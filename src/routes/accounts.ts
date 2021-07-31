@@ -2,7 +2,6 @@ import express, { Request, Response, NextFunction } from "express";
 import Account, { IAccount } from "../models/Account";
 const router = express.Router();
 
-// Getting all accounts
 router.get("/", async (req: Request, res: Response) => {
   try {
     const allAccounts = await Account.find();
@@ -19,8 +18,6 @@ router.get("/:accountId", getAccountId, (req: Request, res: Response) => {
 
 // Create a new account
 router.post("/", async (req: Request, res: Response) => {
-  // console.log(req)
-  console.log(req.body)
   const newAccount = new Account({
     name: req?.body?.name ?? 'undefined',
     api: req?.body?.api ?? 'undefined',

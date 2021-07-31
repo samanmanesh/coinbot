@@ -22,28 +22,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv = __importStar(require("dotenv"));
-const accounts_1 = __importDefault(require("./routes/accounts"));
-// import bodyParser from 'body-parser';
+const account_controller_1 = __importDefault(require("./routes/account.controller"));
+const index_1 = __importDefault(require("./app/index"));
 dotenv.config();
-const app = express_1.default();
-const PORT = 3000;
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
-app.use("/accounts", accounts_1.default);
-const setupMongoose = () => {
-    var _a;
-    try {
-        mongoose_1.default.connect((_a = process.env.DB_CONNECTION_URI) !== null && _a !== void 0 ? _a : "", { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log("Connected to the DB"));
-    }
-    catch (e) {
-        console.log("could not connect");
-    }
-};
-setupMongoose();
-app.get("/", (req, res) => {
-    res.send(`'Hello world'`);
-});
-app.listen(PORT, () => console.log(`App is listening on port ${PORT}`));
+const routes = [
+    {
+        path: "/accounts",
+        controller: new account_controller_1.default(),
+    },
+];
+const app = new index_1.default(routes);
+app.listen(3000);
+// const app: Application = express();
+// const PORT = 3000;
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+// app.use("/accounts", accountsRoute);
+// const setupMongoose = () => {
+// try {
+//   mongoose.connect(
+//     process.env.DB_CONNECTION_URI ?? "",
+//     { useNewUrlParser: true, useUnifiedTopology: true },
+//     () => console.log("Connected to the DB")
+//   );
+// } catch (e) {
+//   console.log("could not connect");
+// }
+// };
+// setupMongoose();
+// app.listen(PORT, () => console.log(`App is listening on port ${PORT}`));

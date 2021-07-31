@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const Account_1 = __importDefault(require("../models/Account"));
 const router = express_1.default.Router();
-// Getting all accounts
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const allAccounts = yield Account_1.default.find();
@@ -32,8 +31,6 @@ router.get("/:accountId", getAccountId, (req, res) => {
 // Create a new account
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
-    // console.log(req)
-    console.log(req.body);
     const newAccount = new Account_1.default({
         name: (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : 'undefined',
         api: (_d = (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.api) !== null && _d !== void 0 ? _d : 'undefined',
