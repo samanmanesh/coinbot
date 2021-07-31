@@ -1,0 +1,25 @@
+
+
+GET http://localhost:3000
+
+###
+GET http://localhost:3000/accounts
+
+###
+GET http://localhost:3000/accounts/6102e76898940c1195dfea1f
+
+###
+PATCH http://localhost:3000/accounts/6102e76898940c1195dfea1f
+
+{
+  "name": "Bob"
+}
+
+### 
+POST http://localhost:3000/accounts HTTP/1.1
+content-type: application/json
+
+ {
+   "name": "Bob",
+   "api": "Bob API"
+ }
