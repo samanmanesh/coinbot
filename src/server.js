@@ -25,12 +25,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = __importStar(require("dotenv"));
 const account_controller_1 = __importDefault(require("./routes/account.controller"));
 const index_1 = __importDefault(require("./app/index"));
+const marketData_controller_1 = __importDefault(require("./routes/marketData.controller"));
 dotenv.config();
 const routes = [
     {
         path: "/accounts",
         controller: new account_controller_1.default(),
     },
+    {
+        path: '/market-cap',
+        controller: new marketData_controller_1.default()
+    }
 ];
 const app = new index_1.default(routes);
 app.listen(3000);

@@ -1,9 +1,9 @@
 import express, { Application, Request, Response, Router } from "express";
 import * as dotenv from "dotenv";
-import accounts from "./routes/accounts";
 import AccountController from "./routes/account.controller";
 import { IRoute } from "./types";
 import App from "./app/index";
+import CoinMarketController from "./routes/marketData.controller";
 dotenv.config();
 
 const routes: IRoute[] = [
@@ -11,6 +11,10 @@ const routes: IRoute[] = [
     path: "/accounts",
     controller: new AccountController(),
   },
+  {
+     path: '/market-cap',
+     controller: new CoinMarketController()
+}
 ];
 
 const app = new App(routes);

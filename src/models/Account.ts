@@ -21,6 +21,6 @@ const AccountSchema = new Schema<IAccount>({
   },
 });
 
-const Account = model<IAccount>('Account', AccountSchema);
+const Account = model<IAccount>("Account", AccountSchema, "accounts");
 
 export default Account;

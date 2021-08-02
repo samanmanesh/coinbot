@@ -15,5 +15,5 @@ const AccountSchema = new mongoose_1.Schema({
         default: Date.now,
     },
 });
-const Account = mongoose_1.model('Account', AccountSchema);
+const Account = mongoose_1.model("Account", AccountSchema, "accounts");
 exports.default = Account;

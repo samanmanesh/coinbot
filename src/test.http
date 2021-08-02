@@ -16,3 +16,6 @@ content-type: application/json
    "name": "Bob",
    "api": "Bob API"
  }
+
+###
+GET http://localhost:3000/market-cap
