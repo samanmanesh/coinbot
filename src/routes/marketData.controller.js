@@ -16,7 +16,7 @@ const express_1 = __importDefault(require("express"));
 const axios_1 = __importDefault(require("axios"));
 const node_cron_1 = __importDefault(require("node-cron"));
 const MarketData_1 = __importDefault(require("../models/MarketData"));
-const coinSymbols = ["BTC", "ETH", "DOGE", "ADA"];
+// const coinSymbols = ["BTC", "ETH", "DOGE", "ADA"];
 var MarketDataPath;
 (function (MarketDataPath) {
     MarketDataPath["Base"] = "/";
@@ -40,11 +40,13 @@ class MarketDataController {
                     start: 1,
                     limit: 10,
                     convert: "CAD",
+                    sort_dir: "asc"
                 },
                 headers: {
                     "X-CMC_PRO_API_KEY": process.env.COINMARKETCAP_API_KEY,
                 },
             };
+            // Getting data from Market data 
             try {
                 const { data } = yield axios_1.default.get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", config);
                 const coinsFromResponse = data.data;
@@ -61,12 +63,21 @@ class MarketDataController {
                     date_added: new Date(),
                     coins,
                 });
+                // Added the Data to DB
                 try {
                     yield newMarketData.save();
                     console.log("added market data!");
                 }
                 catch (error) {
                     console.error(error);
+                }
+                // Getting the Data From DB 
+                try {
+                    const newSavedData = yield MarketData_1.default.find();
+                    res && res.status(201).json(newSavedData);
+                }
+                catch (error) {
+                    res && res.status(400).json({ message: error.message });
                 }
                 //
                 // await this.addMarketData(coins);
@@ -78,21 +89,6 @@ class MarketDataController {
                 res.send({
                     message: "Got market data!!!",
                 });
-        });
-    }
-    addMarketData(coins) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const newMarketData = new MarketData_1.default({
-                date_added: new Date(),
-                coins,
-            });
-            try {
-                yield newMarketData.save();
-                console.log("added market data!");
-            }
-            catch (error) {
-                console.error(error);
-            }
         });
     }
 }

@@ -26,18 +26,20 @@ export default class MarketDataController implements IController {
     this.router.get(MarketDataPath.Base, this.getMarketData);
   }
 
+   
   async getMarketData(req?: Request, res?: Response) {
     const config: AxiosRequestConfig = {
       params: {
         start: 1,
         limit: 10,
         convert: "CAD",
+        sort_dir:"asc"
       },
       headers: {
         "X-CMC_PRO_API_KEY": process.env.COINMARKETCAP_API_KEY,
       },
     };
-
+    // Getting data from Market data 
     try {
       const { data } = await axios.get(
         "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
@@ -59,11 +61,22 @@ export default class MarketDataController implements IController {
         coins,
       });
 
+
+      // Added the Data to DB
       try {
         await newMarketData.save();
         console.log("added market data!");
       } catch (error) {
         console.error(error);
+      }
+
+      // Getting the Data From DB 
+      try {
+       const newSavedData = await MarketData.find();
+       res && res.status(201).json(newSavedData); 
+
+      } catch (error) {
+        res && res.status(400).json({ message: error.message });
       }
 
       //
