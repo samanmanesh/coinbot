@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import cron from "node-cron";
 import MarketData from "../models/MarketData";
 
-const coinSymbols = ["BTC", "ETH", "DOGE", "ADA"];
+// const coinSymbols = ["BTC", "ETH", "DOGE", "ADA"];
 
 enum MarketDataPath {
   Base = "/",
@@ -52,7 +52,7 @@ export default class MarketDataController implements IController {
         last_updated: c.last_updated,
         quote: c.quote,
       }));
-
+      
       //
       const newMarketData = new MarketData({
         date_added: new Date(),
@@ -77,17 +77,17 @@ export default class MarketDataController implements IController {
       });
   }
 
-  async addMarketData(coins: ICoin[]) {
-    const newMarketData = new MarketData({
-      date_added: new Date(),
-      coins,
-    });
+  // async addMarketData(coins: ICoin[]) {
+  //   const newMarketData = new MarketData({
+  //     date_added: new Date(),
+  //     coins,
+  //   });
 
-    try {
-      await newMarketData.save();
-      console.log("added market data!");
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  //   try {
+  //     await newMarketData.save();
+  //     console.log("added market data!");
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 }
