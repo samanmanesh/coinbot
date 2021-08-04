@@ -7,16 +7,16 @@ export interface IMarketData extends Document {
   coins: ICoinData[];
 }
 
-const MarketDataSchema = new Schema<IMarketData>({
-  date_added: {
-    type: Date,
-    required: [true, "Date is required"],
-  },
-  coins: {
-    type: Array,
-    required: [true, "Coins is required"],
-  },
-});
+// const MarketDataSchema = new Schema<IMarketData>({
+//   date_added: {
+//     type: Date,
+//     required: [true, "Date is required"],
+//   },
+//   coins: {
+//     type: Array,
+//     required: [true, "Coins is required"],
+//   },
+// });
 
 const MarketData = model<IMarketData>(
   "MarketData",
