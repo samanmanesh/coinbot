@@ -8,7 +8,7 @@ export default class App {
   constructor(routes: IRoute[]) {
     this.setupMiddleware();
     this.setupRoutes(routes);
-    this.setupMongoose();
+    // this.setupMongoose();
 
     this.app.get("/", (req: Request, res: Response) => {
       res.send(`'Hello world'`);
@@ -36,7 +36,7 @@ export default class App {
     try {
       mongoose.connect(
         process.env.DB_CONNECTION_URI ?? "",
-        { useNewUrlParser: true, useUnifiedTopology: true },
+        // { useNewUrlParser:  useUnifiedTopology: true },
         () => console.log("Connected to the DB")
       );
     } catch (e) {

@@ -1,10 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
-import Account from "../models/Account";
+import Account, { IAccount } from "../models/Account";
 import { IController } from "../types";
 
 enum AccountPath {
   Base = "/",
-  ByID = "/:accountId",
+  ByUsername = "/:username",
 }
 
 export default class AccountController implements IController {
@@ -18,38 +18,46 @@ export default class AccountController implements IController {
     this.router.get(AccountPath.Base, this.getAllAccounts);
 
     this.router.get(
-      AccountPath.ByID,
-      this.getAccountByIDMiddleware,
-      this.getAccountById
+      AccountPath.ByUsername,
+      this.getAccountByUsernameMiddleware,
+      this.getAccountByUsername
     );
 
     this.router.post(AccountPath.Base, this.addAccount);
 
     this.router.delete(
-      AccountPath.ByID,
-      this.getAccountByIDMiddleware,
+      AccountPath.ByUsername,
       this.deleteAccount
     );
 
-    this.router.patch(AccountPath.ByID, this.updateAccount);
+    this.router.patch(AccountPath.ByUsername, this.updateAccount);
   }
 
   async getAllAccounts(req: Request, res: Response) {
     try {
       const allAccounts = await Account.find();
-      res.status(201).json(allAccounts);
+      console.log("all accounts", allAccounts);
+      res.status(200).json(allAccounts);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
   }
 
-  getAccountById(req: Request, res: Response) {
+  getAccountByUsername(req: Request, res: Response) {
     res.json(res.account);
   }
 
   async addAccount(req: Request, res: Response) {
-    const newAccount = new Account({
-      username: req?.body?.username,
+    const fromDB = await Account.findOne({
+      username: req?.body?.username ?? "",
+    });
+    if (fromDB) {
+      res.status(404).send("User already exists");
+      return;
+    }
+
+    const newAccount: IAccount = {
+      username: req?.body?.username ?? "",
       api: req?.body?.api,
       preferred_coins: req?.body?.preferred_coins,
       assets: {
@@ -57,16 +65,18 @@ export default class AccountController implements IController {
           deposit: req?.body?.assets.wallet.deposit,
           currency: req?.body?.assets.wallet.currency,
         },
-        coins: [{
-          symbol: req?.body?.assets.coins.symbol,
-          volume: req?.body?.assets.coins.volume,
-          buy_at: req?.body?.assets.coins.buy_at,
-        }],
+        coins: [
+          {
+            symbol: req?.body?.assets.coins.symbol,
+            volume: req?.body?.assets.coins.volume,
+            buy_at: req?.body?.assets.coins.buy_at,
+          },
+        ],
       },
-    });
+    };
 
     try {
-      const savedAccount = await newAccount.save();
+      const savedAccount = await Account.save(newAccount);
       res.status(201).json(savedAccount);
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -75,7 +85,8 @@ export default class AccountController implements IController {
 
   async deleteAccount(req: Request, res: Response) {
     try {
-      const removedAccount = await res.account.remove();
+      const { username } = req.params;
+      const removedAccount = await Account.remove({ username });
       res.status(201).json(removedAccount);
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -83,15 +94,19 @@ export default class AccountController implements IController {
   }
 
   async updateAccount(req: Request, res: Response) {
-    if (req?.body?.name != null) {
-      res.account.name = req.body.name;
-    }
-    if (req?.body?.api != null) {
-      res.account.api = req.body.api;
-    }
+    // if (req?.body?.name != null) {
+    //   res.account.name = req.body.name;
+    // }
+    // if (req?.body?.api != null) {
+    //   res.account.api = req.body.api;
+    // }
 
     try {
-      const updatedAccount = await res.account.save();
+      // const updatedAccount = await res.account.save();
+      const updatedAccount = await Account.updateOne(
+        { username: req.params.username },
+        req.body
+      );
       res.status(200).json(updatedAccount);
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -99,14 +114,14 @@ export default class AccountController implements IController {
   }
 
   // Helper function
-  async getAccountByIDMiddleware(
+  async getAccountByUsernameMiddleware(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
     let account = null;
     try {
-      account = await Account.findById(req.params.accountId);
+      account = await Account.findOne({ username: req.params.username });
       if (account === null) {
         return res.status(404).json({ message: "Account not found" });
       }

@@ -10,7 +10,7 @@ class App {
         this.app = express_1.default();
         this.setupMiddleware();
         this.setupRoutes(routes);
-        this.setupMongoose();
+        // this.setupMongoose();
         this.app.get("/", (req, res) => {
             res.send(`'Hello world'`);
         });
@@ -30,7 +30,9 @@ class App {
     setupMongoose() {
         var _a;
         try {
-            mongoose_1.default.connect((_a = process.env.DB_CONNECTION_URI) !== null && _a !== void 0 ? _a : "", { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log("Connected to the DB"));
+            mongoose_1.default.connect((_a = process.env.DB_CONNECTION_URI) !== null && _a !== void 0 ? _a : "", 
+            // { useNewUrlParser:  useUnifiedTopology: true },
+            () => console.log("Connected to the DB"));
         }
         catch (e) {
             console.log("could not connect");
