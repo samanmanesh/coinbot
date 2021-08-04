@@ -99,6 +99,22 @@ class Model {
                 .updateMany(filter, { $set: document });
         });
     }
+    removeAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.client
+                .db(this.databaseName)
+                .collection(this.collectionName)
+                .deleteMany({});
+        });
+    }
+    saveMany(documents) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.client
+                .db(this.databaseName)
+                .collection(this.collectionName)
+                .insertMany(documents);
+        });
+    }
 }
 function model(collection) {
     return new Model(collection);

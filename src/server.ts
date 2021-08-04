@@ -1,8 +1,9 @@
-import express, { Application, Request, Response, Router } from "express";
+// import express, { Application, Request, Response, Router } from "express";
 import AccountController from "./routes/account.controller";
 import { IRoute } from "./types";
 import App from "./app/index";
 import CoinMarketController from "./routes/marketData.controller";
+import SellAnalyst from "./routes/sell.analyzer";
 
 const routes: IRoute[] = [
   {
@@ -12,6 +13,10 @@ const routes: IRoute[] = [
   {
     path: "/market-cap",
     controller: new CoinMarketController(),
+  },
+  {
+    path: "/sell-analyzer",
+    controller: new SellAnalyst(),
   },
 ];
 

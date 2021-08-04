@@ -45,7 +45,6 @@ class MarketDataController {
                     "X-CMC_PRO_API_KEY": process.env.COINMARKETCAP_API_KEY,
                 },
             };
-            // Getting data from Market data
             try {
                 const { data } = yield axios_1.default.get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", config);
                 const coinsFromResponse = data.data;
@@ -62,6 +61,7 @@ class MarketDataController {
                     date_added: new Date(),
                     coins,
                 };
+                //Todo must check if there is any data update that one if not should make a new one`
                 // Added the Data to DB
                 // try {
                 //   await MarketData.save(newMarketData);

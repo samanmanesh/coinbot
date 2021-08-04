@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// import express, { Application, Request, Response, Router } from "express";
 const account_controller_1 = __importDefault(require("./routes/account.controller"));
 const index_1 = __importDefault(require("./app/index"));
 const marketData_controller_1 = __importDefault(require("./routes/marketData.controller"));
