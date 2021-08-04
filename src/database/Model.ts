@@ -31,10 +31,11 @@ class Model<T> {
   }
 
   public async find(filter?: any): Promise<T[] | undefined> {
-    return (await this.client
+    return await this.client
       .db(this.databaseName)
       .collection(this.collectionName)
-      .find(filter).toArray());
+      .find(filter)
+      .toArray();
   }
 
   public async findOne(filter?: any): Promise<T | undefined> {
@@ -49,7 +50,6 @@ class Model<T> {
       .db(this.databaseName)
       .collection(this.collectionName)
       .deleteOne(filter);
-      
   }
 
   public async updateOne(filter: any, document: T) {
@@ -57,6 +57,13 @@ class Model<T> {
       .db(this.databaseName)
       .collection(this.collectionName)
       .updateOne(filter, { $set: document });
+  }
+
+  public async update(filter: any, document: T) {
+    return await this.client
+      .db(this.databaseName)
+      .collection(this.collectionName)
+      .updateMany(filter, { $set: document });
   }
 }
 

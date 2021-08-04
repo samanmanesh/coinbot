@@ -1,4 +1,3 @@
-import { Document, Schema } from "mongoose";
 import { IWalletCoin, IAccountAssets } from "../types";
 import model from "../database/Model";
 export interface IAccount {

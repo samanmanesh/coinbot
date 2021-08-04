@@ -60,10 +60,11 @@ class Model {
     }
     find(filter) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.client
+            return yield this.client
                 .db(this.databaseName)
                 .collection(this.collectionName)
-                .find(filter).toArray());
+                .find(filter)
+                .toArray();
         });
     }
     findOne(filter) {
@@ -88,6 +89,14 @@ class Model {
                 .db(this.databaseName)
                 .collection(this.collectionName)
                 .updateOne(filter, { $set: document });
+        });
+    }
+    update(filter, document) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.client
+                .db(this.databaseName)
+                .collection(this.collectionName)
+                .updateMany(filter, { $set: document });
         });
     }
 }

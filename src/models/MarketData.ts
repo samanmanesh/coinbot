@@ -1,11 +1,16 @@
-import { Document, Schema, model } from "mongoose";
 import { ICoinData } from "../types";
+import model from "../database/Model";
 
-
-export interface IMarketData extends Document {
+export interface IMarketData  {
   date_added: Date;
   coins: ICoinData[];
 }
+const MarketData = model<IMarketData>("market-data");
+
+export default MarketData;
+
+
+// Old Version: using Schema for mongoose
 
 // const MarketDataSchema = new Schema<IMarketData>({
 //   date_added: {
@@ -18,10 +23,8 @@ export interface IMarketData extends Document {
 //   },
 // });
 
-const MarketData = model<IMarketData>(
-  "MarketData",
-  MarketDataSchema,
-  "market-data"
-);
-
-export default MarketData;
+// const MarketData = model<IMarketData>(
+//   "MarketData",
+//   MarketDataSchema,
+//   "market-data"
+// );

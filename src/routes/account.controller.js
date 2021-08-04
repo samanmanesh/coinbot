@@ -28,9 +28,7 @@ class AccountController {
         this.router.get(AccountPath.Base, this.getAllAccounts);
         this.router.get(AccountPath.ByUsername, this.getAccountByUsernameMiddleware, this.getAccountByUsername);
         this.router.post(AccountPath.Base, this.addAccount);
-        this.router.delete(AccountPath.ByUsername, this.deleteAccount
-        // this.getAccountByUsernameMiddleware,
-        );
+        this.router.delete(AccountPath.ByUsername, this.deleteAccount);
         this.router.patch(AccountPath.ByUsername, this.updateAccount);
     }
     getAllAccounts(req, res) {

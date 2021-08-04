@@ -40,13 +40,12 @@ class MarketDataController {
                     start: 1,
                     limit: 10,
                     convert: "CAD",
-                    sort_dir: "asc"
                 },
                 headers: {
                     "X-CMC_PRO_API_KEY": process.env.COINMARKETCAP_API_KEY,
                 },
             };
-            // Getting data from Market data 
+            // Getting data from Market data
             try {
                 const { data } = yield axios_1.default.get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", config);
                 const coinsFromResponse = data.data;
@@ -59,19 +58,26 @@ class MarketDataController {
                     quote: c.quote,
                 }));
                 //
-                const newMarketData = new MarketData_1.default({
+                const newMarketData = {
                     date_added: new Date(),
                     coins,
-                });
+                };
                 // Added the Data to DB
+                // try {
+                //   await MarketData.save(newMarketData);
+                //   console.log("added market data!");
+                // } catch (error) {
+                //   console.error(error);
+                // }
+                // Update the existing the data
                 try {
-                    yield newMarketData.save();
-                    console.log("added market data!");
+                    yield MarketData_1.default.update({}, newMarketData);
+                    console.log("updated market data!");
                 }
                 catch (error) {
                     console.error(error);
                 }
-                // Getting the Data From DB 
+                // Getting the Data From DB
                 try {
                     const newSavedData = yield MarketData_1.default.find();
                     res && res.status(201).json(newSavedData);
