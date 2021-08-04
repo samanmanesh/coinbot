@@ -21,7 +21,15 @@ export default class SellAnalyzer {
     public async analyze(req: Request, res: Response) {
       throw new Error("Not implemented.");
 
+      //Todo first gets the data related to accounts from data base
+      
+      
 
+
+      //Todo then gets the data for preferred_coins for each account from the data base
+
+
+      
 
   }
 }
