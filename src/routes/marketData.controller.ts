@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { IController, ICoinMarketCapCoin, ICoin } from "../types";
+import { IController, ICoinMarketCapCoin, ICoinData } from "../types";
 import axios, { AxiosRequestConfig } from "axios";
 import cron from "node-cron";
 import MarketData from "../models/MarketData";
@@ -46,7 +46,7 @@ export default class MarketDataController implements IController {
         config
       );
       const coinsFromResponse: ICoinMarketCapCoin[] = data.data;
-      const coins: ICoin[] = coinsFromResponse.map((c: ICoinMarketCapCoin) => ({
+      const coins: ICoinData[] = coinsFromResponse.map((c: ICoinMarketCapCoin) => ({
         id: c.id,
         name: c.name,
         symbol: c.symbol,

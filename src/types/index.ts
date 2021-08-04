@@ -39,7 +39,7 @@ export interface ICoinMarketCapCoin {
   quote: IQuote;
 }
 
-export interface ICoin {
+export interface ICoinData {
   id: number;
   name: string;
   symbol: string;
@@ -48,6 +48,20 @@ export interface ICoin {
   quote: IQuote;
 }
 
+export interface IWalletCoin {
+  symbol: string;
+  volume: number;
+  buy_at: number;
+}
+
+interface IAccountWallet {
+  deposit: string;
+  currency: string;
+}
+export interface IAccountAssets {
+  wallet: IAccountWallet;
+  coins: IWalletCoin[];
+}
 /** 
        * {
       id: 1027,

@@ -1,9 +1,11 @@
 import { Document, Schema, model } from "mongoose";
-
+import { IWalletCoin, IAccountAssets } from "../types";
 export interface IAccount extends Document {
   name: string;
   api: string;
   date: Date;
+  preferred_coins: string[];
+  assets: IAccountAssets;
 }
 
 const AccountSchema = new Schema<IAccount>({
@@ -29,9 +31,7 @@ const AccountSchema = new Schema<IAccount>({
       currency: { type: String, required: false },
     },
     coins: {
-      symbol: { type: String, required: false },
-      volume: { type: Number, required: false },
-      buy_at: { type: Number, required: false },
+      type: Array,
     },
   },
 });

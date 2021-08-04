@@ -57,11 +57,11 @@ export default class AccountController implements IController {
           deposit: req?.body?.assets.wallet.deposit,
           currency: req?.body?.assets.wallet.currency,
         },
-        coins: {
+        coins: [{
           symbol: req?.body?.assets.coins.symbol,
           volume: req?.body?.assets.coins.volume,
           buy_at: req?.body?.assets.coins.buy_at,
-        },
+        }],
       },
     });
 

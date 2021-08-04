@@ -1,10 +1,10 @@
 import { Document, Schema, model } from "mongoose";
-import { ICoin } from "../types";
+import { ICoinData } from "../types";
 
 
 export interface IMarketData extends Document {
   date_added: Date;
-  coins: ICoin[];
+  coins: ICoinData[];
 }
 
 const MarketDataSchema = new Schema<IMarketData>({
