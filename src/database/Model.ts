@@ -65,6 +65,20 @@ class Model<T> {
       .collection(this.collectionName)
       .updateMany(filter, { $set: document });
   }
+
+  public async removeAll() {
+    return await this.client
+      .db(this.databaseName)
+      .collection(this.collectionName)
+      .deleteMany({});
+  }
+
+  public async saveMany(documents: T[]) {
+    await this.client
+      .db(this.databaseName)
+      .collection(this.collectionName)
+      .insertMany(documents);
+  }
 }
 
 function model<T>(collection: string): Model<T> {
