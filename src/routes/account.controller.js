@@ -46,11 +46,23 @@ class AccountController {
         res.json(res.account);
     }
     addAccount(req, res) {
-        var _a, _b;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         return __awaiter(this, void 0, void 0, function* () {
             const newAccount = new Account_1.default({
-                name: (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.name,
+                username: (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username,
                 api: (_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.api,
+                preferred_coins: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.preferred_coins,
+                assets: {
+                    wallet: {
+                        deposit: (_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.assets.wallet.deposit,
+                        currency: (_e = req === null || req === void 0 ? void 0 : req.body) === null || _e === void 0 ? void 0 : _e.assets.wallet.currency,
+                    },
+                    coins: {
+                        symbol: (_f = req === null || req === void 0 ? void 0 : req.body) === null || _f === void 0 ? void 0 : _f.assets.coins.symbol,
+                        volume: (_g = req === null || req === void 0 ? void 0 : req.body) === null || _g === void 0 ? void 0 : _g.assets.coins.volume,
+                        buy_at: (_h = req === null || req === void 0 ? void 0 : req.body) === null || _h === void 0 ? void 0 : _h.assets.coins.buy_at,
+                    },
+                },
             });
             try {
                 const savedAccount = yield newAccount.save();

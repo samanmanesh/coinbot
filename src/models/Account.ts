@@ -7,7 +7,7 @@ export interface IAccount extends Document {
 }
 
 const AccountSchema = new Schema<IAccount>({
-  name: {
+  username: {
     type: String,
     required: [true, "Name is required"],
   },
@@ -18,6 +18,21 @@ const AccountSchema = new Schema<IAccount>({
   date: {
     type: Date,
     default: Date.now,
+  },
+  preferred_coins: {
+    type: Array,
+    required: [true, "At least one Preferred Coin is required"],
+  },
+  assets: {
+    wallet: {
+      deposit: { type: String, required: false },
+      currency: { type: String, required: false },
+    },
+    coins: {
+      symbol: { type: String, required: false },
+      volume: { type: Number, required: false },
+      buy_at: { type: Number, required: false },
+    },
   },
 });
 

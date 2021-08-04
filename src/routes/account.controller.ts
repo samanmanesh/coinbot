@@ -16,7 +16,7 @@ export default class AccountController implements IController {
 
   setupRoutes() {
     this.router.get(AccountPath.Base, this.getAllAccounts);
-    
+
     this.router.get(
       AccountPath.ByID,
       this.getAccountByIDMiddleware,
@@ -49,8 +49,20 @@ export default class AccountController implements IController {
 
   async addAccount(req: Request, res: Response) {
     const newAccount = new Account({
-      name: req?.body?.name,
+      username: req?.body?.username,
       api: req?.body?.api,
+      preferred_coins: req?.body?.preferred_coins,
+      assets: {
+        wallet: {
+          deposit: req?.body?.assets.wallet.deposit,
+          currency: req?.body?.assets.wallet.currency,
+        },
+        coins: {
+          symbol: req?.body?.assets.coins.symbol,
+          volume: req?.body?.assets.coins.volume,
+          buy_at: req?.body?.assets.coins.buy_at,
+        },
+      },
     });
 
     try {
