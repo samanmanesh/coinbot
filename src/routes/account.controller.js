@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllAccounts = void 0;
+exports.getAccountByUsername = exports.getAllAccounts = void 0;
 const express_1 = __importDefault(require("express"));
 const Account_1 = __importDefault(require("../models/Account"));
 var AccountPath;
@@ -37,6 +37,23 @@ function getAllAccounts(res) {
     });
 }
 exports.getAllAccounts = getAllAccounts;
+function getAccountByUsername(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let account = null;
+        try {
+            account = yield Account_1.default.findOne({ username: req.params.username });
+            res.status(200).json(account);
+            if (account === null) {
+                return res.status(404).json({ message: "Account not found" });
+            }
+        }
+        catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+        return account;
+    });
+}
+exports.getAccountByUsername = getAccountByUsername;
 class AccountController {
     constructor() {
         this.router = express_1.default.Router();

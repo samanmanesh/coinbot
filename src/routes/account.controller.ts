@@ -1,12 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
 import Account, { IAccount } from "../models/Account";
 import { IController } from "../types";
+import AccountManager from "../managers/AccountManager";
 
 enum AccountPath {
   Base = "/",
   ByUsername = "/:username",
 }
-
 
 export async function getAllAccounts(res?: Response) {
   let allAccounts = undefined;
@@ -14,16 +14,33 @@ export async function getAllAccounts(res?: Response) {
     allAccounts = await Account.find();
     console.log("all accounts", allAccounts);
     res &&
-    res.status(200).json(allAccounts);
+      res.status(200).json(allAccounts);
   } catch (error) {
     res &&
-    res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error.message });
   }
   return allAccounts;
 }
 
+export async function getAccountByUsername(req: Request,
+  res: Response,) {
+  let account = null;
+  try {
+    account = await Account.findOne({ username: req.params.username });
+    res.status(200).json(account);
+    if (account === null) {
+      res.status(404).json({ message: "Account not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+  return account;
+}
+
 export default class AccountController implements IController {
   public router = express.Router();
+  accountManager = new AccountManager();
 
   constructor() {
     this.setupRoutes();
@@ -32,10 +49,15 @@ export default class AccountController implements IController {
   setupRoutes() {
     this.router.get(AccountPath.Base, this.getAllAccounts);
 
+    // this.router.get(
+    //   AccountPath.ByUsername,
+    //   this.getAccountByUsernameMiddleware,
+    //   this.getAccountByUsername
+    // );
+
     this.router.get(
       AccountPath.ByUsername,
-      this.getAccountByUsernameMiddleware,
-      this.getAccountByUsername
+      this.getAccount
     );
 
     this.router.post(AccountPath.Base, this.addAccount);
@@ -49,18 +71,28 @@ export default class AccountController implements IController {
   }
 
 
-  public async getAllAccounts(req?: Request, res?: Response) {
-    return getAllAccounts(res);
+  async getAllAccounts(req: Request, res: Response) {
+    try {
+      const accounts = await this.accountManager.getAccounts();
+      res.sendStatus(200).send(accounts);
+    } catch (error) {
+      res.sendStatus(500).send(error);
+    }
   }
 
-  getAccountByUsername(req: Request, res: Response) {
-    res.json(res.account);
+  async getAccount(req: Request, res: Response) {
+    const { username } = req.params;
+    try {
+      const account = await this.accountManager.getAccount(username);
+      res.status(200).json(account);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
   }
 
   async addAccount(req: Request, res: Response) {
-    const fromDB = await Account.findOne({
-      username: req?.body?.username ?? "",
-    });
+    const username = req?.body?.username ?? "";
+    const fromDB = await this.accountManager.getAccount(username);
     if (fromDB) {
       res.status(404).send("User already exists");
       return;
@@ -86,7 +118,7 @@ export default class AccountController implements IController {
     };
 
     try {
-      const savedAccount = await Account.save(newAccount);
+      const savedAccount = await this.accountManager.createAccount(newAccount);
       res.status(201).json(savedAccount);
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -104,19 +136,8 @@ export default class AccountController implements IController {
   }
 
   async updateAccount(req: Request, res: Response) {
-    // if (req?.body?.name != null) {
-    //   res.account.name = req.body.name;
-    // }
-    // if (req?.body?.api != null) {
-    //   res.account.api = req.body.api;
-    // }
-
     try {
-      // const updatedAccount = await res.account.save();
-      const updatedAccount = await Account.updateOne(
-        { username: req.params.username },
-        req.body
-      );
+      const updatedAccount = await this.accountManager.updateAccount(req.params.username, req.body);
       res.status(200).json(updatedAccount);
     } catch (error) {
       res.status(400).json({ message: error.message });
