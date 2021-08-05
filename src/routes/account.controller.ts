@@ -7,6 +7,21 @@ enum AccountPath {
   ByUsername = "/:username",
 }
 
+
+export async function getAllAccounts(res?: Response) {
+  let allAccounts = undefined;
+  try {
+    allAccounts = await Account.find();
+    console.log("all accounts", allAccounts);
+    res &&
+    res.status(200).json(allAccounts);
+  } catch (error) {
+    res &&
+    res.status(400).json({ message: error.message });
+  }
+  return allAccounts;
+}
+
 export default class AccountController implements IController {
   public router = express.Router();
 
@@ -33,14 +48,9 @@ export default class AccountController implements IController {
     this.router.patch(AccountPath.ByUsername, this.updateAccount);
   }
 
-  async getAllAccounts(req: Request, res: Response) {
-    try {
-      const allAccounts = await Account.find();
-      console.log("all accounts", allAccounts);
-      res.status(200).json(allAccounts);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
+
+  public async getAllAccounts(req?: Request, res?: Response) {
+    return getAllAccounts(res);
   }
 
   getAccountByUsername(req: Request, res: Response) {

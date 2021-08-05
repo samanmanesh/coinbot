@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getAllAccounts = void 0;
 const express_1 = __importDefault(require("express"));
 const Account_1 = __importDefault(require("../models/Account"));
 var AccountPath;
@@ -19,6 +20,23 @@ var AccountPath;
     AccountPath["Base"] = "/";
     AccountPath["ByUsername"] = "/:username";
 })(AccountPath || (AccountPath = {}));
+function getAllAccounts(res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let allAccounts = undefined;
+        try {
+            allAccounts = yield Account_1.default.find();
+            console.log("all accounts", allAccounts);
+            res &&
+                res.status(200).json(allAccounts);
+        }
+        catch (error) {
+            res &&
+                res.status(400).json({ message: error.message });
+        }
+        return allAccounts;
+    });
+}
+exports.getAllAccounts = getAllAccounts;
 class AccountController {
     constructor() {
         this.router = express_1.default.Router();
@@ -33,14 +51,7 @@ class AccountController {
     }
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const allAccounts = yield Account_1.default.find();
-                console.log("all accounts", allAccounts);
-                res.status(200).json(allAccounts);
-            }
-            catch (error) {
-                res.status(400).json({ message: error.message });
-            }
+            return getAllAccounts(res);
         });
     }
     getAccountByUsername(req, res) {

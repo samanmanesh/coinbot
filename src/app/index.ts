@@ -1,7 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import mongoose from "mongoose";
 import { IRoute } from "../types";
-
 export default class App {
   public app: Application = express();
 
