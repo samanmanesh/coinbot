@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import AccountController, { getAccountByUsername, getAllAccounts } from "./account.controller";
+// import AccountController, { getAccountByUsername, getAllAccounts } from "./account.controller";
 import MarketData, { IMarketData } from "../models/MarketData";
 import { getsAllCurrencyData } from "./marketData.controller";
 import AccountManager from "../managers/AccountManager";

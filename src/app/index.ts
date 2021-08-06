@@ -31,15 +31,15 @@ export default class App {
     });
   }
 
-  setupMongoose() {
-    try {
-      mongoose.connect(
-        process.env.DB_CONNECTION_URI ?? "",
-        // { useNewUrlParser:  useUnifiedTopology: true },
-        () => console.log("Connected to the DB")
-      );
-    } catch (e) {
-      console.log("could not connect");
-    }
-  }
+  // setupMongoose() {
+  //   try {
+  //     mongoose.connect(
+  //       process.env.DB_CONNECTION_URI ?? "",
+  //       // { useNewUrlParser:  useUnifiedTopology: true },
+  //       () => console.log("Connected to the DB")
+  //     );
+  //   } catch (e) {
+  //     console.log("could not connect");
+  //   }
+  // }
 }

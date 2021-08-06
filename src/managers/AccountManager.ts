@@ -35,4 +35,13 @@ export default class AccountManager {
     }
     return account;
   }
+  
+  public async deleteAccount(username: string): Promise<void> {
+    try {
+      await Account.remove({ username });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 };

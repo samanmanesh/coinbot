@@ -1,41 +1,11 @@
-import express, { Request, Response, NextFunction } from "express";
-import Account, { IAccount } from "../models/Account";
+import express, { Request, Response } from "express";
+import { IAccount } from "../models/Account";
 import { IController } from "../types";
 import AccountManager from "../managers/AccountManager";
 
 enum AccountPath {
   Base = "/",
   ByUsername = "/:username",
-}
-
-export async function getAllAccounts(res?: Response) {
-  let allAccounts = undefined;
-  try {
-    allAccounts = await Account.find();
-    console.log("all accounts", allAccounts);
-    res &&
-      res.status(200).json(allAccounts);
-  } catch (error) {
-    res &&
-      res.status(400).json({ message: error.message });
-  }
-  return allAccounts;
-}
-
-export async function getAccountByUsername(req: Request,
-  res: Response,) {
-  let account = null;
-  try {
-    account = await Account.findOne({ username: req.params.username });
-    res.status(200).json(account);
-    if (account === null) {
-      res.status(404).json({ message: "Account not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-
-  return account;
 }
 
 export default class AccountController implements IController {
@@ -128,8 +98,8 @@ export default class AccountController implements IController {
   async deleteAccount(req: Request, res: Response) {
     try {
       const { username } = req.params;
-      const removedAccount = await Account.remove({ username });
-      res.status(201).json(removedAccount);
+      await this.accountManager.deleteAccount(username);
+      res.status(201);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -144,22 +114,23 @@ export default class AccountController implements IController {
     }
   }
 
+
   // Helper function
-  async getAccountByUsernameMiddleware(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    let account = null;
-    try {
-      account = await Account.findOne({ username: req.params.username });
-      if (account === null) {
-        return res.status(404).json({ message: "Account not found" });
-      }
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-    res.account = account;
-    next();
-  }
+  // async getAccountByUsernameMiddleware(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction
+  // ) {
+  //   let account = null;
+  //   try {
+  //     account = await Account.findOne({ username: req.params.username });
+  //     if (account === null) {
+  //       return res.status(404).json({ message: "Account not found" });
+  //     }
+  //   } catch (error) {
+  //     return res.status(500).json({ message: error.message });
+  //   }
+  //   res.account = account;
+  //   next();
+  // }
 }
