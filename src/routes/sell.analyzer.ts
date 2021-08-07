@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 // import AccountController, { getAccountByUsername, getAllAccounts } from "./account.controller";
 import MarketData, { IMarketData } from "../models/MarketData";
-import { getsAllCurrencyData } from "./marketData.controller";
+// import { getsAllCurrencyData } from "./marketData.controller";
 import AccountManager from "../managers/AccountManager";
 import e from "express";
 import MarketDataManager from "../managers/MarketDataManager";
@@ -25,7 +25,7 @@ export default class SellAnalyzer {
   setupRoutes() {
 
     this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler);
-    // this.router.get(SellAnalyzerPath.ByUsername, this.gettingCurrencyDataHandler);
+    this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler);
   }
 
   public async analyze(req: Request, res: Response) {
@@ -87,15 +87,19 @@ export default class SellAnalyzer {
   }
 
   async getCurrencyDataHandler() {
-    console.log("gettingCureencyData is read");
+    
     let currencyData = undefined;
     // Getting the Currency data From DB
-    currencyData = await getsAllCurrencyData();
-    // console.log("Coins saved data ", currencyData);
-    // try {
-    // } catch (error) {
-    //   console.log("error is", error);
-    // }
+    try {
+      currencyData = await this.marketDataManager.getMarketData();
+      console.log("Coins saved data ", currencyData);
+      if (!currencyData) {
+        return;
+      }
+
+    } catch (error) {
+      console.log("error is", error);
+    }
 
     return currencyData;
   }

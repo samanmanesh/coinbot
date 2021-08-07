@@ -11,16 +11,16 @@ enum MarketDataPath {
 }
 
 
-export async function getsAllCurrencyData(res?: Response) {
-  let newSavedData = undefined;
-  try {
-     newSavedData = await MarketData.find();
-    res && res.status(201).json(newSavedData);
-  } catch (error) {
-    res && res.status(400).json({ message: error.message });
-  }
-  return newSavedData;
-}
+// export async function getsAllCurrencyData(res?: Response) {
+//   let newSavedData = undefined;
+//   try {
+//      newSavedData = await MarketData.find();
+//     res && res.status(201).json(newSavedData);
+//   } catch (error) {
+//     res && res.status(400).json({ message: error.message });
+//   }
+//   return newSavedData;
+// }
 
 export default class MarketDataController implements IController {
   public router = express.Router();
@@ -39,7 +39,8 @@ export default class MarketDataController implements IController {
   }
 
   async refreshMarketData(req?: Request, res?: Response) {
-    const marketData = await this.marketDataManager.getMarketData();
+    // const marketData = await this.marketDataManager.getMarketData();
+    const marketData = await this.marketDataManager.getMarketDataFromAPI();
     if (!marketData) {
       res && res.status(500).json({ message: "No data found" });
       return;

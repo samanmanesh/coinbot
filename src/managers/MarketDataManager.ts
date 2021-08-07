@@ -42,11 +42,14 @@ export default class MarketDataManager {
     return marketData;
   }
 
+
   public async getMarketData(): Promise<IMarketData | undefined> {
+    
     const marketData = await MarketData.findOne({});
     return marketData;
   }
 
+  
   public async updateMarketData(marketData: IMarketData) {
     try {
       await MarketData.update({}, marketData);
