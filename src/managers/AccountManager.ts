@@ -18,6 +18,23 @@ export default class AccountManager {
     return allAccounts;
   }
 
+  public async authorizeAccount(username: string, password?: string): Promise<boolean | undefined> {
+    
+    const fromDB = await this.getAccount(username);
+    
+    if (fromDB === undefined) {
+      return undefined;
+    }
+    // if (fromDB) return true;
+
+
+    // if (password === undefined) {
+    //   return fromDB.password === undefined;
+    // }
+    // return fromDB.password === password;
+  }
+
+
   public async createAccount(account: IAccount): Promise<IAccount | undefined> {
     try {
       account = await Account.save(account);

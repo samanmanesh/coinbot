@@ -25,10 +25,7 @@ export default class AccountController implements IController {
     //   this.getAccountByUsername
     // );
 
-    this.router.get(
-      AccountPath.ByUsername,
-      this.getAccount
-    );
+    this.router.get( AccountPath.ByUsername, this.getAccount );
 
     this.router.post(AccountPath.Base, this.addAccount);
 
@@ -62,7 +59,8 @@ export default class AccountController implements IController {
 
   async addAccount(req: Request, res: Response) {
     const username = req?.body?.username ?? "";
-    const fromDB = await this.accountManager.getAccount(username);
+    // const fromDB = await this.accountManager.getAccount(username);
+    const fromDB = await this.accountManager.authorizeAccount(username);
     if (fromDB) {
       res.status(404).send("User already exists");
       return;
