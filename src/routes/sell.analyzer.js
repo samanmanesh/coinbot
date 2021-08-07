@@ -13,7 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const account_controller_1 = require("./account.controller");
+// import { getsAllCurrencyData } from "./marketData.controller";
+const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
+const MarketDataManager_1 = __importDefault(require("../managers/MarketDataManager"));
 var SellAnalyzerPath;
 (function (SellAnalyzerPath) {
     SellAnalyzerPath["Base"] = "/";
@@ -23,11 +25,13 @@ class SellAnalyzer {
     // accountControllerInstance = new AccountController();
     constructor() {
         this.router = express_1.default.Router();
+        this.accountManager = new AccountManager_1.default();
+        this.marketDataManager = new MarketDataManager_1.default();
         this.setupRoutes();
     }
     setupRoutes() {
-        this.router.get(SellAnalyzerPath.ByUsername, this.gettingAccountsDataHandler);
-        // this.router.get(SellAnalyzerPath.ByUsername, this.gettingCurrencyDataHandler);
+        this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler);
+        this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler);
     }
     analyze(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -61,35 +65,38 @@ class SellAnalyzer {
             // }
         });
     }
-    gettingAccountsDataHandler(req, res) {
+    getAccountsDataHandler(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let accountList = undefined;
+            let account = undefined;
+            const { username } = req.params;
             try {
-                accountList = yield account_controller_1.getAccountByUsername(req, res);
+                account = yield this.accountManager.getAccount(username);
                 res &&
-                    res.status(200).json(accountList);
-                console.log("acccountList is", accountList);
-                const currencyData = this.gettingCurrencyDataHandler();
-                console.log("Coins saved data ", currencyData);
+                    res.status(200).json(account);
+                console.log("accountList is", account);
             }
             catch (error) {
                 res &&
                     res.status(400).json({ message: error.message });
             }
+            const currencyData = this.getCurrencyDataHandler();
         });
     }
-    gettingCurrencyDataHandler() {
+    getCurrencyDataHandler() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("gettingCureencyData is read");
-            // let currencyData = undefined;
+            let currencyData = undefined;
             // Getting the Currency data From DB
-            // currencyData = await getsAllCurrencyData();
-            // console.log("Coins saved data ", currencyData);
-            // try {
-            // } catch (error) {
-            //   console.log("error is", error);
-            // }
-            // return currencyData;
+            try {
+                currencyData = yield this.marketDataManager.getMarketData();
+                console.log("Currency saved data ", currencyData);
+                if (!currencyData) {
+                    return;
+                }
+            }
+            catch (error) {
+                console.log("error is", error);
+            }
+            return currencyData;
         });
     }
 }

@@ -11,6 +11,7 @@ export default class AccountManager {
   public async getAccounts(): Promise<IAccount[] | undefined> {
     let allAccounts = undefined;
     try {
+      console.log("getAccounts is read in accountManager");
       allAccounts = await Account.find();
     } catch (error) {
       console.error(error);

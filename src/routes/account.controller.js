@@ -12,74 +12,58 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAccountByUsername = exports.getAllAccounts = void 0;
 const express_1 = __importDefault(require("express"));
-const Account_1 = __importDefault(require("../models/Account"));
+const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
 var AccountPath;
 (function (AccountPath) {
     AccountPath["Base"] = "/";
     AccountPath["ByUsername"] = "/:username";
 })(AccountPath || (AccountPath = {}));
-function getAllAccounts(res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let allAccounts = undefined;
-        try {
-            allAccounts = yield Account_1.default.find();
-            console.log("all accounts", allAccounts);
-            res &&
-                res.status(200).json(allAccounts);
-        }
-        catch (error) {
-            res &&
-                res.status(400).json({ message: error.message });
-        }
-        return allAccounts;
-    });
-}
-exports.getAllAccounts = getAllAccounts;
-function getAccountByUsername(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let account = null;
-        try {
-            account = yield Account_1.default.findOne({ username: req.params.username });
-            res.status(200).json(account);
-            if (account === null) {
-                return res.status(404).json({ message: "Account not found" });
-            }
-        }
-        catch (error) {
-            return res.status(500).json({ message: error.message });
-        }
-        return account;
-    });
-}
-exports.getAccountByUsername = getAccountByUsername;
 class AccountController {
     constructor() {
+        // accountManager = new AccountManager();
         this.router = express_1.default.Router();
         this.setupRoutes();
+        this.accountManager = new AccountManager_1.default();
     }
     setupRoutes() {
         this.router.get(AccountPath.Base, this.getAllAccounts);
-        this.router.get(AccountPath.ByUsername, this.getAccountByUsernameMiddleware, this.getAccountByUsername);
+        this.router.get(AccountPath.ByUsername, this.getAccount);
         this.router.post(AccountPath.Base, this.addAccount);
         this.router.delete(AccountPath.ByUsername, this.deleteAccount);
         this.router.patch(AccountPath.ByUsername, this.updateAccount);
     }
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            return getAllAccounts(res);
+            const accounts = yield this.accountManager.getAccounts();
+            try {
+                console.log("getAllAccounts is read");
+                res.sendStatus(200).send(accounts);
+            }
+            catch (error) {
+                res.sendStatus(500).send(error);
+            }
         });
     }
-    getAccountByUsername(req, res) {
-        res.json(res.account);
+    getAccount(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { username } = req.params;
+            try {
+                // const account = await this.accountManager.getAccount(username);
+                const account = yield this.accountManager.getAccount(username);
+                res.status(200).json(account);
+            }
+            catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+        });
     }
     addAccount(req, res) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
         return __awaiter(this, void 0, void 0, function* () {
-            const fromDB = yield Account_1.default.findOne({
-                username: (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "",
-            });
+            const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
+            // const fromDB = await this.accountManager.getAccount(username);
+            const fromDB = yield this.accountManager.authorizeAccount(username);
             if (fromDB) {
                 res.status(404).send("User already exists");
                 return;
@@ -103,7 +87,7 @@ class AccountController {
                 },
             };
             try {
-                const savedAccount = yield Account_1.default.save(newAccount);
+                const savedAccount = yield this.accountManager.createAccount(newAccount);
                 res.status(201).json(savedAccount);
             }
             catch (error) {
@@ -115,8 +99,8 @@ class AccountController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { username } = req.params;
-                const removedAccount = yield Account_1.default.remove({ username });
-                res.status(201).json(removedAccount);
+                yield this.accountManager.deleteAccount(username);
+                res.status(201);
             }
             catch (error) {
                 res.status(400).json({ message: error.message });
@@ -125,37 +109,13 @@ class AccountController {
     }
     updateAccount(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // if (req?.body?.name != null) {
-            //   res.account.name = req.body.name;
-            // }
-            // if (req?.body?.api != null) {
-            //   res.account.api = req.body.api;
-            // }
             try {
-                // const updatedAccount = await res.account.save();
-                const updatedAccount = yield Account_1.default.updateOne({ username: req.params.username }, req.body);
+                const updatedAccount = yield this.accountManager.updateAccount(req.params.username, req.body);
                 res.status(200).json(updatedAccount);
             }
             catch (error) {
                 res.status(400).json({ message: error.message });
             }
-        });
-    }
-    // Helper function
-    getAccountByUsernameMiddleware(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let account = null;
-            try {
-                account = yield Account_1.default.findOne({ username: req.params.username });
-                if (account === null) {
-                    return res.status(404).json({ message: "Account not found" });
-                }
-            }
-            catch (error) {
-                return res.status(500).json({ message: error.message });
-            }
-            res.account = account;
-            next();
         });
     }
 }

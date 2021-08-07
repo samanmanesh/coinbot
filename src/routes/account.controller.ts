@@ -9,47 +9,44 @@ enum AccountPath {
 }
 
 export default class AccountController implements IController {
+  // accountManager = new AccountManager();
   public router = express.Router();
-  accountManager = new AccountManager();
-
+  // accountManager = new AccountManager();
+    accountManager: AccountManager;
   constructor() {
     this.setupRoutes();
+    this.accountManager = new AccountManager();
   }
 
   setupRoutes() {
     this.router.get(AccountPath.Base, this.getAllAccounts);
 
-    // this.router.get(
-    //   AccountPath.ByUsername,
-    //   this.getAccountByUsernameMiddleware,
-    //   this.getAccountByUsername
-    // );
-
-    this.router.get( AccountPath.ByUsername, this.getAccount );
+    this.router.get( AccountPath.ByUsername, this.getAccount);
 
     this.router.post(AccountPath.Base, this.addAccount);
 
-    this.router.delete(
-      AccountPath.ByUsername,
-      this.deleteAccount
-    );
+    this.router.delete(AccountPath.ByUsername, this.deleteAccount);
 
     this.router.patch(AccountPath.ByUsername, this.updateAccount);
   }
 
 
   async getAllAccounts(req: Request, res: Response) {
+    
     try {
+      console.log("getAllAccounts is read");
       const accounts = await this.accountManager.getAccounts();
       res.sendStatus(200).send(accounts);
     } catch (error) {
       res.sendStatus(500).send(error);
     }
+    
   }
 
   async getAccount(req: Request, res: Response) {
     const { username } = req.params;
     try {
+      // const account = await this.accountManager.getAccount(username);
       const account = await this.accountManager.getAccount(username);
       res.status(200).json(account);
     } catch (error) {

@@ -75,14 +75,13 @@ export default class SellAnalyzer {
       account = await this.accountManager.getAccount(username);
       res &&
         res.status(200).json(account);
-      console.log("acccountList is", account);
+      console.log("accountList is", account);
     } catch (error) {
       res &&
         res.status(400).json({ message: error.message });
     }
 
     const currencyData = this.getCurrencyDataHandler();
-    console.log("Coins saved data ", currencyData);
 
   }
 
@@ -92,7 +91,7 @@ export default class SellAnalyzer {
     // Getting the Currency data From DB
     try {
       currencyData = await this.marketDataManager.getMarketData();
-      console.log("Coins saved data ", currencyData);
+      console.log("Currency saved data ", currencyData);
       if (!currencyData) {
         return;
       }

@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const mongoose_1 = __importDefault(require("mongoose"));
 class App {
     constructor(routes) {
         this.app = express_1.default();
@@ -26,17 +25,6 @@ class App {
         routes.forEach((route) => {
             this.app.use(route.path, route.controller.router);
         });
-    }
-    setupMongoose() {
-        var _a;
-        try {
-            mongoose_1.default.connect((_a = process.env.DB_CONNECTION_URI) !== null && _a !== void 0 ? _a : "", 
-            // { useNewUrlParser:  useUnifiedTopology: true },
-            () => console.log("Connected to the DB"));
-        }
-        catch (e) {
-            console.log("could not connect");
-        }
     }
 }
 exports.default = App;
