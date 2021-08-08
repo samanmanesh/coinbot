@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,7 +32,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
+const AccountManager_1 = __importStar(require("../managers/AccountManager"));
 var AccountPath;
 (function (AccountPath) {
     AccountPath["Base"] = "/";
@@ -23,26 +42,48 @@ class AccountController {
     constructor() {
         // accountManager = new AccountManager();
         this.router = express_1.default.Router();
-        this.setupRoutes();
+        // accountManager = new AccountManager();
         this.accountManager = new AccountManager_1.default();
+        this.setupRoutes();
+        // this.accountManager = new AccountManager();
     }
     setupRoutes() {
-        this.router.get(AccountPath.Base, this.getAllAccounts);
+        this.router.get(AccountPath.Base, this.getAllAccounts, this.getAllAccountsResponse);
         this.router.get(AccountPath.ByUsername, this.getAccount);
         this.router.post(AccountPath.Base, this.addAccount);
         this.router.delete(AccountPath.ByUsername, this.deleteAccount);
         this.router.patch(AccountPath.ByUsername, this.updateAccount);
     }
-    getAllAccounts(req, res) {
+    getAllAccounts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const accounts = yield this.accountManager.getAccounts();
+            // let accounts = undefined;
             try {
                 console.log("getAllAccounts is read");
+                // accounts = await this.accountManager.getAccounts();
+                const accounts = yield AccountManager_1.getAccounts();
                 res.sendStatus(200).send(accounts);
             }
             catch (error) {
                 res.sendStatus(500).send(error);
             }
+            next();
+            ////Problem with this.accountManager.getAccounts() or calling a method on the manager or even here!! It is not working!!
+            ////Direct way works
+            // let allAccounts = undefined;
+            // try {
+            //   console.log("getAccounts is read in accountManager");
+            //   allAccounts = await Account.find();
+            //   res.status(200).send(allAccounts);
+            // } catch (error) {
+            //   console.error(error);
+            // }
+        });
+    }
+    getAllAccountsResponse(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (req, res) => {
+                res.status(200).send("getAllAccountsResponse");
+            };
         });
     }
     getAccount(req, res) {

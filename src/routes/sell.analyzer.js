@@ -13,8 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-// import { getsAllCurrencyData } from "./marketData.controller";
-const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
 const MarketDataManager_1 = __importDefault(require("../managers/MarketDataManager"));
 var SellAnalyzerPath;
 (function (SellAnalyzerPath) {
@@ -25,7 +23,7 @@ class SellAnalyzer {
     // accountControllerInstance = new AccountController();
     constructor() {
         this.router = express_1.default.Router();
-        this.accountManager = new AccountManager_1.default();
+        // accountManager = new AccountManager();
         this.marketDataManager = new MarketDataManager_1.default();
         this.setupRoutes();
     }
@@ -70,7 +68,7 @@ class SellAnalyzer {
             let account = undefined;
             const { username } = req.params;
             try {
-                account = yield this.accountManager.getAccount(username);
+                // account = await this.accountManager.getAccount(username);
                 res &&
                     res.status(200).json(account);
                 console.log("accountList is", account);

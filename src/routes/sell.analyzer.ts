@@ -12,7 +12,7 @@ enum SellAnalyzerPath {
 }
 export default class SellAnalyzer {
   public router = express.Router();
-  accountManager = new AccountManager();
+  // accountManager = new AccountManager();
   marketDataManager = new MarketDataManager();
   // accountControllerInstance = new AccountController();
 
@@ -72,7 +72,7 @@ export default class SellAnalyzer {
     let account = undefined;
     const { username } = req.params;
     try {
-      account = await this.accountManager.getAccount(username);
+      // account = await this.accountManager.getAccount(username);
       res &&
         res.status(200).json(account);
       console.log("accountList is", account);

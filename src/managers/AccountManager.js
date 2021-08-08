@@ -12,7 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getAccounts = void 0;
 const Account_1 = __importDefault(require("../models/Account"));
+function getAccounts() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let allAccounts = undefined;
+        try {
+            console.log("getAccounts is read in getAccounts !");
+            allAccounts = yield Account_1.default.find();
+        }
+        catch (error) {
+            console.error(error);
+        }
+        return allAccounts;
+    });
+}
+exports.getAccounts = getAccounts;
 class AccountManager {
     constructor() {
     }
@@ -27,11 +42,15 @@ class AccountManager {
             try {
                 console.log("getAccounts is read in accountManager");
                 allAccounts = yield Account_1.default.find();
+                if (allAccounts === undefined) {
+                    return undefined;
+                }
+                return allAccounts;
             }
             catch (error) {
                 console.error(error);
             }
-            return allAccounts;
+            // return allAccounts;
         });
     }
     authorizeAccount(username, password) {

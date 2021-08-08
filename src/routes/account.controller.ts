@@ -1,7 +1,9 @@
 import express, { Request, Response } from "express";
 import { IAccount } from "../models/Account";
 import { IController } from "../types";
-import AccountManager from "../managers/AccountManager";
+import AccountManager,{getAccounts} from "../managers/AccountManager";
+import { resolvePtr } from "dns";
+import Account from "../models/Account";
 
 enum AccountPath {
   Base = "/",
@@ -12,16 +14,16 @@ export default class AccountController implements IController {
   // accountManager = new AccountManager();
   public router = express.Router();
   // accountManager = new AccountManager();
-    accountManager: AccountManager;
+  accountManager = new AccountManager();
   constructor() {
     this.setupRoutes();
-    this.accountManager = new AccountManager();
+    // this.accountManager = new AccountManager();
   }
 
   setupRoutes() {
     this.router.get(AccountPath.Base, this.getAllAccounts);
 
-    this.router.get( AccountPath.ByUsername, this.getAccount);
+    this.router.get(AccountPath.ByUsername, this.getAccount);
 
     this.router.post(AccountPath.Base, this.addAccount);
 
@@ -32,16 +34,37 @@ export default class AccountController implements IController {
 
 
   async getAllAccounts(req: Request, res: Response) {
-    
+    // let accounts = undefined;
     try {
       console.log("getAllAccounts is read");
-      const accounts = await this.accountManager.getAccounts();
+      // accounts = await this.accountManager.getAccounts();
+      const accounts = await getAccounts();
       res.sendStatus(200).send(accounts);
     } catch (error) {
       res.sendStatus(500).send(error);
     }
-    
+
+    ////Problem with this.accountManager.getAccounts() or calling a method on the manager or even here!! It is not working!!
+    //TODO: searrch for the error around the express router and middleware functions
+    ////Direct way works
+    // let allAccounts = undefined;
+    // try {
+    //   console.log("getAccounts is read in accountManager");
+    //   allAccounts = await Account.find();
+    //   res.status(200).send(allAccounts);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   }
+
+  //  async getAllAccountsResponse(req: Request, res: Response) {
+
+  //     return (req: Request, res: Response) => {
+  //       res.status(200).send("getAllAccountsResponse");
+  //     };
+  //   }
+
+
 
   async getAccount(req: Request, res: Response) {
     const { username } = req.params;

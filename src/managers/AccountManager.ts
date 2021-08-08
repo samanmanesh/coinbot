@@ -1,10 +1,22 @@
 import Account, { IAccount } from "../models/Account";
 
+
+export async function  getAccounts(): Promise<IAccount[] | undefined> {
+  let allAccounts = undefined;
+  try {
+    console.log("getAccounts is read in getAccounts !");
+    allAccounts = await Account.find();
+  } catch (error) {
+    console.error(error);
+  }
+  return allAccounts;
+}
+
 export default class AccountManager {
   constructor() {
   }
 
-  public async getAccount(username: string) {
+  public async getAccount(username: string): Promise<IAccount | undefined> {
     return Account.findOne({ username });
   }
 
@@ -13,16 +25,20 @@ export default class AccountManager {
     try {
       console.log("getAccounts is read in accountManager");
       allAccounts = await Account.find();
+      if (allAccounts === undefined) {
+        return undefined;
+      }
+      return allAccounts;
     } catch (error) {
       console.error(error);
     }
-    return allAccounts;
+    // return allAccounts;
   }
 
   public async authorizeAccount(username: string, password?: string): Promise<boolean | undefined> {
-    
+
     const fromDB = await this.getAccount(username);
-    
+
     if (fromDB === undefined) {
       return undefined;
     }
@@ -53,7 +69,7 @@ export default class AccountManager {
     }
     return account;
   }
-  
+
   public async deleteAccount(username: string): Promise<void> {
     try {
       await Account.remove({ username });
