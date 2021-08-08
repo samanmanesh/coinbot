@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { IAccount } from "../models/Account";
 import { IController } from "../types";
-import AccountManager,{getAccounts} from "../managers/AccountManager";
+import AccountManager from "../managers/AccountManager";
 import { resolvePtr } from "dns";
 import Account from "../models/Account";
 
@@ -21,9 +21,9 @@ export default class AccountController implements IController {
   }
 
   setupRoutes() {
-    this.router.get(AccountPath.Base, this.getAllAccounts);
+    this.router.get(AccountPath.Base, this.getAllAccounts.bind(this));
 
-    this.router.get(AccountPath.ByUsername, this.getAccount);
+    this.router.get(AccountPath.ByUsername, this.getAccount.bind(this));
 
     this.router.post(AccountPath.Base, this.addAccount);
 
@@ -34,19 +34,19 @@ export default class AccountController implements IController {
 
 
   async getAllAccounts(req: Request, res: Response) {
-    // let accounts = undefined;
-    try {
+    let accounts = undefined;
+    // try {
       console.log("getAllAccounts is read");
-      // accounts = await this.accountManager.getAccounts();
-      const accounts = await getAccounts();
-      res.sendStatus(200).send(accounts);
-    } catch (error) {
-      res.sendStatus(500).send(error);
-    }
+      accounts = await this.accountManager.getAccounts();
+      // const accounts = await getAccounts();
+      res.status(200).send(accounts);
+    // } catch (error) {
+    //   res.sendStatus(500).send(error);
+    // }
 
     ////Problem with this.accountManager.getAccounts() or calling a method on the manager or even here!! It is not working!!
-    //TODO: searrch for the error around the express router and middleware functions
-    ////Direct way works
+    //TODO: search for the error around the express router and middleware functions
+    ////Direc `t way works
     // let allAccounts = undefined;
     // try {
     //   console.log("getAccounts is read in accountManager");

@@ -12,24 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAccounts = void 0;
 const Account_1 = __importDefault(require("../models/Account"));
-function getAccounts() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let allAccounts = undefined;
-        try {
-            console.log("getAccounts is read in getAccounts !");
-            allAccounts = yield Account_1.default.find();
-        }
-        catch (error) {
-            console.error(error);
-        }
-        return allAccounts;
-    });
-}
-exports.getAccounts = getAccounts;
+// export async function  getAccounts(): Promise<IAccount[] | undefined> {
+//   let allAccounts = undefined;
+//   try {
+//     console.log("getAccounts is read in getAccounts !");
+//     allAccounts = await Account.find();
+//   } catch (error) {
+//     console.error(error);
+//   }
+//   return allAccounts;
+// }
 class AccountManager {
     constructor() {
+        console.log('initialized account manager');
     }
     getAccount(username) {
         return __awaiter(this, void 0, void 0, function* () {

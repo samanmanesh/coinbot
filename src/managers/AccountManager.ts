@@ -1,19 +1,20 @@
 import Account, { IAccount } from "../models/Account";
 
 
-export async function  getAccounts(): Promise<IAccount[] | undefined> {
-  let allAccounts = undefined;
-  try {
-    console.log("getAccounts is read in getAccounts !");
-    allAccounts = await Account.find();
-  } catch (error) {
-    console.error(error);
-  }
-  return allAccounts;
-}
+// export async function  getAccounts(): Promise<IAccount[] | undefined> {
+//   let allAccounts = undefined;
+//   try {
+//     console.log("getAccounts is read in getAccounts !");
+//     allAccounts = await Account.find();
+//   } catch (error) {
+//     console.error(error);
+//   }
+//   return allAccounts;
+// }
 
 export default class AccountManager {
   constructor() {
+    console.log('initialized account manager');
   }
 
   public async getAccount(username: string): Promise<IAccount | undefined> {
