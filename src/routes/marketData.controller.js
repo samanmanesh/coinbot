@@ -30,18 +30,68 @@ class MarketDataController {
         node_cron_1.default.schedule("* * * * *", () => this.refreshMarketData());
     }
     setupRoutes() {
-        this.router.get(MarketDataPath.Base, this.refreshMarketData);
+        this.router.get(MarketDataPath.Base, (req, res) => this.refreshMarketData(req, res));
     }
     refreshMarketData(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            let marketDataFromApi = undefined;
+            let updatedMarketData = undefined;
+            let marketDataFromDB = undefined;
             // const marketData = await this.marketDataManager.getMarketData();
-            const marketData = yield this.marketDataManager.getMarketDataFromAPI();
-            if (!marketData) {
-                res && res.status(500).json({ message: "No data found" });
-                return;
+            // try {
+            //   marketDataFromApi = await this.marketDataManager.getMarketDataFromAPI();
+            //   if (!marketDataFromApi) {
+            //     res && res.status(500).json({ message: "No data found" });
+            //     throw new Error("No data found");
+            //     return;
+            //   }
+            // } catch (error) {
+            // }
+            //  res && 
+            //   res.status(200).json(marketDataFromApi);
+            // if (!marketDataFromApi) {
+            //   res && res.status(500).json({ message: "No data found" });
+            //   throw new Error("No data found");
+            //   return;
+            // }
+            try {
+                try {
+                    marketDataFromApi = yield this.marketDataManager.getMarketDataFromAPI();
+                    if (!marketDataFromApi) {
+                        // res && res.status(500).json({ message: "No data found" });
+                        // throw new Error("No data found");
+                        return;
+                    }
+                }
+                catch (error) {
+                    res && res.status(500).json({ message: "No data found" });
+                    throw new Error("No data found");
+                }
+                ///////////////////
+                try {
+                    updatedMarketData = yield this.marketDataManager.updateMarketData(marketDataFromApi);
+                }
+                catch (error) {
+                    res && res.status(500).json({ message: "No data found" });
+                }
+                // res && res.status(200).json(updatedMarketData);
+                //////////////////
+                try {
+                    marketDataFromDB = yield this.marketDataManager.getMarketData();
+                    if (marketDataFromDB === undefined)
+                        return;
+                    //   throw new Error("No data found in DB");
+                    res && res.status(200).json(marketDataFromDB);
+                }
+                catch (error) {
+                    res && res.status(500).json({ message: "No data found" });
+                    throw new Error("No data found in DB");
+                }
             }
-            yield this.marketDataManager.updateMarketData(marketData);
-            //   //Todo must check if there is any data update that one if not should make a new one`
+            catch (error) {
+                res &&
+                    res.status(500).send({ message: error.message });
+            }
         });
     }
 }

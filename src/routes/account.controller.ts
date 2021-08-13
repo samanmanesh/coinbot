@@ -21,49 +21,31 @@ export default class AccountController implements IController {
   }
 
   setupRoutes() {
-    this.router.get(AccountPath.Base, this.getAllAccounts.bind(this));
+    this.router.get(AccountPath.Base,
+      (req, res) => this.getAllAccounts(req, res));
 
     this.router.get(AccountPath.ByUsername, this.getAccount.bind(this));
 
-    this.router.post(AccountPath.Base, this.addAccount);
+    this.router.post(AccountPath.Base, (req, res) => this.addAccount(req, res));
 
-    this.router.delete(AccountPath.ByUsername, this.deleteAccount);
+    this.router.delete(AccountPath.ByUsername, (req, res) => this.deleteAccount(req, res));
 
-    this.router.patch(AccountPath.ByUsername, this.updateAccount);
+    this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
   }
 
 
   async getAllAccounts(req: Request, res: Response) {
     let accounts = undefined;
-    // try {
+    try {
       console.log("getAllAccounts is read");
       accounts = await this.accountManager.getAccounts();
-      // const accounts = await getAccounts();
       res.status(200).send(accounts);
-    // } catch (error) {
-    //   res.sendStatus(500).send(error);
-    // }
+    } catch (error) {
+      res.status(500).send(error);
+    }
 
-    ////Problem with this.accountManager.getAccounts() or calling a method on the manager or even here!! It is not working!!
-    //TODO: search for the error around the express router and middleware functions
-    ////Direc `t way works
-    // let allAccounts = undefined;
-    // try {
-    //   console.log("getAccounts is read in accountManager");
-    //   allAccounts = await Account.find();
-    //   res.status(200).send(allAccounts);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+
   }
-
-  //  async getAllAccountsResponse(req: Request, res: Response) {
-
-  //     return (req: Request, res: Response) => {
-  //       res.status(200).send("getAllAccountsResponse");
-  //     };
-  //   }
-
 
 
   async getAccount(req: Request, res: Response) {

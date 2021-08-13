@@ -1,24 +1,24 @@
 import Account, { IAccount } from "../models/Account";
 
-
-// export async function  getAccounts(): Promise<IAccount[] | undefined> {
-//   let allAccounts = undefined;
-//   try {
-//     console.log("getAccounts is read in getAccounts !");
-//     allAccounts = await Account.find();
-//   } catch (error) {
-//     console.error(error);
-//   }
-//   return allAccounts;
-// }
-
 export default class AccountManager {
   constructor() {
-    console.log('initialized account manager');
   }
 
   public async getAccount(username: string): Promise<IAccount | undefined> {
-    return Account.findOne({ username });
+    let requiredAccount = undefined;
+    try {
+      requiredAccount =  Account.findOne({ username });
+      if (requiredAccount === undefined) {
+        return undefined;
+      }
+      
+
+    } catch (error) {
+      throw new Error(error);
+    }
+
+    return requiredAccount;
+    // return Account.findOne({ username });
   }
 
   public async getAccounts(): Promise<IAccount[] | undefined> {
@@ -29,11 +29,12 @@ export default class AccountManager {
       if (allAccounts === undefined) {
         return undefined;
       }
-      return allAccounts;
+      // return allAccounts;
     } catch (error) {
       console.error(error);
+      throw new Error(error);
     }
-    // return allAccounts;
+    return allAccounts;
   }
 
   public async authorizeAccount(username: string, password?: string): Promise<boolean | undefined> {
@@ -43,7 +44,7 @@ export default class AccountManager {
     if (fromDB === undefined) {
       return undefined;
     }
-    // if (fromDB) return true;
+    if (fromDB) return true;
 
 
     // if (password === undefined) {
@@ -67,6 +68,8 @@ export default class AccountManager {
       await Account.updateOne({ username }, account);
     } catch (error) {
       console.error(error);
+      throw new Error(error);
+      
     }
     return account;
   }

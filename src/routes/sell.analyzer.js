@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+// import { getsAllCurrencyData } from "./marketData.controller";
+const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
 const MarketDataManager_1 = __importDefault(require("../managers/MarketDataManager"));
 var SellAnalyzerPath;
 (function (SellAnalyzerPath) {
@@ -23,13 +25,13 @@ class SellAnalyzer {
     // accountControllerInstance = new AccountController();
     constructor() {
         this.router = express_1.default.Router();
-        // accountManager = new AccountManager();
+        this.accountManager = new AccountManager_1.default();
         this.marketDataManager = new MarketDataManager_1.default();
         this.setupRoutes();
     }
     setupRoutes() {
-        this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler);
-        this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler);
+        this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler.bind(this));
+        this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler.bind(this));
     }
     analyze(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -68,16 +70,18 @@ class SellAnalyzer {
             let account = undefined;
             const { username } = req.params;
             try {
-                // account = await this.accountManager.getAccount(username);
+                account = yield this.accountManager.getAccount(username);
                 res &&
                     res.status(200).json(account);
+                if (!account)
+                    res.status(400).json({ message: "Account not found" });
                 console.log("accountList is", account);
             }
             catch (error) {
                 res &&
                     res.status(400).json({ message: error.message });
             }
-            const currencyData = this.getCurrencyDataHandler();
+            // const currencyData = this.getCurrencyDataHandler();
         });
     }
     getCurrencyDataHandler() {

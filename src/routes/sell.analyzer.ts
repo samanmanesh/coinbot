@@ -12,7 +12,7 @@ enum SellAnalyzerPath {
 }
 export default class SellAnalyzer {
   public router = express.Router();
-  // accountManager = new AccountManager();
+  accountManager = new AccountManager();
   marketDataManager = new MarketDataManager();
   // accountControllerInstance = new AccountController();
 
@@ -24,8 +24,8 @@ export default class SellAnalyzer {
 
   setupRoutes() {
 
-    this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler);
-    this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler);
+    this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler.bind(this));
+    this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler.bind(this));
   }
 
   public async analyze(req: Request, res: Response) {
@@ -72,21 +72,22 @@ export default class SellAnalyzer {
     let account = undefined;
     const { username } = req.params;
     try {
-      // account = await this.accountManager.getAccount(username);
+      account = await this.accountManager.getAccount(username);
       res &&
-        res.status(200).json(account);
+      res.status(200).json(account);
+      if (!account) res.status(400).json({ message: "Account not found" });
       console.log("accountList is", account);
     } catch (error) {
       res &&
         res.status(400).json({ message: error.message });
     }
 
-    const currencyData = this.getCurrencyDataHandler();
+    // const currencyData = this.getCurrencyDataHandler();
 
   }
 
   async getCurrencyDataHandler() {
-    
+
     let currencyData = undefined;
     // Getting the Currency data From DB
     try {

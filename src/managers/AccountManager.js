@@ -13,23 +13,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Account_1 = __importDefault(require("../models/Account"));
-// export async function  getAccounts(): Promise<IAccount[] | undefined> {
-//   let allAccounts = undefined;
-//   try {
-//     console.log("getAccounts is read in getAccounts !");
-//     allAccounts = await Account.find();
-//   } catch (error) {
-//     console.error(error);
-//   }
-//   return allAccounts;
-// }
 class AccountManager {
     constructor() {
-        console.log('initialized account manager');
     }
     getAccount(username) {
         return __awaiter(this, void 0, void 0, function* () {
-            return Account_1.default.findOne({ username });
+            let requiredAccount = undefined;
+            try {
+                requiredAccount = Account_1.default.findOne({ username });
+                if (requiredAccount === undefined) {
+                    return undefined;
+                }
+            }
+            catch (error) {
+                throw new Error(error);
+            }
+            return requiredAccount;
+            // return Account.findOne({ username });
         });
     }
     getAccounts() {
@@ -41,12 +41,13 @@ class AccountManager {
                 if (allAccounts === undefined) {
                     return undefined;
                 }
-                return allAccounts;
+                // return allAccounts;
             }
             catch (error) {
                 console.error(error);
+                throw new Error(error);
             }
-            // return allAccounts;
+            return allAccounts;
         });
     }
     authorizeAccount(username, password) {
@@ -55,7 +56,8 @@ class AccountManager {
             if (fromDB === undefined) {
                 return undefined;
             }
-            // if (fromDB) return true;
+            if (fromDB)
+                return true;
             // if (password === undefined) {
             //   return fromDB.password === undefined;
             // }
@@ -80,6 +82,7 @@ class AccountManager {
             }
             catch (error) {
                 console.error(error);
+                throw new Error(error);
             }
             return account;
         });
