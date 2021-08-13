@@ -4,7 +4,7 @@ import { ICoinMarketCapCoin, ICoinData } from "../types";
 
 export default class MarketDataManager {
 
-  public async getMarketDataFromAPI(): Promise<IMarketData | undefined> {
+  public async getMarketDataFromAPI( ): Promise<IMarketData | undefined> {
     let marketData: IMarketData | undefined;
     const config: AxiosRequestConfig = {
       params: {

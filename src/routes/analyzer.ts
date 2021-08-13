@@ -10,7 +10,7 @@ enum SellAnalyzerPath {
   Base = "/",
   ByUsername = "/:username",
 }
-export default class SellAnalyzer {
+export default class Analyzer {
   public router = express.Router();
   accountManager = new AccountManager();
   marketDataManager = new MarketDataManager();
