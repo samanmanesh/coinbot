@@ -11,13 +11,10 @@ enum AccountPath {
 }
 
 export default class AccountController implements IController {
-  // accountManager = new AccountManager();
   public router = express.Router();
-  // accountManager = new AccountManager();
   accountManager = new AccountManager();
   constructor() {
     this.setupRoutes();
-    // this.accountManager = new AccountManager();
   }
 
   setupRoutes() {
@@ -34,7 +31,7 @@ export default class AccountController implements IController {
   }
 
 
-  async getAllAccounts(req: Request, res: Response) {
+  async getAllAccounts(req: Request, res: Response) { 
     let accounts = undefined;
     try {
       console.log("getAllAccounts is read");
@@ -51,7 +48,6 @@ export default class AccountController implements IController {
   async getAccount(req: Request, res: Response) {
     const { username } = req.params;
     try {
-      // const account = await this.accountManager.getAccount(username);
       const account = await this.accountManager.getAccount(username);
       res.status(200).json(account);
     } catch (error) {
@@ -61,7 +57,6 @@ export default class AccountController implements IController {
 
   async addAccount(req: Request, res: Response) {
     const username = req?.body?.username ?? "";
-    // const fromDB = await this.accountManager.getAccount(username);
     const fromDB = await this.accountManager.authorizeAccount(username);
     if (fromDB) {
       res.status(404).send("User already exists");
@@ -114,23 +109,4 @@ export default class AccountController implements IController {
     }
   }
 
-
-  // Helper function
-  // async getAccountByUsernameMiddleware(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction
-  // ) {
-  //   let account = null;
-  //   try {
-  //     account = await Account.findOne({ username: req.params.username });
-  //     if (account === null) {
-  //       return res.status(404).json({ message: "Account not found" });
-  //     }
-  //   } catch (error) {
-  //     return res.status(500).json({ message: error.message });
-  //   }
-  //   res.account = account;
-  //   next();
-  // }
 }
