@@ -1,5 +1,4 @@
 import express, { Application, Request, Response } from "express";
-import mongoose from "mongoose";
 import { IRoute } from "../types";
 export default class App {
   public app: Application = express();
@@ -7,8 +6,6 @@ export default class App {
   constructor(routes: IRoute[]) {
     this.setupMiddleware();
     this.setupRoutes(routes);
-    // this.setupMongoose();
-
     this.app.get("/", (req: Request, res: Response) => {
       res.send(`'Hello world'`);
     });
@@ -31,15 +28,4 @@ export default class App {
     });
   }
 
-  // setupMongoose() {
-  //   try {
-  //     mongoose.connect(
-  //       process.env.DB_CONNECTION_URI ?? "",
-  //       // { useNewUrlParser:  useUnifiedTopology: true },
-  //       () => console.log("Connected to the DB")
-  //     );
-  //   } catch (e) {
-  //     console.log("could not connect");
-  //   }
-  // }
 }
