@@ -1,5 +1,5 @@
+import { AnalyzerManager } from './../managers/analyzerManager';
 import express, { Request, Response } from "express";
-import MarketData, { IMarketData } from "../models/MarketData";
 import AccountManager from "../managers/AccountManager";
 import MarketDataManager from "../managers/MarketDataManager";
 
@@ -11,7 +11,7 @@ export default class Analyzer {
   public router = express.Router();
   accountManager = new AccountManager();
   marketDataManager = new MarketDataManager();
-
+  analyzerManager = new AnalyzerManager();
 
   constructor() {
     this.setupRoutes();
@@ -20,9 +20,9 @@ export default class Analyzer {
 
   setupRoutes() {
 
-    // this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler.bind(this));
-    // this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler.bind(this));
-    
+    // this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsData.bind(this));
+    // this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyData.bind(this));
+
     // this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
   }
 
@@ -32,15 +32,51 @@ export default class Analyzer {
   }
 
 
+
+  async getPreferredCoinsData(req: Request, res: Response) {
+    let account = undefined;
+    let currencyData = undefined;
+    let preferredCoinsData = undefined;
+
+    try {
+
+      account = await this.getAccountsData(req, res);
+
+    } catch (error) {
+      console.error("error is", error);
+    }
+
+
+    try { 
+      currencyData = await this.getCurrencyData();
+    } catch (error) { 
+      console.error("error is", error);
+    }
+
+    try {
+      preferredCoinsData = await this.analyzerManager.getPreferredCoinsData();
+      console.log("preferredCoinsData is", preferredCoinsData);
+      if (!preferredCoinsData) {
+        return;
+      }
+
+    } catch (error) {
+      console.log("error is", error);
+    }
+
+    return preferredCoinsData;
+
+  }
+
   // Getting the data related to accounts from data base
-  async getAccountsDataHandler(req: Request, res: Response) {
-    
+  async getAccountsData(req: Request, res: Response) {
+
     let account = undefined;
     const { username } = req.params;
     try {
       account = await this.accountManager.getAccount(username);
       res &&
-      res.status(200).json(account);
+        res.status(200).json(account);
       if (!account) res.status(400).json({ message: "Account not found" });
       console.log("accountList is", account);
     } catch (error) {
@@ -51,7 +87,7 @@ export default class Analyzer {
   }
 
   // Getting the Currency data From DB
-  async getCurrencyDataHandler() {
+  async getCurrencyData() {
 
     let currencyData = undefined;
     try {
