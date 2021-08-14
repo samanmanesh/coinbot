@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const account_controller_1 = __importDefault(require("./routes/account.controller"));
 const index_1 = __importDefault(require("./app/index"));
 const marketData_controller_1 = __importDefault(require("./routes/marketData.controller"));
-const sell_analyzer_1 = __importDefault(require("./routes/sell.analyzer"));
+const analyzer_1 = __importDefault(require("./routes/analyzer"));
 const routes = [
     {
         path: "/accounts",
@@ -17,8 +17,8 @@ const routes = [
         controller: new marketData_controller_1.default(),
     },
     {
-        path: "/sell-analyzer",
-        controller: new sell_analyzer_1.default(),
+        path: "/analyzer",
+        controller: new analyzer_1.default(),
     },
 ];
 const app = new index_1.default(routes);

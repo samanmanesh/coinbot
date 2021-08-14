@@ -6,7 +6,7 @@ import AccountManager from "../managers/AccountManager";
 import e from "express";
 import MarketDataManager from "../managers/MarketDataManager";
 
-enum SellAnalyzerPath {
+enum AnalyzerPath {
   Base = "/",
   ByUsername = "/:username",
 }
@@ -24,8 +24,9 @@ export default class Analyzer {
 
   setupRoutes() {
 
-    this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler.bind(this));
-    this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler.bind(this));
+    // this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler.bind(this));
+    // this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler.bind(this));
+    // this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
   }
 
   public async analyze(req: Request, res: Response) {
@@ -103,6 +104,23 @@ export default class Analyzer {
 
     return currencyData;
   }
+
+
+  // async  getMarketDataTestApi(req: Request, res: Response) {
+  //   let marketData = undefined;
+  //   try { 
+  //     marketData = await this.marketDataManager.getMarketDataFromAPI();
+  //     // console.log("Market data is", marketData);
+  //     if (!marketData) {
+  //       return;
+  //     }
+  //     res.status(200).send(marketData);
+  //   }catch (error) {
+  //     // console.error("error is", error);
+  //     res.status(500).send(error);
+  //   }
+
+  // }
 
 
 }

@@ -6,6 +6,8 @@ export default class MarketDataManager {
 
   public async getMarketDataFromAPI( ): Promise<IMarketData | undefined> {
     let marketData: IMarketData | undefined;
+    
+    // I could not use quotes for asking specific coins data due to the Api limit
     const config: AxiosRequestConfig = {
       params: {
         start: 1,

@@ -18,6 +18,7 @@ class MarketDataManager {
     getMarketDataFromAPI() {
         return __awaiter(this, void 0, void 0, function* () {
             let marketData;
+            // I could not use quotes for asking specific coins data due to the Api limit
             const config = {
                 params: {
                     start: 1,
