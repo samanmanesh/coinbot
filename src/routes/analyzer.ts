@@ -1,4 +1,4 @@
-import { AnalyzerManager } from './../managers/analyzerManager';
+import  AnalyzerManager  from '../managers/AnalyzerManager';
 import express, { Request, Response } from "express";
 import AccountManager from "../managers/AccountManager";
 import MarketDataManager from "../managers/MarketDataManager";
@@ -53,16 +53,16 @@ export default class Analyzer {
       console.error("error is", error);
     }
 
-    try {
-      preferredCoinsData = await this.analyzerManager.getPreferredCoinsData();
-      console.log("preferredCoinsData is", preferredCoinsData);
-      if (!preferredCoinsData) {
-        return;
-      }
-
-    } catch (error) {
-      console.log("error is", error);
+    if (!account || !currencyData) {
+      return;
     }
+
+    // try {
+    //   preferredCoinsData = await this.analyzerManager.preferredCoinsHandler(account, currencyData);
+    //   console.log("preferredCoinsData is", preferredCoinsData);
+    // } catch (error) {
+    //   console.log("error is", error);
+    // }
 
     return preferredCoinsData;
 
@@ -83,7 +83,7 @@ export default class Analyzer {
       res &&
         res.status(400).json({ message: error.message });
     }
-
+    return account;
   }
 
   // Getting the Currency data From DB

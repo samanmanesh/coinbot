@@ -11,10 +11,10 @@ export default class AnalyzerManager {
     } 
 
 
-    public async preferredCoinsHandlers( account: IAccount, marketData: IMarketData) {
+    // public async preferredCoinsHandler( account: IAccount, marketData: IMarketData) {
 
-        const userPreferredCoins = account.preferred_coins;
-        const marketDataCoins = marketData.coins;
+    //     const userPreferredCoins = account.preferred_coins;
+    //     const marketDataCoins = marketData.coins;
         
         
         // const preferredCoinsHandler = new PreferredCoinsHandler();
@@ -26,7 +26,7 @@ export default class AnalyzerManager {
         // }
 
 
-    }
+    // }
 
 
 }
