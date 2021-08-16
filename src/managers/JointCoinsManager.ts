@@ -43,10 +43,6 @@ export default class JointCoinsManager {
 
   public async updateJointCoin(coinSymbol: string, newJointCoin: ICoins): Promise<ICoins | undefined> {
 
-    // const preJointCoin = await this.getJointCoin(coinSymbol);
-    // if (!preJointCoin) return undefined;
-    // const updatedJointCoin = { ...preJointCoin, newJointCoin };
-
     try {
       await JointCoins.updateOne({ coinSymbol }, newJointCoin);
       ;
@@ -55,27 +51,27 @@ export default class JointCoinsManager {
     }
     return newJointCoin;
   }
-  
+
   public async addAccountToJointCoin(coinSymbol: string, account: string) {
     try {
-      await JointCoins.addToArray({coinSymbol}, "accounts", account);
+      await JointCoins.addToArray({ coinSymbol }, "accounts", account);
     } catch (error) {
       console.error(error.message);
     }
-  }  
+  }
 
   public async removeAccountFromJointCoin(coinSymbol: string, account: string) {
     try {
-      await JointCoins.removeFromArray({coinSymbol}, "accounts", account);
+      await JointCoins.removeFromArray({ coinSymbol }, "accounts", account);
     } catch (error) {
       console.error(error.message);
     }
-  }  
+  }
 
 
-  public async updateJointCoinAccount(coinSymbol: string, newAccount: string)  {
+  // public async updateJointCoinAccount(coinSymbol: string, newAccount: string) {
 
-      
+
     // const preJointCoin = await this.getJointCoin(coinSymbol);
     // if (!preJointCoin) return;
     // const accountsSet = new Set(preJointCoin.accounts);
@@ -84,16 +80,13 @@ export default class JointCoinsManager {
     // console.log("accountArraySet is" , accountsArray)
     // const newJointCoin = { ...preJointCoin, accounts: accountsArray };
     ///////////////////////////////
-    
-    await JointCoins.addToArray({coinSymbol}, "accounts", newAccount);
 
-    try {
-      // return await JointCoins.addToArray({ coinSymbol }, accountArraySet);
-      //  return await JointCoins.addToArray({ coinSymbol }, newAccount);
-    }
-    catch (error) {
-      console.error(error.message);
-    }
+    // try {
+    //   await JointCoins.addToArray({ coinSymbol }, "accounts", newAccount);
+    // }
+    // catch (error) {
+    //   console.error(error.message);
+    // }
 
-  }
+  // }
 }

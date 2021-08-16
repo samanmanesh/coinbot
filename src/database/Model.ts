@@ -15,6 +15,7 @@ class Model<T> {
 
     this.connect();
     this.collectionName = collection;
+
   }
 
   async connect() {

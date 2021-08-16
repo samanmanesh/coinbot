@@ -60,9 +60,6 @@ class JointCoinsManager {
     }
     updateJointCoin(coinSymbol, newJointCoin) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const preJointCoin = await this.getJointCoin(coinSymbol);
-            // if (!preJointCoin) return undefined;
-            // const updatedJointCoin = { ...preJointCoin, newJointCoin };
             try {
                 yield jointCoins_1.default.updateOne({ coinSymbol }, newJointCoin);
                 ;
@@ -87,26 +84,6 @@ class JointCoinsManager {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield jointCoins_1.default.removeFromArray({ coinSymbol }, "accounts", account);
-            }
-            catch (error) {
-                console.error(error.message);
-            }
-        });
-    }
-    updateJointCoinAccount(coinSymbol, newAccount) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // const preJointCoin = await this.getJointCoin(coinSymbol);
-            // if (!preJointCoin) return;
-            // const accountsSet = new Set(preJointCoin.accounts);
-            // accountsSet.add(newAccount);
-            // const accountsArray = Array.from(accountsSet);
-            // console.log("accountArraySet is" , accountsArray)
-            // const newJointCoin = { ...preJointCoin, accounts: accountsArray };
-            ///////////////////////////////
-            yield jointCoins_1.default.addToArray({ coinSymbol }, "accounts", newAccount);
-            try {
-                // return await JointCoins.addToArray({ coinSymbol }, accountArraySet);
-                //  return await JointCoins.addToArray({ coinSymbol }, newAccount);
             }
             catch (error) {
                 console.error(error.message);

@@ -31,7 +31,7 @@ class CommonCoinsController {
         this.router.get(RouteNames.Base, (req, res) => this.getAllCommonCoins(req, res));
         this.router.get(RouteNames.BySymbol, (req, res) => this.getCommonCoin(req, res));
         this.router.delete(RouteNames.BySymbol, (req, res) => this.deleteCommonCoin(req, res));
-        this.router.delete(RouteNames.BySymbolAndUsername, (req, res) => this.deleteUserFromCoin(req, res));
+        this.router.delete(RouteNames.BySymbolAndUsername, (req, res) => this.deleteAccountFromCoin(req, res));
         this.router.put(RouteNames.BySymbol, (req, res) => this.updateCommonCoin(req, res));
         this.router.patch(RouteNames.BySymbolAndUsername, (req, res) => this.updateCommonCoinAccount(req, res));
     }
@@ -84,10 +84,11 @@ class CommonCoinsController {
             }
         });
     }
-    deleteUserFromCoin(req, res) {
+    deleteAccountFromCoin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this.jointCoinsManager.removeAccountFromJointCoin(req.params.symbol, req.params.username);
+                res.status(200).send({ message: "Account removed from coin" });
             }
             catch (error) {
                 res.status(400).json({ message: error.message });
