@@ -91,6 +91,11 @@ class Model {
                 .updateOne(filter, { $set: document });
         });
     }
+    addToArray(filter, document) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.client.db(this.databaseName).collection(this.collectionName).updateOne(filter, { $addToSet: document });
+        });
+    }
     update(filter, document) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.client

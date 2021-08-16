@@ -26,7 +26,8 @@ class AccountManager {
                 }
             }
             catch (error) {
-                throw new Error(error);
+                // throw new Error(error);
+                console.error(error.message);
             }
             return requiredAccount;
             // return Account.findOne({ username });
@@ -45,7 +46,7 @@ class AccountManager {
             }
             catch (error) {
                 console.error(error);
-                throw new Error(error);
+                // throw new Error(error);
             }
             return allAccounts;
         });
@@ -82,7 +83,7 @@ class AccountManager {
             }
             catch (error) {
                 console.error(error);
-                throw new Error(error);
+                // throw new Error(error);
             }
             return account;
         });

@@ -23,6 +23,64 @@ class JointCoinsManager {
             catch (error) {
                 console.error(error.message);
             }
+            return jointCoin;
+        });
+    }
+    getJointCoins() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield jointCoins_1.default.find();
+            }
+            catch (error) {
+                console.error(error.message);
+            }
+        });
+    }
+    getJointCoin(coinSymbol) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let requiredCoin = undefined;
+            try {
+                requiredCoin = yield jointCoins_1.default.findOne({ coinSymbol });
+                return requiredCoin;
+            }
+            catch (error) {
+                console.error(error.message);
+            }
+        });
+    }
+    deleteJointCoin(coinSymbol) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield jointCoins_1.default.remove({ coinSymbol: coinSymbol });
+            }
+            catch (error) {
+                console.error(error.message);
+            }
+        });
+    }
+    updateJointCoin(coinSymbol, newJointCoin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // const preJointCoin = await this.getJointCoin(coinSymbol);
+            // if (!preJointCoin) return undefined;
+            // const updatedJointCoin = { ...preJointCoin, newJointCoin };
+            try {
+                yield jointCoins_1.default.updateOne({ coinSymbol }, newJointCoin);
+                ;
+            }
+            catch (error) {
+                console.error(error.message);
+            }
+            return newJointCoin;
+        });
+    }
+    updateJointCoinAccount(coinSymbol, newAccount) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield jointCoins_1.default.addToArray({ coinSymbol }, newAccount);
+            }
+            catch (error) {
+                console.error(error.message);
+            }
         });
     }
 }
