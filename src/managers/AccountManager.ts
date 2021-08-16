@@ -14,7 +14,9 @@ export default class AccountManager {
       
 
     } catch (error) {
-      throw new Error(error);
+      // throw new Error(error);
+      console.error(error.message);
+      
     }
 
     return requiredAccount;
@@ -32,7 +34,7 @@ export default class AccountManager {
       // return allAccounts;
     } catch (error) {
       console.error(error);
-      throw new Error(error);
+      // throw new Error(error);
     }
     return allAccounts;
   }
@@ -68,7 +70,7 @@ export default class AccountManager {
       await Account.updateOne({ username }, account);
     } catch (error) {
       console.error(error);
-      throw new Error(error);
+      // throw new Error(error);
       
     }
     return account;

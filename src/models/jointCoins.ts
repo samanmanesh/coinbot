@@ -1,7 +1,8 @@
 import model from '../database/Model'
 
 export interface ICoins{
-  coinName: string;
+  coinName?: string;
+  coinSymbol: string;
   accounts: string[];
 }
 

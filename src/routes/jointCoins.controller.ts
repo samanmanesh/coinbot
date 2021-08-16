@@ -23,6 +23,7 @@ export default class CommonCoinsController {
 
     const newCoin : ICoins = {
       coinName: req.body.coinName,
+      coinSymbol: req.body.coinSymbol,
       accounts: req.body.accounts
     }
 
