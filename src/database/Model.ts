@@ -60,14 +60,20 @@ class Model<T> {
   }
 
   public async addToArray(filter: any, arrayName: string, document: any) {
-
     return await this.client
-    .db(this.databaseName)
-    .collection(this.collectionName)
-    .updateOne(filter, { $addToSet: { [arrayName]: document } });
+      .db(this.databaseName)
+      .collection(this.collectionName)
+      .updateOne(filter, { $addToSet: { [arrayName]: document } });
   }
-  
-  
+
+  public async removeFromArray(filter: any, arrayName: string, document: any) {
+    return await this.client
+      .db(this.databaseName)
+      .collection(this.collectionName)
+      .updateOne(filter, { $pull: { [arrayName]: { $in: [document] } } });
+  }
+
+
 
   public async update(filter: any, document: T) {
     return await this.client

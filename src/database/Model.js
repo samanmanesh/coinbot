@@ -91,18 +91,20 @@ class Model {
                 .updateOne(filter, { $set: document });
         });
     }
-    // public async addToArray(filter: any, document: any) {
-    //   return await this.client
-    //   .db(this.databaseName)
-    //   .collection(this.collectionName)
-    //   .update(filter, { $addToSet:  document });
-    // }
-    addToArray(filter, document) {
+    addToArray(filter, arrayName, document) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.client
                 .db(this.databaseName)
                 .collection(this.collectionName)
-                .updateOne(filter, { $set: document });
+                .updateOne(filter, { $addToSet: { [arrayName]: document } });
+        });
+    }
+    removeFromArray(filter, arrayName, document) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.client
+                .db(this.databaseName)
+                .collection(this.collectionName)
+                .updateOne(filter, { $pull: { [arrayName]: { $in: [document] } } });
         });
     }
     update(filter, document) {

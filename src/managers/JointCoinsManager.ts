@@ -55,21 +55,37 @@ export default class JointCoinsManager {
     }
     return newJointCoin;
   }
+  
+  public async addAccountToJointCoin(coinSymbol: string, account: string) {
+    try {
+      await JointCoins.addToArray({coinSymbol}, "accounts", account);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }  
 
-  public async updateJointCoinAccount(coinSymbol: string, newAccount: string): Promise<ICoins | undefined>  {
+  public async removeAccountFromJointCoin(coinSymbol: string, account: string) {
+    try {
+      await JointCoins.removeFromArray({coinSymbol}, "accounts", account);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }  
 
-      // const preJointCoin = await this.getJointCoin(coinSymbol);
-      // if (!preJointCoin) return;
-      // preJointCoin.accounts.push(newAccount);
 
-      // const newJointCoinAccounts = await {...preJointCoin, account: newAccount}; 
-    const preJointCoin = await this.getJointCoin(coinSymbol);
-    if (!preJointCoin) return;
-    const accountsSet = new Set(preJointCoin.accounts);
-    accountsSet.add(newAccount);
-    const accountsArray = Array.from(accountsSet);
-    console.log("accountArraySet is" , accountsArray)
-    const newJointCoin = { ...preJointCoin, accounts: accountsArray };
+  public async updateJointCoinAccount(coinSymbol: string, newAccount: string)  {
+
+      
+    // const preJointCoin = await this.getJointCoin(coinSymbol);
+    // if (!preJointCoin) return;
+    // const accountsSet = new Set(preJointCoin.accounts);
+    // accountsSet.add(newAccount);
+    // const accountsArray = Array.from(accountsSet);
+    // console.log("accountArraySet is" , accountsArray)
+    // const newJointCoin = { ...preJointCoin, accounts: accountsArray };
+    ///////////////////////////////
+    
+    await JointCoins.addToArray({coinSymbol}, "accounts", newAccount);
 
     try {
       // return await JointCoins.addToArray({ coinSymbol }, accountArraySet);

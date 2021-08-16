@@ -73,15 +73,39 @@ class JointCoinsManager {
             return newJointCoin;
         });
     }
+    addAccountToJointCoin(coinSymbol, account) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield jointCoins_1.default.addToArray({ coinSymbol }, "accounts", account);
+            }
+            catch (error) {
+                console.error(error.message);
+            }
+        });
+    }
+    removeAccountFromJointCoin(coinSymbol, account) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield jointCoins_1.default.removeFromArray({ coinSymbol }, "accounts", account);
+            }
+            catch (error) {
+                console.error(error.message);
+            }
+        });
+    }
     updateJointCoinAccount(coinSymbol, newAccount) {
         return __awaiter(this, void 0, void 0, function* () {
-            const preJointCoin = yield this.getJointCoin(coinSymbol);
-            const accountArraySet = new Set();
-            accountArraySet.add(preJointCoin === null || preJointCoin === void 0 ? void 0 : preJointCoin.accounts);
-            accountArraySet.add(newAccount);
-            console.log("accountArraySet is", accountArraySet);
+            // const preJointCoin = await this.getJointCoin(coinSymbol);
+            // if (!preJointCoin) return;
+            // const accountsSet = new Set(preJointCoin.accounts);
+            // accountsSet.add(newAccount);
+            // const accountsArray = Array.from(accountsSet);
+            // console.log("accountArraySet is" , accountsArray)
+            // const newJointCoin = { ...preJointCoin, accounts: accountsArray };
+            ///////////////////////////////
+            yield jointCoins_1.default.addToArray({ coinSymbol }, "accounts", newAccount);
             try {
-                return yield jointCoins_1.default.addToArray({ coinSymbol }, accountArraySet);
+                // return await JointCoins.addToArray({ coinSymbol }, accountArraySet);
                 //  return await JointCoins.addToArray({ coinSymbol }, newAccount);
             }
             catch (error) {

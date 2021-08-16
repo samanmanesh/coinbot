@@ -18,6 +18,7 @@ var RouteNames;
 (function (RouteNames) {
     RouteNames["Base"] = "/";
     RouteNames["BySymbol"] = "/:symbol";
+    RouteNames["BySymbolAndUsername"] = "/:symbol/:username";
 })(RouteNames || (RouteNames = {}));
 class CommonCoinsController {
     constructor() {
@@ -30,8 +31,9 @@ class CommonCoinsController {
         this.router.get(RouteNames.Base, (req, res) => this.getAllCommonCoins(req, res));
         this.router.get(RouteNames.BySymbol, (req, res) => this.getCommonCoin(req, res));
         this.router.delete(RouteNames.BySymbol, (req, res) => this.deleteCommonCoin(req, res));
+        this.router.delete(RouteNames.BySymbolAndUsername, (req, res) => this.deleteUserFromCoin(req, res));
         this.router.put(RouteNames.BySymbol, (req, res) => this.updateCommonCoin(req, res));
-        this.router.patch(RouteNames.BySymbol, (req, res) => this.updateCommonCoinAccount(req, res));
+        this.router.patch(RouteNames.BySymbolAndUsername, (req, res) => this.updateCommonCoinAccount(req, res));
     }
     addNewCommonCoin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -82,6 +84,16 @@ class CommonCoinsController {
             }
         });
     }
+    deleteUserFromCoin(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.jointCoinsManager.removeAccountFromJointCoin(req.params.symbol, req.params.username);
+            }
+            catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+        });
+    }
     updateCommonCoin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -96,8 +108,8 @@ class CommonCoinsController {
     updateCommonCoinAccount(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const updatedCoin = yield this.jointCoinsManager.updateJointCoinAccount(req.params.symbol, req.body.accounts);
-                res.status(200).send(updatedCoin);
+                yield this.jointCoinsManager.addAccountToJointCoin(req.params.symbol, req.params.username);
+                res.sendStatus(200);
             }
             catch (error) {
                 res.status(400).json({ message: error.message });
