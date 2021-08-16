@@ -21,12 +21,9 @@ var AccountPath;
 })(AccountPath || (AccountPath = {}));
 class AccountController {
     constructor() {
-        // accountManager = new AccountManager();
         this.router = express_1.default.Router();
-        // accountManager = new AccountManager();
         this.accountManager = new AccountManager_1.default();
         this.setupRoutes();
-        // this.accountManager = new AccountManager();
     }
     setupRoutes() {
         this.router.get(AccountPath.Base, (req, res) => this.getAllAccounts(req, res));
@@ -52,7 +49,6 @@ class AccountController {
         return __awaiter(this, void 0, void 0, function* () {
             const { username } = req.params;
             try {
-                // const account = await this.accountManager.getAccount(username);
                 const account = yield this.accountManager.getAccount(username);
                 res.status(200).json(account);
             }
@@ -65,7 +61,6 @@ class AccountController {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
         return __awaiter(this, void 0, void 0, function* () {
             const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
-            // const fromDB = await this.accountManager.getAccount(username);
             const fromDB = yield this.accountManager.authorizeAccount(username);
             if (fromDB) {
                 res.status(404).send("User already exists");

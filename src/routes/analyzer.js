@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const AnalyzerManager_1 = __importDefault(require("../managers/AnalyzerManager"));
 const express_1 = __importDefault(require("express"));
-// import { getsAllCurrencyData } from "./marketData.controller";
 const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
 const MarketDataManager_1 = __importDefault(require("../managers/MarketDataManager"));
 var AnalyzerPath;
@@ -22,51 +22,53 @@ var AnalyzerPath;
     AnalyzerPath["ByUsername"] = "/:username";
 })(AnalyzerPath || (AnalyzerPath = {}));
 class Analyzer {
-    // accountControllerInstance = new AccountController();
     constructor() {
         this.router = express_1.default.Router();
         this.accountManager = new AccountManager_1.default();
         this.marketDataManager = new MarketDataManager_1.default();
+        this.analyzerManager = new AnalyzerManager_1.default();
         this.setupRoutes();
     }
     setupRoutes() {
-        // this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsDataHandler.bind(this));
-        // this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyDataHandler.bind(this));
-        this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
+        // this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsData.bind(this));
+        // this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyData.bind(this));
+        // this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
     }
     analyze(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            //Todo first gets the data related to accounts from data base
-            // this.gettingAccountsDataHandler(req , res);
-            // try {
-            //   const accountList = await getAccountByUsername(req, res);
-            //   res &&
-            //     res.status(200).json(accountList);
-            //   console.log("acccountList is", accountList);
-            // } catch (error) {
-            //   res &&
-            //     res.status(400).json({ message: error.message });
-            // }
-            // try {
-            //   const accountList = await getAllAccounts();
-            //   res.status(200).json(accountList);
-            //   console.log("acccountList is", accountList);
-            // } catch (error) {
-            //   res.status(400).json({ message: error.message });
-            // }
-            //Todo then gets the data for preferred_coins for each account from the data base
-            // Getting the Data From DB
-            // this.gettingCurrencyDataHandler(res);
-            // try {
-            //   const coinsSavedData = await getsAllCurrencyData();
-            //   console.log("Coins saved data ", coinsSavedData)
-            //   res.status(200).json(coinsSavedData);
-            // } catch (error) {
-            //   res.status(400).json({ message: error.message });
-            // }
         });
     }
-    getAccountsDataHandler(req, res) {
+    getPreferredCoinsData(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let account = undefined;
+            let currencyData = undefined;
+            let preferredCoinsData = undefined;
+            try {
+                account = yield this.getAccountsData(req, res);
+            }
+            catch (error) {
+                console.error("error is", error);
+            }
+            try {
+                currencyData = yield this.getCurrencyData();
+            }
+            catch (error) {
+                console.error("error is", error);
+            }
+            if (!account || !currencyData) {
+                return;
+            }
+            // try {
+            //   preferredCoinsData = await this.analyzerManager.preferredCoinsHandler(account, currencyData);
+            //   console.log("preferredCoinsData is", preferredCoinsData);
+            // } catch (error) {
+            //   console.log("error is", error);
+            // }
+            return preferredCoinsData;
+        });
+    }
+    // Getting the data related to accounts from data base
+    getAccountsData(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let account = undefined;
             const { username } = req.params;
@@ -82,13 +84,13 @@ class Analyzer {
                 res &&
                     res.status(400).json({ message: error.message });
             }
-            // const currencyData = this.getCurrencyDataHandler();
+            return account;
         });
     }
-    getCurrencyDataHandler() {
+    // Getting the Currency data From DB
+    getCurrencyData() {
         return __awaiter(this, void 0, void 0, function* () {
             let currencyData = undefined;
-            // Getting the Currency data From DB
             try {
                 currencyData = yield this.marketDataManager.getMarketData();
                 console.log("Currency saved data ", currencyData);
@@ -100,23 +102,6 @@ class Analyzer {
                 console.log("error is", error);
             }
             return currencyData;
-        });
-    }
-    getMarketDataTestApi(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let marketData = undefined;
-            try {
-                marketData = yield this.marketDataManager.getMarketDataFromAPI();
-                // console.log("Market data is", marketData);
-                if (!marketData) {
-                    return;
-                }
-                res.status(200).send(marketData);
-            }
-            catch (error) {
-                // console.error("error is", error);
-                res.status(500).send(error);
-            }
         });
     }
 }

@@ -12,5 +12,13 @@ export default class JointCoinsManager {
       }
     }
 
+    public async getJointCoins() {
+      try {
+        return await JointCoins.find();
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+
 
 }

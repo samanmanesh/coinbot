@@ -9,7 +9,6 @@ class App {
         this.app = express_1.default();
         this.setupMiddleware();
         this.setupRoutes(routes);
-        // this.setupMongoose();
         this.app.get("/", (req, res) => {
             res.send(`'Hello world'`);
         });
