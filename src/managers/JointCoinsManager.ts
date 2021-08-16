@@ -56,10 +56,24 @@ export default class JointCoinsManager {
     return newJointCoin;
   }
 
-  public async updateJointCoinAccount(coinSymbol: string, newAccount: string) {
+  public async updateJointCoinAccount(coinSymbol: string, newAccount: string): Promise<ICoins | undefined>  {
+
+      // const preJointCoin = await this.getJointCoin(coinSymbol);
+      // if (!preJointCoin) return;
+      // preJointCoin.accounts.push(newAccount);
+
+      // const newJointCoinAccounts = await {...preJointCoin, account: newAccount}; 
+    const preJointCoin = await this.getJointCoin(coinSymbol);
+    if (!preJointCoin) return;
+    const accountsSet = new Set(preJointCoin.accounts);
+    accountsSet.add(newAccount);
+    const accountsArray = Array.from(accountsSet);
+    console.log("accountArraySet is" , accountsArray)
+    const newJointCoin = { ...preJointCoin, accounts: accountsArray };
 
     try {
-      await JointCoins.addToArray({ coinSymbol }, newAccount);
+      // return await JointCoins.addToArray({ coinSymbol }, accountArraySet);
+      //  return await JointCoins.addToArray({ coinSymbol }, newAccount);
     }
     catch (error) {
       console.error(error.message);

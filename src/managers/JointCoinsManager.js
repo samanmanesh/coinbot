@@ -75,8 +75,14 @@ class JointCoinsManager {
     }
     updateJointCoinAccount(coinSymbol, newAccount) {
         return __awaiter(this, void 0, void 0, function* () {
+            const preJointCoin = yield this.getJointCoin(coinSymbol);
+            const accountArraySet = new Set();
+            accountArraySet.add(preJointCoin === null || preJointCoin === void 0 ? void 0 : preJointCoin.accounts);
+            accountArraySet.add(newAccount);
+            console.log("accountArraySet is", accountArraySet);
             try {
-                yield jointCoins_1.default.addToArray({ coinSymbol }, newAccount);
+                return yield jointCoins_1.default.addToArray({ coinSymbol }, accountArraySet);
+                //  return await JointCoins.addToArray({ coinSymbol }, newAccount);
             }
             catch (error) {
                 console.error(error.message);
