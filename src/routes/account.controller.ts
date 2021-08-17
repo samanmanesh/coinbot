@@ -65,8 +65,9 @@ export default class AccountController implements IController {
 
     const newAccount: IAccount = {
       username: req?.body?.username ?? "",
+      password: req?.body?.password ?? "",
       api: req?.body?.api,
-      preferred_coins: req?.body?.preferred_coins,
+      preferred_coins: [],
       assets: {
         wallet: {
           deposit: req?.body?.assets.wallet.deposit,

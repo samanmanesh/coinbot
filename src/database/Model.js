@@ -109,7 +109,10 @@ class Model {
     }
     removeFromArrays(filter, arrayName, document) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.client.db(this.databaseName).collection(this.collectionName).updateMany(filter, { $unset: { [arrayName]: { $in: [document] } } });
+            return yield this.client
+                .db(this.databaseName)
+                .collection(this.collectionName)
+                .updateOne(filter, { $pull: { [arrayName]: { $in: [document] } } });
         });
     }
     update(filter, document) {

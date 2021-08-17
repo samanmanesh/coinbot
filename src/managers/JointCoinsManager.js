@@ -107,17 +107,16 @@ class JointCoinsManager {
     deleteJointCoinAccount(account) {
         return __awaiter(this, void 0, void 0, function* () {
             // Deleting a deleted account from all coins which hold it
+            console.log(account, "account is");
             const allJointCoins = yield this.getJointCoins();
-            try {
-                allJointCoins &&
-                    (yield allJointCoins.forEach(() => {
-                        jointCoins_1.default.removeFromArrays({}, "accounts", account);
-                    }));
-                console.log("coinsSymbols");
+            console.log(allJointCoins);
+            if (allJointCoins) {
+                for (let coin of allJointCoins) {
+                    coin.accounts = coin.accounts.filter(e => e !== account);
+                    console.log(coin.accounts, "check loop");
+                }
             }
-            catch (error) {
-                console.error(error.message);
-            }
+            // allJointCoins.forEach( data => data.accounts.filter(e => e !== account));
         });
     }
 }

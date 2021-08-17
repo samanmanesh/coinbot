@@ -86,19 +86,29 @@ export default class JointCoinsManager {
   public async deleteJointCoinAccount( account: string) {
 
     // Deleting a deleted account from all coins which hold it
-
-    const allJointCoins = await this.getJointCoins();
-    try {
-      allJointCoins &&
-      await allJointCoins.forEach(() => {
-        JointCoins.removeFromArrays({ }, "accounts", account);
-      })
-      console.log("coinsSymbols");
-    } catch (error) {
-      console.error(error.message);
-    }
+    
 
   }
+    
+    
+  }
+    
+
+    
+  //   try {
+  //     allJointCoins &&
+  //       await allJointCoins.forEach( () => {
+  //         // console.log("coinsSymbols are",coinsSymbols.coinSymbol);
+  //         JointCoins.removeFromArrays({}, "accounts", account);
+  //       });
+      
+      
+  //     // console.log("coinsSymbols");
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+
+  // }
   //   {
   //     for ( let coin of coinsSymbols ) {
   //     try {
@@ -129,4 +139,3 @@ export default class JointCoinsManager {
   // }
 
   // }
-}
