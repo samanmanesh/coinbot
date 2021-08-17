@@ -90,5 +90,35 @@ class JointCoinsManager {
             }
         });
     }
+    addAccountCoinsToJointCoin(coinsSymbols, account) {
+        return __awaiter(this, void 0, void 0, function* () {
+            //for adding the new account to related coins in JointCoins collection
+            try {
+                yield coinsSymbols.forEach((coinSymbol) => {
+                    jointCoins_1.default.addToArray({ coinSymbol }, "accounts", account);
+                });
+                console.log("coinsSymbols", coinsSymbols);
+            }
+            catch (error) {
+                console.error(error.message);
+            }
+        });
+    }
+    deleteJointCoinAccount(account) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Deleting a deleted account from all coins which hold it
+            const allJointCoins = yield this.getJointCoins();
+            try {
+                allJointCoins &&
+                    (yield allJointCoins.forEach(() => {
+                        jointCoins_1.default.removeFromArrays({}, "accounts", account);
+                    }));
+                console.log("coinsSymbols");
+            }
+            catch (error) {
+                console.error(error.message);
+            }
+        });
+    }
 }
 exports.default = JointCoinsManager;

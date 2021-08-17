@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
+const JointCoinsManager_1 = __importDefault(require("../managers/JointCoinsManager"));
 var AccountPath;
 (function (AccountPath) {
     AccountPath["Base"] = "/";
@@ -23,6 +24,7 @@ class AccountController {
     constructor() {
         this.router = express_1.default.Router();
         this.accountManager = new AccountManager_1.default();
+        this.jointCoinsManager = new JointCoinsManager_1.default();
         this.setupRoutes();
     }
     setupRoutes() {
@@ -58,7 +60,7 @@ class AccountController {
         });
     }
     addAccount(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         return __awaiter(this, void 0, void 0, function* () {
             const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
             const fromDB = yield this.accountManager.authorizeAccount(username);
@@ -84,9 +86,20 @@ class AccountController {
                     ],
                 },
             };
+            const newJointCoinAccount = {
+                coinsSymbol: (_m = req === null || req === void 0 ? void 0 : req.body) === null || _m === void 0 ? void 0 : _m.preferred_coins,
+                accounts: req.body.username
+            };
             try {
                 const savedAccount = yield this.accountManager.createAccount(newAccount);
                 res.status(201).json(savedAccount);
+            }
+            catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+            try {
+                yield this.jointCoinsManager.addAccountCoinsToJointCoin(newJointCoinAccount.coinsSymbol, newJointCoinAccount.accounts);
+                console.log("Updated jointCoin");
             }
             catch (error) {
                 res.status(400).json({ message: error.message });
@@ -95,10 +108,17 @@ class AccountController {
     }
     deleteAccount(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const { username } = req.params;
             try {
-                const { username } = req.params;
                 yield this.accountManager.deleteAccount(username);
-                res.status(201);
+                res.status(201).send("Account deleted");
+            }
+            catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+            try {
+                yield this.jointCoinsManager.deleteJointCoinAccount(username);
+                console.log("Updated jointCoin");
             }
             catch (error) {
                 res.status(400).json({ message: error.message });

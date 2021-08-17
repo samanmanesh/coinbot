@@ -69,24 +69,64 @@ export default class JointCoinsManager {
   }
 
 
+  public async addAccountCoinsToJointCoin(coinsSymbols: string[], account: string) {
+
+    //for adding the new account to related coins in JointCoins collection
+
+    try {
+      await coinsSymbols.forEach((coinSymbol) => {
+        JointCoins.addToArray({ coinSymbol }, "accounts", account);
+      })
+      console.log("coinsSymbols", coinsSymbols);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  public async deleteJointCoinAccount( account: string) {
+
+    // Deleting a deleted account from all coins which hold it
+
+    const allJointCoins = await this.getJointCoins();
+    try {
+      allJointCoins &&
+      await allJointCoins.forEach(() => {
+        JointCoins.removeFromArrays({ }, "accounts", account);
+      })
+      console.log("coinsSymbols");
+    } catch (error) {
+      console.error(error.message);
+    }
+
+  }
+  //   {
+  //     for ( let coin of coinsSymbols ) {
+  //     try {
+  //       await JointCoins.addToArray({ coin }, "accounts", account);
+  //     } catch (error) {
+  //       console.error(error.message);
+  //     }
+  //   }
+
+  // }
   // public async updateJointCoinAccount(coinSymbol: string, newAccount: string) {
 
 
-    // const preJointCoin = await this.getJointCoin(coinSymbol);
-    // if (!preJointCoin) return;
-    // const accountsSet = new Set(preJointCoin.accounts);
-    // accountsSet.add(newAccount);
-    // const accountsArray = Array.from(accountsSet);
-    // console.log("accountArraySet is" , accountsArray)
-    // const newJointCoin = { ...preJointCoin, accounts: accountsArray };
-    ///////////////////////////////
+  // const preJointCoin = await this.getJointCoin(coinSymbol);
+  // if (!preJointCoin) return;
+  // const accountsSet = new Set(preJointCoin.accounts);
+  // accountsSet.add(newAccount);
+  // const accountsArray = Array.from(accountsSet);
+  // console.log("accountArraySet is" , accountsArray)
+  // const newJointCoin = { ...preJointCoin, accounts: accountsArray };
+  ///////////////////////////////
 
-    // try {
-    //   await JointCoins.addToArray({ coinSymbol }, "accounts", newAccount);
-    // }
-    // catch (error) {
-    //   console.error(error.message);
-    // }
+  // try {
+  //   await JointCoins.addToArray({ coinSymbol }, "accounts", newAccount);
+  // }
+  // catch (error) {
+  //   console.error(error.message);
+  // }
 
   // }
 }

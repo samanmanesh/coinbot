@@ -1,10 +1,9 @@
+import { ICoins } from './../models/jointCoins';
 import express, { Request, Response } from "express";
 import { IAccount } from "../models/Account";
 import { IController } from "../types";
 import AccountManager from "../managers/AccountManager";
-import { resolvePtr } from "dns";
-import Account from "../models/Account";
-
+import JointCoinsManager from '../managers/JointCoinsManager';
 enum AccountPath {
   Base = "/",
   ByUsername = "/:username",
@@ -13,6 +12,7 @@ enum AccountPath {
 export default class AccountController implements IController {
   public router = express.Router();
   accountManager = new AccountManager();
+  jointCoinsManager = new JointCoinsManager();
   constructor() {
     this.setupRoutes();
   }
@@ -82,20 +82,40 @@ export default class AccountController implements IController {
       },
     };
 
+    const newJointCoinAccount = {
+     coinsSymbol: req?.body?.preferred_coins,
+     accounts: req.body.username 
+    }
+
     try {
       const savedAccount = await this.accountManager.createAccount(newAccount);
       res.status(201).json(savedAccount);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
+
+    try {
+       await this.jointCoinsManager.addAccountCoinsToJointCoin(newJointCoinAccount.coinsSymbol, newJointCoinAccount.accounts);
+       console.log("Updated jointCoin");
+    }catch (error) {  
+      res.status(400).json({ message: error.message });
+    }
+
   }
 
   async deleteAccount(req: Request, res: Response) {
+    const { username } = req.params;
     try {
-      const { username } = req.params;
       await this.accountManager.deleteAccount(username);
-      res.status(201);
+      res.status(201).send("Account deleted");
     } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+
+    try { 
+      await this.jointCoinsManager.deleteJointCoinAccount(username);
+      console.log("Updated jointCoin");
+    }catch (error) {  
       res.status(400).json({ message: error.message });
     }
   }

@@ -91,7 +91,7 @@ class AccountManager {
     deleteAccount(username) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield Account_1.default.remove({ username });
+                return yield Account_1.default.remove({ username });
             }
             catch (error) {
                 console.error(error);

@@ -1,3 +1,4 @@
+import { DeleteResult } from 'mongodb';
 import Account, { IAccount } from "../models/Account";
 
 export default class AccountManager {
@@ -76,12 +77,13 @@ export default class AccountManager {
     return account;
   }
 
-  public async deleteAccount(username: string): Promise<void> {
+  public async deleteAccount(username: string): Promise<DeleteResult | undefined> {
     try {
-      await Account.remove({ username });
+      return await Account.remove({ username });
     } catch (error) {
       console.error(error);
     }
+    
   }
 
 };

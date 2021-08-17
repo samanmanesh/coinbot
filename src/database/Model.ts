@@ -74,6 +74,11 @@ class Model<T> {
       .updateOne(filter, { $pull: { [arrayName]: { $in: [document] } } });
   }
 
+  public async removeFromArrays(filter: any, arrayName: string, document: any) {
+    return await this.client.db(this.databaseName).collection(this.collectionName).updateMany(filter, { $unset: { arrayName: { $in: [document] } } }); 
+
+  }
+
 
 
   public async update(filter: any, document: T) {
