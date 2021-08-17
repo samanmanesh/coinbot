@@ -8,20 +8,18 @@ export default class AccountManager {
   public async getAccount(username: string): Promise<IAccount | undefined> {
     let requiredAccount = undefined;
     try {
-      requiredAccount =  Account.findOne({ username });
+      requiredAccount = Account.findOne({ username });
       if (requiredAccount === undefined) {
         return undefined;
       }
-      
+
 
     } catch (error) {
-      // throw new Error(error);
       console.error(error.message);
-      
+
     }
 
     return requiredAccount;
-    // return Account.findOne({ username });
   }
 
   public async getAccounts(): Promise<IAccount[] | undefined> {
@@ -35,7 +33,6 @@ export default class AccountManager {
       // return allAccounts;
     } catch (error) {
       console.error(error);
-      // throw new Error(error);
     }
     return allAccounts;
   }
@@ -71,8 +68,6 @@ export default class AccountManager {
       await Account.updateOne({ username }, account);
     } catch (error) {
       console.error(error);
-      // throw new Error(error);
-      
     }
     return account;
   }
@@ -83,7 +78,23 @@ export default class AccountManager {
     } catch (error) {
       console.error(error);
     }
-    
+
   }
 
-};
+  public async addPreferredCoinsHandler(username: string, preferredCoins: string[]) {
+    console.log(username, "username");
+    let account = await this.getAccount(username);
+    if (account)
+      for (let coin in preferredCoins) {
+        account.preferred_coins.push(preferredCoins[coin]);
+      }
+      console.log(account);
+    try {
+      if (account)
+        await Account.updateOne({ username }, account);
+    } catch (error) {
+      console.error(error);
+    }
+    return account;
+  }
+}

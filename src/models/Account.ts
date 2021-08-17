@@ -2,6 +2,7 @@ import { IWalletCoin, IAccountAssets } from "../types";
 import model from "../database/Model";
 export interface IAccount {
   username: string;
+  password: string;
   api: string;
   preferred_coins: string[];
   assets: IAccountAssets;

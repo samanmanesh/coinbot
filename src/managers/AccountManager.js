@@ -26,11 +26,9 @@ class AccountManager {
                 }
             }
             catch (error) {
-                // throw new Error(error);
                 console.error(error.message);
             }
             return requiredAccount;
-            // return Account.findOne({ username });
         });
     }
     getAccounts() {
@@ -46,7 +44,6 @@ class AccountManager {
             }
             catch (error) {
                 console.error(error);
-                // throw new Error(error);
             }
             return allAccounts;
         });
@@ -83,7 +80,6 @@ class AccountManager {
             }
             catch (error) {
                 console.error(error);
-                // throw new Error(error);
             }
             return account;
         });
@@ -98,6 +94,30 @@ class AccountManager {
             }
         });
     }
+    addPreferredCoinsHandler(username, preferredCoins) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(username, "username");
+            let account = yield this.getAccount(username);
+            let preferred_coins = new Set();
+            preferred_coins.add(account === null || account === void 0 ? void 0 : account.preferred_coins);
+            if (account) {
+                for (let coin in preferredCoins) {
+                    preferred_coins.add(preferredCoins[coin]);
+                }
+                const preferred_coinsArray = [...preferred_coins];
+                console.log(preferred_coinsArray);
+                //  account.preferred_coins.push(preferred_coinsArray);
+                console.log(account);
+            }
+            try {
+                if (account)
+                    yield Account_1.default.updateOne({ username }, account);
+            }
+            catch (error) {
+                console.error(error);
+            }
+            return account;
+        });
+    }
 }
 exports.default = AccountManager;
-;

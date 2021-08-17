@@ -7,6 +7,7 @@ import JointCoinsManager from '../managers/JointCoinsManager';
 enum AccountPath {
   Base = "/",
   ByUsername = "/:username",
+  PreferredCoins="/:username/:preferredCoins" ,
 }
 
 export default class AccountController implements IController {
@@ -28,6 +29,7 @@ export default class AccountController implements IController {
     this.router.delete(AccountPath.ByUsername, (req, res) => this.deleteAccount(req, res));
 
     this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
+    this.router.put(AccountPath.PreferredCoins, (req, res) => this.addPreferredCoins(req, res));
   }
 
 
@@ -67,7 +69,7 @@ export default class AccountController implements IController {
       username: req?.body?.username ?? "",
       password: req?.body?.password ?? "",
       api: req?.body?.api,
-      preferred_coins: [],
+      preferred_coins: req?.body?.preferred_coins,
       assets: {
         wallet: {
           deposit: req?.body?.assets.wallet.deposit,
@@ -83,11 +85,6 @@ export default class AccountController implements IController {
       },
     };
 
-    const newJointCoinAccount = {
-     coinsSymbol: req?.body?.preferred_coins,
-     accounts: req.body.username 
-    }
-
     try {
       const savedAccount = await this.accountManager.createAccount(newAccount);
       res.status(201).json(savedAccount);
@@ -95,12 +92,21 @@ export default class AccountController implements IController {
       res.status(400).json({ message: error.message });
     }
 
-    try {
-       await this.jointCoinsManager.addAccountCoinsToJointCoin(newJointCoinAccount.coinsSymbol, newJointCoinAccount.accounts);
-       console.log("Updated jointCoin");
-    }catch (error) {  
-      res.status(400).json({ message: error.message });
-    }
+    
+    // its going to be separated to another method 
+    // const newJointCoinAccount = {
+    //  coinsSymbol: req?.body?.preferred_coins,
+    //  accounts: req.body.username 
+    // }
+
+    
+
+    // try {
+    //    await this.jointCoinsManager.addAccountCoinsToJointCoin(newJointCoinAccount.coinsSymbol, newJointCoinAccount.accounts);
+    //    console.log("Updated jointCoin");
+    // }catch (error) {  
+    //   res.status(400).json({ message: error.message });
+    // }
 
   }
 
@@ -125,6 +131,19 @@ export default class AccountController implements IController {
     try {
       const updatedAccount = await this.accountManager.updateAccount(req.params.username, req.body);
       res.status(200).json(updatedAccount);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }
+
+
+  async addPreferredCoins(req: Request, res: Response){
+    const username = req.params.username;
+    const preferredCoins = req.body.preferred_coins;
+
+    try {
+      const result = await this.accountManager.addPreferredCoinsHandler(username, preferredCoins);
+      res.status(200).json(result);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

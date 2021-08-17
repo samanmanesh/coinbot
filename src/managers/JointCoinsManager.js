@@ -107,17 +107,43 @@ class JointCoinsManager {
     deleteJointCoinAccount(account) {
         return __awaiter(this, void 0, void 0, function* () {
             // Deleting a deleted account from all coins which hold it
-            console.log(account, "account is");
-            const allJointCoins = yield this.getJointCoins();
-            console.log(allJointCoins);
-            if (allJointCoins) {
-                for (let coin of allJointCoins) {
-                    coin.accounts = coin.accounts.filter(e => e !== account);
-                    console.log(coin.accounts, "check loop");
-                }
-            }
-            // allJointCoins.forEach( data => data.accounts.filter(e => e !== account));
         });
     }
 }
 exports.default = JointCoinsManager;
+//   try {
+//     allJointCoins &&
+//       await allJointCoins.forEach( () => {
+//         // console.log("coinsSymbols are",coinsSymbols.coinSymbol);
+//         JointCoins.removeFromArrays({}, "accounts", account);
+//       });
+//     // console.log("coinsSymbols");
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+// }
+//   {
+//     for ( let coin of coinsSymbols ) {
+//     try {
+//       await JointCoins.addToArray({ coin }, "accounts", account);
+//     } catch (error) {
+//       console.error(error.message);
+//     }
+//   }
+// }
+// public async updateJointCoinAccount(coinSymbol: string, newAccount: string) {
+// const preJointCoin = await this.getJointCoin(coinSymbol);
+// if (!preJointCoin) return;
+// const accountsSet = new Set(preJointCoin.accounts);
+// accountsSet.add(newAccount);
+// const accountsArray = Array.from(accountsSet);
+// console.log("accountArraySet is" , accountsArray)
+// const newJointCoin = { ...preJointCoin, accounts: accountsArray };
+///////////////////////////////
+// try {
+//   await JointCoins.addToArray({ coinSymbol }, "accounts", newAccount);
+// }
+// catch (error) {
+//   console.error(error.message);
+// }
+// }

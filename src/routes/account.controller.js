@@ -19,6 +19,7 @@ var AccountPath;
 (function (AccountPath) {
     AccountPath["Base"] = "/";
     AccountPath["ByUsername"] = "/:username";
+    AccountPath["PreferredCoins"] = "/:username/:preferredCoins";
 })(AccountPath || (AccountPath = {}));
 class AccountController {
     constructor() {
@@ -33,6 +34,7 @@ class AccountController {
         this.router.post(AccountPath.Base, (req, res) => this.addAccount(req, res));
         this.router.delete(AccountPath.ByUsername, (req, res) => this.deleteAccount(req, res));
         this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
+        this.router.put(AccountPath.PreferredCoins, (req, res) => this.addPreferredCoins(req, res));
     }
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -60,7 +62,7 @@ class AccountController {
         });
     }
     addAccount(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         return __awaiter(this, void 0, void 0, function* () {
             const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
             const fromDB = yield this.accountManager.authorizeAccount(username);
@@ -70,36 +72,26 @@ class AccountController {
             }
             const newAccount = {
                 username: (_d = (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.username) !== null && _d !== void 0 ? _d : "",
-                api: (_e = req === null || req === void 0 ? void 0 : req.body) === null || _e === void 0 ? void 0 : _e.api,
-                preferred_coins: (_f = req === null || req === void 0 ? void 0 : req.body) === null || _f === void 0 ? void 0 : _f.preferred_coins,
+                password: (_f = (_e = req === null || req === void 0 ? void 0 : req.body) === null || _e === void 0 ? void 0 : _e.password) !== null && _f !== void 0 ? _f : "",
+                api: (_g = req === null || req === void 0 ? void 0 : req.body) === null || _g === void 0 ? void 0 : _g.api,
+                preferred_coins: (_h = req === null || req === void 0 ? void 0 : req.body) === null || _h === void 0 ? void 0 : _h.preferred_coins,
                 assets: {
                     wallet: {
-                        deposit: (_g = req === null || req === void 0 ? void 0 : req.body) === null || _g === void 0 ? void 0 : _g.assets.wallet.deposit,
-                        currency: (_h = req === null || req === void 0 ? void 0 : req.body) === null || _h === void 0 ? void 0 : _h.assets.wallet.currency,
+                        deposit: (_j = req === null || req === void 0 ? void 0 : req.body) === null || _j === void 0 ? void 0 : _j.assets.wallet.deposit,
+                        currency: (_k = req === null || req === void 0 ? void 0 : req.body) === null || _k === void 0 ? void 0 : _k.assets.wallet.currency,
                     },
                     coins: [
                         {
-                            symbol: (_j = req === null || req === void 0 ? void 0 : req.body) === null || _j === void 0 ? void 0 : _j.assets.coins.symbol,
-                            volume: (_k = req === null || req === void 0 ? void 0 : req.body) === null || _k === void 0 ? void 0 : _k.assets.coins.volume,
-                            buy_at: (_l = req === null || req === void 0 ? void 0 : req.body) === null || _l === void 0 ? void 0 : _l.assets.coins.buy_at,
+                            symbol: (_l = req === null || req === void 0 ? void 0 : req.body) === null || _l === void 0 ? void 0 : _l.assets.coins.symbol,
+                            volume: (_m = req === null || req === void 0 ? void 0 : req.body) === null || _m === void 0 ? void 0 : _m.assets.coins.volume,
+                            buy_at: (_o = req === null || req === void 0 ? void 0 : req.body) === null || _o === void 0 ? void 0 : _o.assets.coins.buy_at,
                         },
                     ],
                 },
             };
-            const newJointCoinAccount = {
-                coinsSymbol: (_m = req === null || req === void 0 ? void 0 : req.body) === null || _m === void 0 ? void 0 : _m.preferred_coins,
-                accounts: req.body.username
-            };
             try {
                 const savedAccount = yield this.accountManager.createAccount(newAccount);
                 res.status(201).json(savedAccount);
-            }
-            catch (error) {
-                res.status(400).json({ message: error.message });
-            }
-            try {
-                yield this.jointCoinsManager.addAccountCoinsToJointCoin(newJointCoinAccount.coinsSymbol, newJointCoinAccount.accounts);
-                console.log("Updated jointCoin");
             }
             catch (error) {
                 res.status(400).json({ message: error.message });
@@ -130,6 +122,19 @@ class AccountController {
             try {
                 const updatedAccount = yield this.accountManager.updateAccount(req.params.username, req.body);
                 res.status(200).json(updatedAccount);
+            }
+            catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+        });
+    }
+    addPreferredCoins(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const username = req.params.username;
+            const preferredCoins = req.body.preferred_coins;
+            try {
+                const result = yield this.accountManager.addPreferredCoinsHandler(username, preferredCoins);
+                res.status(200).json(result);
             }
             catch (error) {
                 res.status(400).json({ message: error.message });
