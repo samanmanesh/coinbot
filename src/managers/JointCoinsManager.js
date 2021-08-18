@@ -60,9 +60,7 @@ class JointCoinsManager {
     }
     updateJointCoin(coinSymbol, desiredSection, newData) {
         return __awaiter(this, void 0, void 0, function* () {
-            // let requiredJointCoin= await this.getJointCoin(coinSymbol)
-            // if (!requiredJointCoin) return;
-            // requiredJointCoin.element = newJointCoin.[desiredSection]
+            // updating the desire keys in ICoins Object except accounts arrays
             try {
                 yield jointCoins_1.default.updateOnesElement({ coinSymbol }, desiredSection, newData);
                 ;
@@ -74,10 +72,32 @@ class JointCoinsManager {
         });
     }
     // Adding a new account to related coins in JointCoins accounts array 
+    // public async addAccountToJointCoinsAccounts(coinSymbol: string, account: string) {
+    //   try {
+    //     return await JointCoins.addToArray({ coinSymbol }, "accounts", account);
+    //   } catch (error) {
+    //     console.error(error.message);
+    //   }
+    // }
+    //Adding a new account to its related coins
+    //Todo it is going to get an array of preferred Coins and an array of accounts name in case the it gives both requests 
     addAccountToJointCoinsAccounts(coinSymbol, account) {
         return __awaiter(this, void 0, void 0, function* () {
+            let jointCoins = yield this.getJointCoins();
+            if (!jointCoins)
+                return;
             try {
-                return yield jointCoins_1.default.addToArray({ coinSymbol }, "accounts", account);
+                for (let coin in coinSymbol) {
+                    for (let joinCoin in jointCoins)
+                        if (jointCoins[joinCoin].coinSymbol === coinSymbol[coin]) {
+                            jointCoins[joinCoin].accounts.push(account);
+                            // await JointCoins.addToArray({ coin }, "accounts", account);
+                        }
+                }
+                yield jointCoins_1.default.updateAll({}, jointCoins);
+                console.log("check", jointCoins);
+                //Todo could add account name to related coinsSymbol just find a way to save the new JointCoins to store in daba base
+                // await JointCoins.addToArray({ coin }, "accounts", account);
             }
             catch (error) {
                 console.error(error.message);

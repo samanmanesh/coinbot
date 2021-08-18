@@ -1,4 +1,5 @@
 import { ReturnDocument } from "mongodb";
+import jointCoins from "../models/jointCoins";
 import JointCoins, { ICoins } from "../models/jointCoins"
 
 export default class JointCoinsManager {
@@ -41,11 +42,11 @@ export default class JointCoinsManager {
     }
   }
 
-  public async updateJointCoin(coinSymbol: string, desiredSection:string, newData: string): Promise<ICoins | undefined | string > {
+  public async updateJointCoin(coinSymbol: string, desiredSection: string, newData: string): Promise<ICoins | undefined | string> {
 
     // updating the desire keys in ICoins Object except accounts arrays
     try {
-        await JointCoins.updateOnesElement({ coinSymbol }, desiredSection ,newData);
+      await JointCoins.updateOnesElement({ coinSymbol }, desiredSection, newData);
       ;
     } catch (error) {
       console.error(error.message);
@@ -54,15 +55,52 @@ export default class JointCoinsManager {
   }
 
   // Adding a new account to related coins in JointCoins accounts array 
-  public async addAccountToJointCoinsAccounts(coinSymbol: string, account: string) {
+  // public async addAccountToJointCoinsAccounts(coinSymbol: string, account: string) {
+
+  //   try {
+  //     return await JointCoins.addToArray({ coinSymbol }, "accounts", account);
+
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+  // }
+
+  //Adding a new account to its related coins
+  //Todo it is going to get an array of preferred Coins and an array of accounts name in case the it gives both requests 
+  public async addAccountToJointCoinsAccounts(coinSymbol: string[], account: string) {
+
+    let jointCoins = await this.getJointCoins();
+    if (!jointCoins) return;
 
     try {
-      return await JointCoins.addToArray({ coinSymbol }, "accounts", account);
+      for (let coin in coinSymbol) {
 
+        for (let jointCoin in jointCoins)
+          if (jointCoins[jointCoin].coinSymbol === coinSymbol[coin]) {
+
+            jointCoins[jointCoin].accounts.push(account);
+            // await JointCoins.addToArray({ coin }, "accounts", account);
+          }
+
+      }
+
+
+
+
+
+      //       await JointCoins.updateAll({ }, jointCoins);
+
+      console.log("check", jointCoins);
+
+      //Todo could add account name to related coinsSymbol just find a way to save the new JointCoins to store in daba base
+
+      // await JointCoins.addToArray({ coin }, "accounts", account);
     } catch (error) {
       console.error(error.message);
     }
   }
+
+
 
   // Removing a new account to related coins in JointCoins accounts array 
   public async removeAccountFromJointCoinsAccounts(coinSymbol: string, account: string) {
@@ -72,19 +110,6 @@ export default class JointCoinsManager {
       console.error(error.message);
     }
   }
-
-
-
-
-
-
-
-  // public async deleteJointCoinAccount( account: string) {
-
-  //   // Deleting a deleted account from all coins which hold it
-
-
-  // }
 
 
 }

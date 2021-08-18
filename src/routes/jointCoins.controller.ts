@@ -6,7 +6,8 @@ enum RouteNames {
   Base = "/",
   BySymbol = "/:symbol",
   BySymbolAndElement ="/:symbol/:element",
-  BySymbolAndUsername = "/:symbol/:username"
+  BySymbolAndUsername = "/:symbol/:username",
+  ByUsername= "/:username"
 }
 
 export default class CommonCoinsController {
@@ -31,7 +32,7 @@ export default class CommonCoinsController {
     
     // this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.updateCommonCoinAccount(req, res));
     
-    this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.addAccountToCommonCoinsAccounts(req, res));
+    this.router.patch(RouteNames.ByUsername, (req: Request, res: Response) => this.addAccountToCommonCoinsAccounts(req, res));
 
     this.router.delete(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.deleteAccountFromCommonCoinsAccounts(req, res));
 
@@ -125,7 +126,7 @@ export default class CommonCoinsController {
   async addAccountToCommonCoinsAccounts(req: Request, res: Response) {
 
     try {
-      const addedAccount = await this.jointCoinsManager.addAccountToJointCoinsAccounts(req.params.symbol, req.params.username);
+      const addedAccount = await this.jointCoinsManager.addAccountToJointCoinsAccounts(req.body.coinSymbol, req.params.username);
       res.status(200).send(addedAccount);
     } catch (error) {
       res.status(400).json({ message: error.message });

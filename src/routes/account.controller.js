@@ -19,7 +19,8 @@ var AccountPath;
 (function (AccountPath) {
     AccountPath["Base"] = "/";
     AccountPath["ByUsername"] = "/:username";
-    AccountPath["PreferredCoins"] = "/:username/:preferredCoins";
+    AccountPath["ByUserAndPreferredCoins"] = "/:username/:preferredCoins";
+    AccountPath["ByUserAndAssetsCoins"] = "/:username/:assets/:coins";
 })(AccountPath || (AccountPath = {}));
 class AccountController {
     constructor() {
@@ -34,8 +35,9 @@ class AccountController {
         this.router.post(AccountPath.Base, (req, res) => this.addAccount(req, res));
         this.router.delete(AccountPath.ByUsername, (req, res) => this.deleteAccount(req, res));
         this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
-        this.router.put(AccountPath.PreferredCoins, (req, res) => this.addPreferredCoins(req, res));
-        this.router.delete(AccountPath.PreferredCoins, (req, res) => this.removePreferredCoins(req, res));
+        this.router.put(AccountPath.ByUserAndPreferredCoins, (req, res) => this.addPreferredCoins(req, res));
+        this.router.delete(AccountPath.ByUserAndPreferredCoins, (req, res) => this.removePreferredCoins(req, res));
+        this.router.put(AccountPath.ByUserAndAssetsCoins, (req, res) => this.addAssetCoins(req, res));
     }
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -55,6 +57,9 @@ class AccountController {
             const { username } = req.params;
             try {
                 const account = yield this.accountManager.getAccount(username);
+                if (account === undefined) {
+                    res.status(200).send("message: account does not exists");
+                }
                 res.status(200).json(account);
             }
             catch (error) {
@@ -122,6 +127,7 @@ class AccountController {
             }
         });
     }
+    // Controlling the PreferredCoins
     addPreferredCoins(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const username = req.params.username;
@@ -133,6 +139,7 @@ class AccountController {
             catch (error) {
                 res.status(400).json({ message: error.message });
             }
+            // add this username for coins in jointCoins too
         });
     }
     removePreferredCoins(req, res) {
@@ -146,6 +153,11 @@ class AccountController {
             catch (error) {
                 res.status(400).json({ message: error.message });
             }
+        });
+    }
+    // Controlling the assets 
+    addAssetCoins(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
         });
     }
 }

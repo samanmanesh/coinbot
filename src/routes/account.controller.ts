@@ -7,7 +7,8 @@ import JointCoinsManager from '../managers/JointCoinsManager';
 enum AccountPath {
   Base = "/",
   ByUsername = "/:username",
-  PreferredCoins = "/:username/:preferredCoins",
+  ByUserAndPreferredCoins = "/:username/:preferredCoins",
+  ByUserAndAssetsCoins = "/:username/:assets/:coins"
 }
 
 export default class AccountController implements IController {
@@ -24,20 +25,22 @@ export default class AccountController implements IController {
 
     this.router.get(AccountPath.ByUsername, this.getAccount.bind(this));
 
-    
+
     this.router.post(AccountPath.Base, (req, res) => this.addAccount(req, res));
 
-    
+
     this.router.delete(AccountPath.ByUsername, (req, res) => this.deleteAccount(req, res));
 
     this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
 
 
-    this.router.put(AccountPath.PreferredCoins, (req, res) => this.addPreferredCoins(req, res));
+    this.router.put(AccountPath.ByUserAndPreferredCoins, (req, res) => this.addPreferredCoins(req, res));
 
-    this.router.delete(AccountPath.PreferredCoins, (req, res) => this.removePreferredCoins(req, res));
+    this.router.delete(AccountPath.ByUserAndPreferredCoins, (req, res) => this.removePreferredCoins(req, res));
+
+
+    this.router.put(AccountPath.ByUserAndAssetsCoins, (req,res)=> this.addAssetCoins(req, res));
   }
-
 
   async getAllAccounts(req: Request, res: Response) {
     let accounts = undefined;
@@ -52,12 +55,13 @@ export default class AccountController implements IController {
 
   }
 
-
   async getAccount(req: Request, res: Response) {
     const { username } = req.params;
     try {
       const account = await this.accountManager.getAccount(username);
+      if (account === undefined) { res.status(200).send("message: account does not exists") }
       res.status(200).json(account);
+
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -122,7 +126,7 @@ export default class AccountController implements IController {
     }
   }
 
-
+  // Controlling the PreferredCoins
   async addPreferredCoins(req: Request, res: Response) {
     const username = req.params.username;
     const preferredCoins = req.body.preferred_coins;
@@ -133,6 +137,9 @@ export default class AccountController implements IController {
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
+
+    // add this username for coins in jointCoins too
+    
   }
 
   async removePreferredCoins(req: Request, res: Response) {
@@ -145,6 +152,11 @@ export default class AccountController implements IController {
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
+
+  }
+
+  // Controlling the assets 
+  async addAssetCoins(req: Request, res: Response) {
 
   }
 }

@@ -12,11 +12,8 @@ export default class AccountManager {
       if (requiredAccount === undefined) {
         return undefined;
       }
-
-
     } catch (error) {
       console.error(error.message);
-
     }
 
     return requiredAccount;
