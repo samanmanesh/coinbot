@@ -35,6 +35,7 @@ class AccountController {
         this.router.delete(AccountPath.ByUsername, (req, res) => this.deleteAccount(req, res));
         this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
         this.router.put(AccountPath.PreferredCoins, (req, res) => this.addPreferredCoins(req, res));
+        this.router.delete(AccountPath.PreferredCoins, (req, res) => this.removePreferredCoins(req, res));
     }
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,7 +63,7 @@ class AccountController {
         });
     }
     addAccount(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+        var _a, _b, _c, _d, _e, _f, _g;
         return __awaiter(this, void 0, void 0, function* () {
             const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
             const fromDB = yield this.accountManager.authorizeAccount(username);
@@ -74,19 +75,13 @@ class AccountController {
                 username: (_d = (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.username) !== null && _d !== void 0 ? _d : "",
                 password: (_f = (_e = req === null || req === void 0 ? void 0 : req.body) === null || _e === void 0 ? void 0 : _e.password) !== null && _f !== void 0 ? _f : "",
                 api: (_g = req === null || req === void 0 ? void 0 : req.body) === null || _g === void 0 ? void 0 : _g.api,
-                preferred_coins: (_h = req === null || req === void 0 ? void 0 : req.body) === null || _h === void 0 ? void 0 : _h.preferred_coins,
+                preferred_coins: [],
                 assets: {
                     wallet: {
-                        deposit: (_j = req === null || req === void 0 ? void 0 : req.body) === null || _j === void 0 ? void 0 : _j.assets.wallet.deposit,
-                        currency: (_k = req === null || req === void 0 ? void 0 : req.body) === null || _k === void 0 ? void 0 : _k.assets.wallet.currency,
+                        deposit: "",
+                        currency: "CAD",
                     },
-                    coins: [
-                        {
-                            symbol: (_l = req === null || req === void 0 ? void 0 : req.body) === null || _l === void 0 ? void 0 : _l.assets.coins.symbol,
-                            volume: (_m = req === null || req === void 0 ? void 0 : req.body) === null || _m === void 0 ? void 0 : _m.assets.coins.volume,
-                            buy_at: (_o = req === null || req === void 0 ? void 0 : req.body) === null || _o === void 0 ? void 0 : _o.assets.coins.buy_at,
-                        },
-                    ],
+                    coins: [],
                 },
             };
             try {
@@ -134,6 +129,19 @@ class AccountController {
             const preferredCoins = req.body.preferred_coins;
             try {
                 const result = yield this.accountManager.addPreferredCoinsHandler(username, preferredCoins);
+                res.status(200).json(result);
+            }
+            catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+        });
+    }
+    removePreferredCoins(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const username = req.params.username;
+            const preferredCoins = req.body.preferred_coins;
+            try {
+                const result = yield this.accountManager.removePreferredCoinsHandler(username, preferredCoins);
                 res.status(200).json(result);
             }
             catch (error) {

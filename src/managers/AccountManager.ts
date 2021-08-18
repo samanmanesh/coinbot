@@ -84,17 +84,46 @@ export default class AccountManager {
   public async addPreferredCoinsHandler(username: string, preferredCoins: string[]) {
     console.log(username, "username");
     let account = await this.getAccount(username);
-    if (account)
-      for (let coin in preferredCoins) {
-        account.preferred_coins.push(preferredCoins[coin]);
-      }
-      console.log(account);
+    if (!account) return;
+
+    // make new array of all old coins and new preferred coins, without duplicates
+    account.preferred_coins = Array.from(new Set([...account.preferred_coins, ...preferredCoins]));
+
+
+
+
+
     try {
-      if (account)
-        await Account.updateOne({ username }, account);
+      await Account.updateOne({ username }, account);
     } catch (error) {
       console.error(error);
     }
     return account;
   }
+
+
+  public async removePreferredCoinsHandler(username: string, removeCoins: string[]) {
+
+    // account.preferred_coins =  account.preferred_coins.filter(c => c !== removeCoin);
+    let account = await this.getAccount(username);
+    if (!account) return;
+
+    console.log("preferredcoins before", account.preferred_coins);
+
+    for (let coin in removeCoins) {
+      let indexCoin = removeCoins[coin];
+      account.preferred_coins = account.preferred_coins.filter(c => c !== indexCoin);
+    }
+
+    console.log("preferredcoins after", account.preferred_coins);
+
+    try {
+      await Account.updateOne({ username }, account);
+    } catch (error) {
+      console.error(error);
+    }
+    return account;
+
+  }
 }
+

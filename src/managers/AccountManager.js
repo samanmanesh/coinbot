@@ -98,20 +98,33 @@ class AccountManager {
         return __awaiter(this, void 0, void 0, function* () {
             console.log(username, "username");
             let account = yield this.getAccount(username);
-            let preferred_coins = new Set();
-            preferred_coins.add(account === null || account === void 0 ? void 0 : account.preferred_coins);
-            if (account) {
-                for (let coin in preferredCoins) {
-                    preferred_coins.add(preferredCoins[coin]);
-                }
-                const preferred_coinsArray = [...preferred_coins];
-                console.log(preferred_coinsArray);
-                //  account.preferred_coins.push(preferred_coinsArray);
-                console.log(account);
-            }
+            if (!account)
+                return;
+            // make new array of all old coins and new preferred coins, without duplicates
+            account.preferred_coins = Array.from(new Set([...account.preferred_coins, ...preferredCoins]));
             try {
-                if (account)
-                    yield Account_1.default.updateOne({ username }, account);
+                yield Account_1.default.updateOne({ username }, account);
+            }
+            catch (error) {
+                console.error(error);
+            }
+            return account;
+        });
+    }
+    removePreferredCoinsHandler(username, removeCoins) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // account.preferred_coins =  account.preferred_coins.filter(c => c !== removeCoin);
+            let account = yield this.getAccount(username);
+            if (!account)
+                return;
+            console.log("preferredcoins before", account.preferred_coins);
+            for (let coin in removeCoins) {
+                let indexCoin = removeCoins[coin];
+                account.preferred_coins = account.preferred_coins.filter(c => c !== indexCoin);
+            }
+            console.log("preferredcoins after", account.preferred_coins);
+            try {
+                yield Account_1.default.updateOne({ username }, account);
             }
             catch (error) {
                 console.error(error);

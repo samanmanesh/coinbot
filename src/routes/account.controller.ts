@@ -30,6 +30,7 @@ export default class AccountController implements IController {
 
     this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
     this.router.put(AccountPath.PreferredCoins, (req, res) => this.addPreferredCoins(req, res));
+    this.router.delete(AccountPath.PreferredCoins, (req, res) => this.removePreferredCoins(req, res));
   }
 
 
@@ -69,18 +70,14 @@ export default class AccountController implements IController {
       username: req?.body?.username ?? "",
       password: req?.body?.password ?? "",
       api: req?.body?.api,
-      preferred_coins: req?.body?.preferred_coins,
+      preferred_coins: [],
       assets: {
         wallet: {
-          deposit: req?.body?.assets.wallet.deposit,
-          currency: req?.body?.assets.wallet.currency,
+          deposit: "",
+          currency: "CAD",
         },
         coins: [
-          {
-            symbol: req?.body?.assets.coins.symbol,
-            volume: req?.body?.assets.coins.volume,
-            buy_at: req?.body?.assets.coins.buy_at,
-          },
+          
         ],
       },
     };
@@ -149,4 +146,16 @@ export default class AccountController implements IController {
     }
   }
 
+  async removePreferredCoins(req: Request, res: Response) {
+    const username = req.params.username;
+    const preferredCoins = req.body.preferred_coins;
+
+    try {
+      const result = await this.accountManager.removePreferredCoinsHandler(username, preferredCoins);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+
+  }
 }
