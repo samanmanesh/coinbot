@@ -35,7 +35,7 @@ export default class JointCoinsManager {
   public async deleteJointCoin(coinSymbol: string) {
 
     try {
-      await JointCoins.remove({ coinSymbol: coinSymbol });
+      return await JointCoins.remove({ coinSymbol: coinSymbol });
     } catch (error) {
       console.error(error.message);
     }
@@ -52,19 +52,9 @@ export default class JointCoinsManager {
     return newJointCoin;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
+  // Adding a new account to related coins in JointCoins accounts array 
   public async addAccountToJointCoinsAccounts(coinSymbol: string, account: string) {
+
     try {
       return await JointCoins.addToArray({ coinSymbol }, "accounts", account);
 
@@ -73,49 +63,41 @@ export default class JointCoinsManager {
     }
   }
 
-  public async removeAccountFromJointCoin(coinSymbol: string, account: string) {
+  // Removing a new account to related coins in JointCoins accounts array 
+  public async removeAccountFromJointCoinsAccounts(coinSymbol: string, account: string) {
     try {
-      await JointCoins.removeFromArray({ coinSymbol }, "accounts", account);
+      return await JointCoins.removeFromArray({ coinSymbol }, "accounts", account);
     } catch (error) {
       console.error(error.message);
     }
   }
 
 
-  public async addAccountCoinsToJointCoin(coinsSymbols: string[], account: string) {
 
-    //for adding the new account to related coins in JointCoins collection
 
-    try {
-      await coinsSymbols.forEach((coinSymbol) => {
-        JointCoins.addToArray({ coinSymbol }, "accounts", account);
-      })
-      console.log("coinsSymbols", coinsSymbols);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
 
-  public async deleteJointCoinAccount( account: string) {
 
-    // Deleting a deleted account from all coins which hold it
-    
 
-  }
-    
-    
-  }
-    
+  // public async deleteJointCoinAccount( account: string) {
 
-    
+  //   // Deleting a deleted account from all coins which hold it
+
+
+  // }
+
+
+}
+
+
+
   //   try {
   //     allJointCoins &&
   //       await allJointCoins.forEach( () => {
   //         // console.log("coinsSymbols are",coinsSymbols.coinSymbol);
   //         JointCoins.removeFromArrays({}, "accounts", account);
   //       });
-      
-      
+
+
   //     // console.log("coinsSymbols");
   //   } catch (error) {
   //     console.error(error.message);

@@ -7,7 +7,7 @@ import JointCoinsManager from '../managers/JointCoinsManager';
 enum AccountPath {
   Base = "/",
   ByUsername = "/:username",
-  PreferredCoins="/:username/:preferredCoins" ,
+  PreferredCoins = "/:username/:preferredCoins",
 }
 
 export default class AccountController implements IController {
@@ -24,17 +24,22 @@ export default class AccountController implements IController {
 
     this.router.get(AccountPath.ByUsername, this.getAccount.bind(this));
 
+    
     this.router.post(AccountPath.Base, (req, res) => this.addAccount(req, res));
 
+    
     this.router.delete(AccountPath.ByUsername, (req, res) => this.deleteAccount(req, res));
 
     this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
+
+
     this.router.put(AccountPath.PreferredCoins, (req, res) => this.addPreferredCoins(req, res));
+
     this.router.delete(AccountPath.PreferredCoins, (req, res) => this.removePreferredCoins(req, res));
   }
 
 
-  async getAllAccounts(req: Request, res: Response) { 
+  async getAllAccounts(req: Request, res: Response) {
     let accounts = undefined;
     try {
       console.log("getAllAccounts is read");
@@ -77,7 +82,7 @@ export default class AccountController implements IController {
           currency: "CAD",
         },
         coins: [
-          
+
         ],
       },
     };
@@ -88,22 +93,6 @@ export default class AccountController implements IController {
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
-
-    
-    // its going to be separated to another method 
-    // const newJointCoinAccount = {
-    //  coinsSymbol: req?.body?.preferred_coins,
-    //  accounts: req.body.username 
-    // }
-
-    
-
-    // try {
-    //    await this.jointCoinsManager.addAccountCoinsToJointCoin(newJointCoinAccount.coinsSymbol, newJointCoinAccount.accounts);
-    //    console.log("Updated jointCoin");
-    // }catch (error) {  
-    //   res.status(400).json({ message: error.message });
-    // }
 
   }
 
@@ -116,12 +105,12 @@ export default class AccountController implements IController {
       res.status(400).json({ message: error.message });
     }
 
-    try { 
-      await this.jointCoinsManager.deleteJointCoinAccount(username);
-      console.log("Updated jointCoin");
-    }catch (error) {  
-      res.status(400).json({ message: error.message });
-    }
+    // try { 
+    //   await this.jointCoinsManager.deleteJointCoinAccount(username);
+    //   console.log("Updated jointCoin");
+    // }catch (error) {  
+    //   res.status(400).json({ message: error.message });
+    // }
   }
 
   async updateAccount(req: Request, res: Response) {
@@ -134,7 +123,7 @@ export default class AccountController implements IController {
   }
 
 
-  async addPreferredCoins(req: Request, res: Response){
+  async addPreferredCoins(req: Request, res: Response) {
     const username = req.params.username;
     const preferredCoins = req.body.preferred_coins;
 

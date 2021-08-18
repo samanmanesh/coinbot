@@ -25,13 +25,16 @@ export default class CommonCoinsController {
 
     this.router.delete(RouteNames.BySymbol, (req: Request, res: Response) => this.deleteCommonCoin(req, res));
 
-    this.router.delete(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.deleteAccountFromCoin(req, res));
-
+    
     this.router.put(RouteNames.BySymbol, (req: Request, res: Response) => this.updateCommonCoin(req, res));
-
+    
     // this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.updateCommonCoinAccount(req, res));
-
+    
     this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.addAccountToCommonCoinsAccounts(req, res));
+
+    this.router.delete(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.deleteAccountFromCommonCoinsAccounts(req, res));
+
+    
   }
 
   async addNewCommonCoin(req: Request, res: Response) {
@@ -106,14 +109,7 @@ export default class CommonCoinsController {
   }
 
 
-  async deleteAccountFromCoin(req: Request, res: Response) {
-    try {
-      await this.jointCoinsManager.removeAccountFromJointCoin(req.params.symbol, req.params.username);
-      res.status(200).send({ message: "Account removed from coin" });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  }
+  
 
 
   // async updateCommonCoinAccount(req: Request, res: Response) {
@@ -136,6 +132,16 @@ export default class CommonCoinsController {
       res.status(400).json({ message: error.message });
     }
 
+  }
+
+
+  async deleteAccountFromCommonCoinsAccounts(req: Request, res: Response) {
+    try {
+    const removedAccount = await this.jointCoinsManager.removeAccountFromJointCoinsAccounts(req.params.symbol, req.params.username);
+      res.status(200).send(removedAccount);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
   }
 
 }

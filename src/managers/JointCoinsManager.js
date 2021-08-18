@@ -51,7 +51,7 @@ class JointCoinsManager {
     deleteJointCoin(coinSymbol) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield jointCoins_1.default.remove({ coinSymbol: coinSymbol });
+                return yield jointCoins_1.default.remove({ coinSymbol: coinSymbol });
             }
             catch (error) {
                 console.error(error.message);
@@ -70,20 +70,20 @@ class JointCoinsManager {
             return newJointCoin;
         });
     }
-    addAccountToJointCoin(coinSymbol, account) {
+    addAccountToJointCoinsAccounts(coinSymbol, account) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield jointCoins_1.default.addToArray({ coinSymbol }, "accounts", account);
+                return yield jointCoins_1.default.addToArray({ coinSymbol }, "accounts", account);
             }
             catch (error) {
                 console.error(error.message);
             }
         });
     }
-    removeAccountFromJointCoin(coinSymbol, account) {
+    removeAccountFromJointCoinsAccounts(coinSymbol, account) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield jointCoins_1.default.removeFromArray({ coinSymbol }, "accounts", account);
+                return yield jointCoins_1.default.removeFromArray({ coinSymbol }, "accounts", account);
             }
             catch (error) {
                 console.error(error.message);
