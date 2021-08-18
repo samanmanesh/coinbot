@@ -52,9 +52,22 @@ export default class JointCoinsManager {
     return newJointCoin;
   }
 
-  public async addAccountToJointCoin(coinSymbol: string, account: string) {
+
+
+
+
+
+
+
+
+
+
+
+
+  public async addAccountToJointCoinsAccounts(coinSymbol: string, account: string) {
     try {
-      await JointCoins.addToArray({ coinSymbol }, "accounts", account);
+      return await JointCoins.addToArray({ coinSymbol }, "accounts", account);
+
     } catch (error) {
       console.error(error.message);
     }

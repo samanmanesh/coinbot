@@ -117,12 +117,10 @@ class AccountManager {
             let account = yield this.getAccount(username);
             if (!account)
                 return;
-            console.log("preferredcoins before", account.preferred_coins);
             for (let coin in removeCoins) {
                 let indexCoin = removeCoins[coin];
                 account.preferred_coins = account.preferred_coins.filter(c => c !== indexCoin);
             }
-            console.log("preferredcoins after", account.preferred_coins);
             try {
                 yield Account_1.default.updateOne({ username }, account);
             }

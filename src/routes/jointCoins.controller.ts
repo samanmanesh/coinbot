@@ -29,7 +29,9 @@ export default class CommonCoinsController {
 
     this.router.put(RouteNames.BySymbol, (req: Request, res: Response) => this.updateCommonCoin(req, res));
 
-    this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.updateCommonCoinAccount(req, res));
+    // this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.updateCommonCoinAccount(req, res));
+
+    this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.addAccountToCommonCoinsAccounts(req, res));
   }
 
   async addNewCommonCoin(req: Request, res: Response) {
@@ -37,7 +39,7 @@ export default class CommonCoinsController {
     const newCoin: ICoins = {
       coinName: req.body.coinName,
       coinSymbol: req.body.coinSymbol,
-      accounts: req.body.accounts
+      accounts: []
     }
 
     try {
@@ -88,14 +90,7 @@ export default class CommonCoinsController {
     }
   }
 
-  async deleteAccountFromCoin(req: Request, res: Response) {
-    try {
-      await this.jointCoinsManager.removeAccountFromJointCoin(req.params.symbol, req.params.username);
-      res.status(200).send({ message: "Account removed from coin" });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  }
+  
 
   async updateCommonCoin(req: Request, res: Response) {
 
@@ -110,14 +105,37 @@ export default class CommonCoinsController {
 
   }
 
-  async updateCommonCoinAccount(req: Request, res: Response) {
 
+  async deleteAccountFromCoin(req: Request, res: Response) {
     try {
-      await this.jointCoinsManager.addAccountToJointCoin(req.params.symbol, req.params.username);
-      res.sendStatus(200)
-
+      await this.jointCoinsManager.removeAccountFromJointCoin(req.params.symbol, req.params.username);
+      res.status(200).send({ message: "Account removed from coin" });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
   }
+
+
+  // async updateCommonCoinAccount(req: Request, res: Response) {
+
+  //   try {
+  //     await this.jointCoinsManager.addAccountToJointCoin(req.params.symbol, req.params.username);
+  //     res.sendStatus(200)
+
+  //   } catch (error) {
+  //     res.status(400).json({ message: error.message });
+  //   }
+  // }
+
+  async addAccountToCommonCoinsAccounts(req: Request, res: Response) {
+
+    try {
+      const addedAccount = await this.jointCoinsManager.addAccountToJointCoinsAccounts(req.params.symbol, req.params.username);
+      res.status(200).send(addedAccount);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+
+  }
+
 }
