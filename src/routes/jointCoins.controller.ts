@@ -5,6 +5,7 @@ import JointCoinsManager from "../managers/JointCoinsManager";
 enum RouteNames {
   Base = "/",
   BySymbol = "/:symbol",
+  BySymbolAndElement ="/:symbol/:element",
   BySymbolAndUsername = "/:symbol/:username"
 }
 
@@ -26,7 +27,7 @@ export default class CommonCoinsController {
     this.router.delete(RouteNames.BySymbol, (req: Request, res: Response) => this.deleteCommonCoin(req, res));
 
     
-    this.router.put(RouteNames.BySymbol, (req: Request, res: Response) => this.updateCommonCoin(req, res));
+    this.router.put(RouteNames.BySymbolAndElement, (req: Request, res: Response) => this.updateCommonCoin(req, res));
     
     // this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.updateCommonCoinAccount(req, res));
     
@@ -34,7 +35,7 @@ export default class CommonCoinsController {
 
     this.router.delete(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.deleteAccountFromCommonCoinsAccounts(req, res));
 
-    
+
   }
 
   async addNewCommonCoin(req: Request, res: Response) {
@@ -93,12 +94,10 @@ export default class CommonCoinsController {
     }
   }
 
-  
 
   async updateCommonCoin(req: Request, res: Response) {
-
     try {
-      const updatedCoin = await this.jointCoinsManager.updateJointCoin(req.params.symbol, req.body);
+      const updatedCoin = await this.jointCoinsManager.updateJointCoin(req.params.symbol,  req.params.element, req.body.newData);
       res.status(200).send(updatedCoin);
 
     } catch (error) {

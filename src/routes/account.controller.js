@@ -103,13 +103,12 @@ class AccountController {
             catch (error) {
                 res.status(400).json({ message: error.message });
             }
-            try {
-                yield this.jointCoinsManager.deleteJointCoinAccount(username);
-                console.log("Updated jointCoin");
-            }
-            catch (error) {
-                res.status(400).json({ message: error.message });
-            }
+            // try { 
+            //   await this.jointCoinsManager.deleteJointCoinAccount(username);
+            //   console.log("Updated jointCoin");
+            // }catch (error) {  
+            //   res.status(400).json({ message: error.message });
+            // }
         });
     }
     updateAccount(req, res) {

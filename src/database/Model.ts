@@ -59,6 +59,13 @@ class Model<T> {
       .collection(this.collectionName)
       .updateOne(filter, { $set: document });
   }
+  
+  public async updateOnesElement(filter: any, key: string, newValue: string) {
+    return await this.client
+      .db(this.databaseName)
+      .collection(this.collectionName)
+      .updateOne(filter, { $set: { [key]: newValue} });
+  }
 
   public async addToArray(filter: any, arrayName: string, document: any) {
     return await this.client

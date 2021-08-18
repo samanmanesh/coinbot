@@ -41,15 +41,16 @@ export default class JointCoinsManager {
     }
   }
 
-  public async updateJointCoin(coinSymbol: string, newJointCoin: ICoins): Promise<ICoins | undefined> {
+  public async updateJointCoin(coinSymbol: string, desiredSection:string, newData: string): Promise<ICoins | undefined | string > {
 
+    // updating the desire keys in ICoins Object except accounts arrays
     try {
-      await JointCoins.updateOne({ coinSymbol }, newJointCoin);
+        await JointCoins.updateOnesElement({ coinSymbol }, desiredSection ,newData);
       ;
     } catch (error) {
       console.error(error.message);
     }
-    return newJointCoin;
+    return newData;
   }
 
   // Adding a new account to related coins in JointCoins accounts array 

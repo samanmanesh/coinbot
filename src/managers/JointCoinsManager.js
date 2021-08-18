@@ -58,18 +58,22 @@ class JointCoinsManager {
             }
         });
     }
-    updateJointCoin(coinSymbol, newJointCoin) {
+    updateJointCoin(coinSymbol, desiredSection, newData) {
         return __awaiter(this, void 0, void 0, function* () {
+            // let requiredJointCoin= await this.getJointCoin(coinSymbol)
+            // if (!requiredJointCoin) return;
+            // requiredJointCoin.element = newJointCoin.[desiredSection]
             try {
-                yield jointCoins_1.default.updateOne({ coinSymbol }, newJointCoin);
+                yield jointCoins_1.default.updateOnesElement({ coinSymbol }, desiredSection, newData);
                 ;
             }
             catch (error) {
                 console.error(error.message);
             }
-            return newJointCoin;
+            return newData;
         });
     }
+    // Adding a new account to related coins in JointCoins accounts array 
     addAccountToJointCoinsAccounts(coinSymbol, account) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -80,6 +84,7 @@ class JointCoinsManager {
             }
         });
     }
+    // Removing a new account to related coins in JointCoins accounts array 
     removeAccountFromJointCoinsAccounts(coinSymbol, account) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -88,25 +93,6 @@ class JointCoinsManager {
             catch (error) {
                 console.error(error.message);
             }
-        });
-    }
-    addAccountCoinsToJointCoin(coinsSymbols, account) {
-        return __awaiter(this, void 0, void 0, function* () {
-            //for adding the new account to related coins in JointCoins collection
-            try {
-                yield coinsSymbols.forEach((coinSymbol) => {
-                    jointCoins_1.default.addToArray({ coinSymbol }, "accounts", account);
-                });
-                console.log("coinsSymbols", coinsSymbols);
-            }
-            catch (error) {
-                console.error(error.message);
-            }
-        });
-    }
-    deleteJointCoinAccount(account) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // Deleting a deleted account from all coins which hold it
         });
     }
 }
