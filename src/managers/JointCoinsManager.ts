@@ -1,5 +1,4 @@
 import { ReturnDocument } from "mongodb";
-import jointCoins from "../models/jointCoins";
 import JointCoins, { ICoins } from "../models/jointCoins"
 
 export default class JointCoinsManager {
@@ -78,13 +77,11 @@ export default class JointCoinsManager {
         for (let jointCoin in jointCoins)
           if (jointCoins[jointCoin].coinSymbol === coinSymbol[coin]) {
             let requiredCoinSymbol = coinSymbol[coin]
-            jointCoins[jointCoin].accounts.push(account);
+            // jointCoins[jointCoin].accounts.push(account);
 
             await JointCoins.addToArray({ coinSymbol: requiredCoinSymbol }, "accounts", account);
-            // await JointCoins.addToArray({ coin }, "accounts", account);
           }
       }
-      // console.log("check", jointCoins);
     } catch (error) {
       console.error(error.message);
     }
@@ -93,9 +90,30 @@ export default class JointCoinsManager {
 
 
   // Removing a new account to related coins in JointCoins accounts array 
-  public async removeAccountFromJointCoinsAccounts(coinSymbol: string, account: string) {
+  // public async removeAccountFromJointCoinsAccounts(coinSymbol: string, account: string) {
+  //   try {
+  //     return await JointCoins.removeFromArray({ coinSymbol }, "accounts", account);
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+  // }
+
+  // Removing a new account to related coins in JointCoins accounts array 
+  public async removeAccountFromJointCoinsAccounts(coinSymbol: string[], account: string) {
+    console.log("read remove account from Joint");
+    let jointCoins = await this.getJointCoins();
+    if (!jointCoins) return;
+
     try {
-      return await JointCoins.removeFromArray({ coinSymbol }, "accounts", account);
+      for (let coin in coinSymbol) {
+
+        for (let jointCoin in jointCoins)
+          if (jointCoins[jointCoin].coinSymbol === coinSymbol[coin]) {
+            let requiredCoinSymbol = coinSymbol[coin]
+
+            await JointCoins.removeFromArray({ coinSymbol: requiredCoinSymbol }, "accounts", account);
+          }
+      }
     } catch (error) {
       console.error(error.message);
     }

@@ -91,12 +91,10 @@ class JointCoinsManager {
                     for (let jointCoin in jointCoins)
                         if (jointCoins[jointCoin].coinSymbol === coinSymbol[coin]) {
                             let requiredCoinSymbol = coinSymbol[coin];
-                            jointCoins[jointCoin].accounts.push(account);
+                            // jointCoins[jointCoin].accounts.push(account);
                             yield jointCoins_1.default.addToArray({ coinSymbol: requiredCoinSymbol }, "accounts", account);
-                            // await JointCoins.addToArray({ coin }, "accounts", account);
                         }
                 }
-                // console.log("check", jointCoins);
             }
             catch (error) {
                 console.error(error.message);
@@ -104,10 +102,30 @@ class JointCoinsManager {
         });
     }
     // Removing a new account to related coins in JointCoins accounts array 
+    // public async removeAccountFromJointCoinsAccounts(coinSymbol: string, account: string) {
+    //   try {
+    //     return await JointCoins.removeFromArray({ coinSymbol }, "accounts", account);
+    //   } catch (error) {
+    //     console.error(error.message);
+    //   }
+    // }
+    // Removing a new account to related coins in JointCoins accounts array 
     removeAccountFromJointCoinsAccounts(coinSymbol, account) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("read remove account from Joint");
+            let jointCoins = yield this.getJointCoins();
+            if (!jointCoins)
+                return;
             try {
-                return yield jointCoins_1.default.removeFromArray({ coinSymbol }, "accounts", account);
+                for (let coin in coinSymbol) {
+                    for (let jointCoin in jointCoins)
+                        if (jointCoins[jointCoin].coinSymbol === coinSymbol[coin]) {
+                            let requiredCoinSymbol = coinSymbol[coin];
+                            // jointCoins[jointCoin].accounts.filter(e  => e !== account)
+                            yield jointCoins_1.default.removeFromArray({ coinSymbol: requiredCoinSymbol }, "accounts", account);
+                        }
+                }
+                // console.log("check1",jointCoins);
             }
             catch (error) {
                 console.error(error.message);

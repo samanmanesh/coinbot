@@ -138,7 +138,7 @@ export default class AccountController implements IController {
       res.status(400).json({ message: error.message });
     }
 
-    // Add this username for coins in jointCoins too
+    // Add this username for coin's accounts in jointCoins too
     try {
       await this.jointCoinsManager.addAccountToJointCoinsAccounts(preferredCoins, username);  
     } catch (error) {
@@ -157,6 +157,8 @@ export default class AccountController implements IController {
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
+
+    // Remove this username for coin's account in jointCoins too
 
   }
 

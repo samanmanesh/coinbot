@@ -20,7 +20,7 @@ var RouteNames;
     RouteNames["BySymbol"] = "/:symbol";
     RouteNames["BySymbolAndElement"] = "/:symbol/:element";
     RouteNames["BySymbolAndUsername"] = "/:symbol/:username";
-    RouteNames["ByUsername"] = "/:username";
+    RouteNames["ByUsername"] = "/action/:username";
 })(RouteNames || (RouteNames = {}));
 class CommonCoinsController {
     constructor() {
@@ -36,7 +36,7 @@ class CommonCoinsController {
         this.router.put(RouteNames.BySymbolAndElement, (req, res) => this.updateCommonCoin(req, res));
         // this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.updateCommonCoinAccount(req, res));
         this.router.patch(RouteNames.ByUsername, (req, res) => this.addAccountToCommonCoinsAccounts(req, res));
-        this.router.delete(RouteNames.BySymbolAndUsername, (req, res) => this.deleteAccountFromCommonCoinsAccounts(req, res));
+        this.router.delete(RouteNames.ByUsername, (req, res) => this.deleteAccountFromCommonCoinsAccounts(req, res));
     }
     addNewCommonCoin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -119,8 +119,10 @@ class CommonCoinsController {
     }
     deleteAccountFromCommonCoinsAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const username = req.params.username;
+            const preferredCoins = req.body.coinSymbol;
             try {
-                const removedAccount = yield this.jointCoinsManager.removeAccountFromJointCoinsAccounts(req.params.symbol, req.params.username);
+                const removedAccount = yield this.jointCoinsManager.removeAccountFromJointCoinsAccounts(preferredCoins, username);
                 res.status(200).send(removedAccount);
             }
             catch (error) {
