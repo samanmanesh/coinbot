@@ -112,7 +112,6 @@ class JointCoinsManager {
     // Removing a new account to related coins in JointCoins accounts array 
     removeAccountFromJointCoinsAccounts(coinSymbol, account) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("read remove account from Joint");
             let jointCoins = yield this.getJointCoins();
             if (!jointCoins)
                 return;

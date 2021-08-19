@@ -45,7 +45,6 @@ export default class AccountController implements IController {
   async getAllAccounts(req: Request, res: Response) {
     let accounts = undefined;
     try {
-      console.log("getAllAccounts is read");
       accounts = await this.accountManager.getAccounts();
       res.status(200).send(accounts);
     } catch (error) {

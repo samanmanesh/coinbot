@@ -22,7 +22,6 @@ export default class AccountManager {
   public async getAccounts(): Promise<IAccount[] | undefined> {
     let allAccounts = undefined;
     try {
-      console.log("getAccounts is read in accountManager");
       allAccounts = await Account.find();
       if (allAccounts === undefined) {
         return undefined;
@@ -96,7 +95,7 @@ export default class AccountManager {
 
 
   public async removePreferredCoinsHandler(username: string, removeCoins: string[]) {
-    // account.preferred_coins =  account.preferred_coins.filter(c => c !== removeCoin);
+    
     let account = await this.getAccount(username);
     if (!account) return;
 

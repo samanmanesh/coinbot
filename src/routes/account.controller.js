@@ -43,7 +43,6 @@ class AccountController {
         return __awaiter(this, void 0, void 0, function* () {
             let accounts = undefined;
             try {
-                console.log("getAllAccounts is read");
                 accounts = yield this.accountManager.getAccounts();
                 res.status(200).send(accounts);
             }

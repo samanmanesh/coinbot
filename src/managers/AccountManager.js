@@ -35,7 +35,6 @@ class AccountManager {
         return __awaiter(this, void 0, void 0, function* () {
             let allAccounts = undefined;
             try {
-                console.log("getAccounts is read in accountManager");
                 allAccounts = yield Account_1.default.find();
                 if (allAccounts === undefined) {
                     return undefined;

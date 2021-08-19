@@ -53,19 +53,7 @@ export default class JointCoinsManager {
     return newData;
   }
 
-  // Adding a new account to related coins in JointCoins accounts array 
-  // public async addAccountToJointCoinsAccounts(coinSymbol: string, account: string) {
-
-  //   try {
-  //     return await JointCoins.addToArray({ coinSymbol }, "accounts", account);
-
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // }
-
-  //Adding a new account to its related coins
-  //Todo it is going to get an array of preferred Coins and an array of accounts name in case the it gives both requests 
+  // Adding a new account to related coins in JointCoins accounts array  
   public async addAccountToJointCoinsAccounts(coinSymbol: string[], account: string) {
 
     let jointCoins = await this.getJointCoins();
@@ -87,20 +75,8 @@ export default class JointCoinsManager {
     }
   }
 
-
-
-  // Removing a new account to related coins in JointCoins accounts array 
-  // public async removeAccountFromJointCoinsAccounts(coinSymbol: string, account: string) {
-  //   try {
-  //     return await JointCoins.removeFromArray({ coinSymbol }, "accounts", account);
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // }
-
   // Removing a new account to related coins in JointCoins accounts array 
   public async removeAccountFromJointCoinsAccounts(coinSymbol: string[], account: string) {
-    console.log("read remove account from Joint");
     let jointCoins = await this.getJointCoins();
     if (!jointCoins) return;
 
@@ -124,47 +100,3 @@ export default class JointCoinsManager {
 
 
 
-  //   try {
-  //     allJointCoins &&
-  //       await allJointCoins.forEach( () => {
-  //         // console.log("coinsSymbols are",coinsSymbols.coinSymbol);
-  //         JointCoins.removeFromArrays({}, "accounts", account);
-  //       });
-
-
-  //     // console.log("coinsSymbols");
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-
-  // }
-  //   {
-  //     for ( let coin of coinsSymbols ) {
-  //     try {
-  //       await JointCoins.addToArray({ coin }, "accounts", account);
-  //     } catch (error) {
-  //       console.error(error.message);
-  //     }
-  //   }
-
-  // }
-  // public async updateJointCoinAccount(coinSymbol: string, newAccount: string) {
-
-
-  // const preJointCoin = await this.getJointCoin(coinSymbol);
-  // if (!preJointCoin) return;
-  // const accountsSet = new Set(preJointCoin.accounts);
-  // accountsSet.add(newAccount);
-  // const accountsArray = Array.from(accountsSet);
-  // console.log("accountArraySet is" , accountsArray)
-  // const newJointCoin = { ...preJointCoin, accounts: accountsArray };
-  ///////////////////////////////
-
-  // try {
-  //   await JointCoins.addToArray({ coinSymbol }, "accounts", newAccount);
-  // }
-  // catch (error) {
-  //   console.error(error.message);
-  // }
-
-  // }
