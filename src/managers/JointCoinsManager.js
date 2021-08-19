@@ -121,11 +121,9 @@ class JointCoinsManager {
                     for (let jointCoin in jointCoins)
                         if (jointCoins[jointCoin].coinSymbol === coinSymbol[coin]) {
                             let requiredCoinSymbol = coinSymbol[coin];
-                            // jointCoins[jointCoin].accounts.filter(e  => e !== account)
                             yield jointCoins_1.default.removeFromArray({ coinSymbol: requiredCoinSymbol }, "accounts", account);
                         }
                 }
-                // console.log("check1",jointCoins);
             }
             catch (error) {
                 console.error(error.message);

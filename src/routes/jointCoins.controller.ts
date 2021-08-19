@@ -7,7 +7,7 @@ enum RouteNames {
   BySymbol = "/:symbol",
   BySymbolAndElement ="/:symbol/:element",
   BySymbolAndUsername = "/:symbol/:username",
-  ByUsername= "/action/:username"
+  ByActionAndUsername= "/action/:username"
 }
 
 export default class CommonCoinsController {
@@ -32,9 +32,9 @@ export default class CommonCoinsController {
     
     // this.router.patch(RouteNames.BySymbolAndUsername, (req: Request, res: Response) => this.updateCommonCoinAccount(req, res));
     
-    this.router.patch(RouteNames.ByUsername, (req: Request, res: Response) => this.addAccountToCommonCoinsAccounts(req, res));
+    this.router.patch(RouteNames.ByActionAndUsername, (req: Request, res: Response) => this.addAccountToCommonCoinsAccounts(req, res));
 
-    this.router.delete(RouteNames.ByUsername, (req: Request, res: Response) => this.deleteAccountFromCommonCoinsAccounts(req, res));
+    this.router.delete(RouteNames.ByActionAndUsername, (req: Request, res: Response) => this.deleteAccountFromCommonCoinsAccounts(req, res));
 
 
   }
