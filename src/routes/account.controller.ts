@@ -7,7 +7,7 @@ import JointCoinsManager from '../managers/JointCoinsManager';
 enum AccountPath {
   Base = "/",
   ByUsername = "/:username",
-  ByUserAndPreferredCoins = "/:username/:preferredCoins",
+  ByActionAndUser = "/action/:username",
   ByUserAndAssetsCoins = "/:username/:assets/:coins"
 }
 
@@ -36,10 +36,10 @@ export default class AccountController implements IController {
 
     this.router.put(AccountPath.ByUsername, (req, res) => this.addPreferredCoins(req, res));
 
-    this.router.delete(AccountPath.ByUserAndPreferredCoins, (req, res) => this.removePreferredCoins(req, res));
+    this.router.delete(AccountPath.ByActionAndUser, (req, res) => this.removePreferredCoins(req, res));
 
 
-    this.router.put(AccountPath.ByUserAndAssetsCoins, (req,res)=> this.addAssetCoins(req, res));
+    this.router.put(AccountPath.ByUserAndAssetsCoins, (req, res) => this.addAssetCoins(req, res));
   }
 
   async getAllAccounts(req: Request, res: Response) {
@@ -140,7 +140,7 @@ export default class AccountController implements IController {
 
     // Add this username for coin's accounts in jointCoins too
     try {
-      await this.jointCoinsManager.addAccountToJointCoinsAccounts(preferredCoins, username);  
+      await this.jointCoinsManager.addAccountToJointCoinsAccounts(preferredCoins, username);
     } catch (error) {
       console.error(error);
     }
@@ -159,6 +159,12 @@ export default class AccountController implements IController {
     }
 
     // Remove this username for coin's account in jointCoins too
+    try {
+      await this.jointCoinsManager.removeAccountFromJointCoinsAccounts(preferredCoins, username);
+
+    } catch (error) {
+      console.error(error);
+    }
 
   }
 

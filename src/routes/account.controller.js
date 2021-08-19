@@ -19,7 +19,7 @@ var AccountPath;
 (function (AccountPath) {
     AccountPath["Base"] = "/";
     AccountPath["ByUsername"] = "/:username";
-    AccountPath["ByUserAndPreferredCoins"] = "/:username/:preferredCoins";
+    AccountPath["ByActionAndUser"] = "/action/:username";
     AccountPath["ByUserAndAssetsCoins"] = "/:username/:assets/:coins";
 })(AccountPath || (AccountPath = {}));
 class AccountController {
@@ -36,7 +36,7 @@ class AccountController {
         this.router.delete(AccountPath.ByUsername, (req, res) => this.deleteAccount(req, res));
         this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
         this.router.put(AccountPath.ByUsername, (req, res) => this.addPreferredCoins(req, res));
-        this.router.delete(AccountPath.ByUserAndPreferredCoins, (req, res) => this.removePreferredCoins(req, res));
+        this.router.delete(AccountPath.ByActionAndUser, (req, res) => this.removePreferredCoins(req, res));
         this.router.put(AccountPath.ByUserAndAssetsCoins, (req, res) => this.addAssetCoins(req, res));
     }
     getAllAccounts(req, res) {
@@ -160,6 +160,12 @@ class AccountController {
                 res.status(400).json({ message: error.message });
             }
             // Remove this username for coin's account in jointCoins too
+            try {
+                yield this.jointCoinsManager.removeAccountFromJointCoinsAccounts(preferredCoins, username);
+            }
+            catch (error) {
+                console.error(error);
+            }
         });
     }
     // Controlling the assets 
