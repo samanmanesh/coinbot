@@ -34,7 +34,7 @@ export default class AccountController implements IController {
     this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
 
 
-    this.router.put(AccountPath.ByUserAndPreferredCoins, (req, res) => this.addPreferredCoins(req, res));
+    this.router.put(AccountPath.ByUsername, (req, res) => this.addPreferredCoins(req, res));
 
     this.router.delete(AccountPath.ByUserAndPreferredCoins, (req, res) => this.removePreferredCoins(req, res));
 
@@ -138,8 +138,13 @@ export default class AccountController implements IController {
       res.status(400).json({ message: error.message });
     }
 
-    // add this username for coins in jointCoins too
-    
+    // Add this username for coins in jointCoins too
+    try {
+      await this.jointCoinsManager.addAccountToJointCoinsAccounts(preferredCoins, username);  
+    } catch (error) {
+      console.error(error);
+    }
+
   }
 
   async removePreferredCoins(req: Request, res: Response) {

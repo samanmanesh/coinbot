@@ -88,16 +88,15 @@ class JointCoinsManager {
                 return;
             try {
                 for (let coin in coinSymbol) {
-                    for (let joinCoin in jointCoins)
-                        if (jointCoins[joinCoin].coinSymbol === coinSymbol[coin]) {
-                            jointCoins[joinCoin].accounts.push(account);
+                    for (let jointCoin in jointCoins)
+                        if (jointCoins[jointCoin].coinSymbol === coinSymbol[coin]) {
+                            let requiredCoinSymbol = coinSymbol[coin];
+                            jointCoins[jointCoin].accounts.push(account);
+                            yield jointCoins_1.default.addToArray({ coinSymbol: requiredCoinSymbol }, "accounts", account);
                             // await JointCoins.addToArray({ coin }, "accounts", account);
                         }
                 }
-                yield jointCoins_1.default.updateAll({}, jointCoins);
-                console.log("check", jointCoins);
-                //Todo could add account name to related coinsSymbol just find a way to save the new JointCoins to store in daba base
-                // await JointCoins.addToArray({ coin }, "accounts", account);
+                // console.log("check", jointCoins);
             }
             catch (error) {
                 console.error(error.message);

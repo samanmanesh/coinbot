@@ -123,14 +123,6 @@ class Model {
                 .updateMany(filter, { $set: document });
         });
     }
-    updateAll(filter, document) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this.client
-                .db(this.databaseName)
-                .collection(this.collectionName)
-                .updateMany(filter, { $set: document });
-        });
-    }
     removeAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.client
