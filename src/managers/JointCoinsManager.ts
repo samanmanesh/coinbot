@@ -97,22 +97,28 @@ export default class JointCoinsManager {
 
   public async coinsExistenceHandler(preferredCoins: string[]) {
 
-    const preJoinCoins = await this.getJointCoins();
-    const notExitingCoins= [];
-    
-    if (!preJoinCoins) return;
+    const preJointCoins = await this.getJointCoins();
+    let notExitingCoins = preferredCoins;
+
+    if (!preJointCoins) return;
     for (let coin in preferredCoins) {
 
-      for (let coinSymbol in preJoinCoins) {
+      
+      
+      for (let coinSymbol in preJointCoins) {
 
-        if (preJoinCoins[coinSymbol].coinSymbol !== preferredCoins[coin]) { notExitingCoins.push(preferredCoins[coin]); }
+        if (preJointCoins[coinSymbol].coinSymbol === preferredCoins[coin]) { 
+          notExitingCoins = preferredCoins.filter( e => e === preferredCoins[coin])
+        }
+        
 
       }
     }
     const notExitingCoinsArray= Array.from( new Set(notExitingCoins));
-    console.log(notExitingCoinsArray);
     console.log(notExitingCoins," notExitingCoins");
-    if (!notExitingCoins) return;
+    console.log(notExitingCoinsArray," notExitingCoinsArray");
+    if (!notExitingCoinsArray) return;
+    // return notExitingCoinsArray;
     return notExitingCoinsArray;
 
   }

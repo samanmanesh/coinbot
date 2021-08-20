@@ -141,6 +141,7 @@ class AccountController {
             // Check if coins in preferredCoins exists in jointCoins to add to
             try {
                 const result = yield this.jointCoinsManager.coinsExistenceHandler(preferredCoins);
+                console.log("result", result);
                 // If coins doesn't exist added the coin to jointCoins object
                 if (result) {
                     for (let coin in result) {

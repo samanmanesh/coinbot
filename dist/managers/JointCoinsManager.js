@@ -114,22 +114,24 @@ class JointCoinsManager {
     }
     coinsExistenceHandler(preferredCoins) {
         return __awaiter(this, void 0, void 0, function* () {
-            const preJoinCoins = yield this.getJointCoins();
-            const notExitingCoins = [];
-            if (!preJoinCoins)
+            const preJointCoins = yield this.getJointCoins();
+            let notExitingCoins = preferredCoins;
+            if (!preJointCoins)
                 return;
             for (let coin in preferredCoins) {
-                for (let coinSymbol in preJoinCoins) {
-                    if (preJoinCoins[coinSymbol].coinSymbol !== preferredCoins[coin]) {
-                        notExitingCoins.push(preferredCoins[coin]);
+                // notExitingCoins.push(preJoinCoins.find( e => e.coinSymbol === preferredCoins[coin]))
+                for (let coinSymbol in preJointCoins) {
+                    if (preJointCoins[coinSymbol].coinSymbol === preferredCoins[coin]) {
+                        notExitingCoins = preferredCoins.filter(e => e === preferredCoins[coin]);
                     }
                 }
             }
             const notExitingCoinsArray = Array.from(new Set(notExitingCoins));
-            console.log(notExitingCoinsArray);
             console.log(notExitingCoins, " notExitingCoins");
-            if (!notExitingCoins)
+            console.log(notExitingCoinsArray, " notExitingCoinsArray");
+            if (!notExitingCoinsArray)
                 return;
+            // return notExitingCoinsArray;
             return notExitingCoinsArray;
         });
     }
