@@ -1,4 +1,3 @@
-import { ReturnDocument } from "mongodb";
 import JointCoins, { ICoins } from "../models/jointCoins"
 
 export default class JointCoinsManager {
@@ -96,40 +95,11 @@ export default class JointCoinsManager {
   }
 
   public async coinsExistenceHandler(preferredCoin: string) {
-
     const preJointCoins = await this.getJointCoins();
-    // let notExitingCoins = preferredCoins;
-
     if (!preJointCoins) return;
-
     const result = preJointCoins.find(c => c.coinSymbol === preferredCoin);
     if (result) return true;
     if (!result) return false;
-    // for (let coin in preJointCoins) {
-
-    //   preJointCoins[coin].coinSymbol === preferredCoin;
-    // }
-
-    // for (let coin in preferredCoins) {
-    
-
-
-    //   for (let coinSymbol in preJointCoins) {
-
-    //     if (preJointCoins[coinSymbol].coinSymbol === preferredCoins[coin]) { 
-    //       notExitingCoins = preferredCoins.filter( e => e === preferredCoins[coin])
-    //     }
-        
-
-    //   }
-    // }
-    // const notExitingCoinsArray= Array.from( new Set(notExitingCoins));
-    // console.log(notExitingCoins," notExitingCoins");
-    // console.log(notExitingCoinsArray," notExitingCoinsArray");
-    // if (!notExitingCoinsArray) return;
-    // // return notExitingCoinsArray;
-    // return notExitingCoinsArray;
-
   }
 
 
