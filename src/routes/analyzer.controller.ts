@@ -20,8 +20,6 @@ export default class Analyzer {
 
   setupRoutes() {
 
-    // this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsData.bind(this));
-    // this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyData.bind(this));
 
     // this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
   }
