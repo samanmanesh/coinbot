@@ -71,16 +71,7 @@ class JointCoinsManager {
             return newData;
         });
     }
-    // Adding a new account to related coins in JointCoins accounts array 
-    // public async addAccountToJointCoinsAccounts(coinSymbol: string, account: string) {
-    //   try {
-    //     return await JointCoins.addToArray({ coinSymbol }, "accounts", account);
-    //   } catch (error) {
-    //     console.error(error.message);
-    //   }
-    // }
-    //Adding a new account to its related coins
-    //Todo it is going to get an array of preferred Coins and an array of accounts name in case the it gives both requests 
+    // Adding a new account to related coins in JointCoins accounts array  
     addAccountToJointCoinsAccounts(coinSymbol, account) {
         return __awaiter(this, void 0, void 0, function* () {
             let jointCoins = yield this.getJointCoins();
@@ -102,14 +93,6 @@ class JointCoinsManager {
         });
     }
     // Removing a new account to related coins in JointCoins accounts array 
-    // public async removeAccountFromJointCoinsAccounts(coinSymbol: string, account: string) {
-    //   try {
-    //     return await JointCoins.removeFromArray({ coinSymbol }, "accounts", account);
-    //   } catch (error) {
-    //     console.error(error.message);
-    //   }
-    // }
-    // Removing a new account to related coins in JointCoins accounts array 
     removeAccountFromJointCoinsAccounts(coinSymbol, account) {
         return __awaiter(this, void 0, void 0, function* () {
             let jointCoins = yield this.getJointCoins();
@@ -129,41 +112,26 @@ class JointCoinsManager {
             }
         });
     }
+    coinsExistenceHandler(preferredCoins) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const preJoinCoins = yield this.getJointCoins();
+            const notExitingCoins = [];
+            if (!preJoinCoins)
+                return;
+            for (let coin in preferredCoins) {
+                for (let coinSymbol in preJoinCoins) {
+                    if (preJoinCoins[coinSymbol].coinSymbol !== preferredCoins[coin]) {
+                        notExitingCoins.push(preferredCoins[coin]);
+                    }
+                }
+            }
+            const notExitingCoinsArray = Array.from(new Set(notExitingCoins));
+            console.log(notExitingCoinsArray);
+            console.log(notExitingCoins, " notExitingCoins");
+            if (!notExitingCoins)
+                return;
+            return notExitingCoinsArray;
+        });
+    }
 }
 exports.default = JointCoinsManager;
-//   try {
-//     allJointCoins &&
-//       await allJointCoins.forEach( () => {
-//         // console.log("coinsSymbols are",coinsSymbols.coinSymbol);
-//         JointCoins.removeFromArrays({}, "accounts", account);
-//       });
-//     // console.log("coinsSymbols");
-//   } catch (error) {
-//     console.error(error.message);
-//   }
-// }
-//   {
-//     for ( let coin of coinsSymbols ) {
-//     try {
-//       await JointCoins.addToArray({ coin }, "accounts", account);
-//     } catch (error) {
-//       console.error(error.message);
-//     }
-//   }
-// }
-// public async updateJointCoinAccount(coinSymbol: string, newAccount: string) {
-// const preJointCoin = await this.getJointCoin(coinSymbol);
-// if (!preJointCoin) return;
-// const accountsSet = new Set(preJointCoin.accounts);
-// accountsSet.add(newAccount);
-// const accountsArray = Array.from(accountsSet);
-// console.log("accountArraySet is" , accountsArray)
-// const newJointCoin = { ...preJointCoin, accounts: accountsArray };
-///////////////////////////////
-// try {
-//   await JointCoins.addToArray({ coinSymbol }, "accounts", newAccount);
-// }
-// catch (error) {
-//   console.error(error.message);
-// }
-// }

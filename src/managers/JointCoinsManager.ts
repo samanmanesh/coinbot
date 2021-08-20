@@ -95,6 +95,28 @@ export default class JointCoinsManager {
     }
   }
 
+  public async coinsExistenceHandler(preferredCoins: string[]) {
+
+    const preJoinCoins = await this.getJointCoins();
+    const notExitingCoins= [];
+    
+    if (!preJoinCoins) return;
+    for (let coin in preferredCoins) {
+
+      for (let coinSymbol in preJoinCoins) {
+
+        if (preJoinCoins[coinSymbol].coinSymbol !== preferredCoins[coin]) { notExitingCoins.push(preferredCoins[coin]); }
+
+      }
+    }
+    const notExitingCoinsArray= Array.from( new Set(notExitingCoins));
+    console.log(notExitingCoinsArray);
+    console.log(notExitingCoins," notExitingCoins");
+    if (!notExitingCoins) return;
+    return notExitingCoinsArray;
+
+  }
+
 
 }
 

@@ -112,7 +112,6 @@ class AccountManager {
     }
     removePreferredCoinsHandler(username, removeCoins) {
         return __awaiter(this, void 0, void 0, function* () {
-            // account.preferred_coins =  account.preferred_coins.filter(c => c !== removeCoin);
             let account = yield this.getAccount(username);
             if (!account)
                 return;

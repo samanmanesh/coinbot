@@ -138,6 +138,23 @@ class AccountController {
             catch (error) {
                 res.status(400).json({ message: error.message });
             }
+            // Check if coins in preferredCoins exists in jointCoins to add to
+            try {
+                const result = yield this.jointCoinsManager.coinsExistenceHandler(preferredCoins);
+                // If coins doesn't exist added the coin to jointCoins object
+                if (result) {
+                    for (let coin in result) {
+                        const newCoin = {
+                            coinSymbol: result[coin],
+                            accounts: []
+                        };
+                        yield this.jointCoinsManager.createJointCoin(newCoin);
+                    }
+                }
+            }
+            catch (error) {
+                console.error(error);
+            }
             // Add this username for coin's accounts in jointCoins too
             try {
                 yield this.jointCoinsManager.addAccountToJointCoinsAccounts(preferredCoins, username);

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const account_controller_1 = __importDefault(require("./routes/account.controller"));
 const index_1 = __importDefault(require("./app/index"));
 const marketData_controller_1 = __importDefault(require("./routes/marketData.controller"));
-const analyzer_1 = __importDefault(require("./routes/analyzer"));
+const analyzer_controller_1 = __importDefault(require("./routes/analyzer.controller"));
 const jointCoins_controller_1 = __importDefault(require("./routes/jointCoins.controller"));
 const routes = [
     {
@@ -19,7 +19,7 @@ const routes = [
     },
     {
         path: "/analyzer",
-        controller: new analyzer_1.default(),
+        controller: new analyzer_controller_1.default(),
     },
     {
         path: "/joint-coins",

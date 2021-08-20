@@ -137,6 +137,26 @@ export default class AccountController implements IController {
       res.status(400).json({ message: error.message });
     }
 
+    // Check if coins in preferredCoins exists in jointCoins to add to
+    try {
+      const result = await this.jointCoinsManager.coinsExistenceHandler
+        (preferredCoins);
+
+        // If coins doesn't exist added the coin to jointCoins object
+        if (result) {
+        for (let coin in result) {
+          const newCoin: ICoins = {
+            coinSymbol: result[coin],
+            accounts: []
+          }
+          await this.jointCoinsManager.createJointCoin(newCoin);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+
     // Add this username for coin's accounts in jointCoins too
     try {
       await this.jointCoinsManager.addAccountToJointCoinsAccounts(preferredCoins, username);
