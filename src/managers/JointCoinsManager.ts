@@ -95,31 +95,40 @@ export default class JointCoinsManager {
     }
   }
 
-  public async coinsExistenceHandler(preferredCoins: string[]) {
+  public async coinsExistenceHandler(preferredCoin: string) {
 
     const preJointCoins = await this.getJointCoins();
-    let notExitingCoins = preferredCoins;
+    // let notExitingCoins = preferredCoins;
 
     if (!preJointCoins) return;
-    for (let coin in preferredCoins) {
 
-      
-      
-      for (let coinSymbol in preJointCoins) {
+    const result = preJointCoins.find(c => c.coinSymbol === preferredCoin);
+    if (result) return true;
+    if (!result) return false;
+    // for (let coin in preJointCoins) {
 
-        if (preJointCoins[coinSymbol].coinSymbol === preferredCoins[coin]) { 
-          notExitingCoins = preferredCoins.filter( e => e === preferredCoins[coin])
-        }
+    //   preJointCoins[coin].coinSymbol === preferredCoin;
+    // }
+
+    // for (let coin in preferredCoins) {
+    
+
+
+    //   for (let coinSymbol in preJointCoins) {
+
+    //     if (preJointCoins[coinSymbol].coinSymbol === preferredCoins[coin]) { 
+    //       notExitingCoins = preferredCoins.filter( e => e === preferredCoins[coin])
+    //     }
         
 
-      }
-    }
-    const notExitingCoinsArray= Array.from( new Set(notExitingCoins));
-    console.log(notExitingCoins," notExitingCoins");
-    console.log(notExitingCoinsArray," notExitingCoinsArray");
-    if (!notExitingCoinsArray) return;
+    //   }
+    // }
+    // const notExitingCoinsArray= Array.from( new Set(notExitingCoins));
+    // console.log(notExitingCoins," notExitingCoins");
+    // console.log(notExitingCoinsArray," notExitingCoinsArray");
+    // if (!notExitingCoinsArray) return;
+    // // return notExitingCoinsArray;
     // return notExitingCoinsArray;
-    return notExitingCoinsArray;
 
   }
 

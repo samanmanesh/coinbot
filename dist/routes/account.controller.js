@@ -140,18 +140,27 @@ class AccountController {
             }
             // Check if coins in preferredCoins exists in jointCoins to add to
             try {
-                const result = yield this.jointCoinsManager.coinsExistenceHandler(preferredCoins);
-                console.log("result", result);
-                // If coins doesn't exist added the coin to jointCoins object
-                if (result) {
-                    for (let coin in result) {
+                for (let coin in preferredCoins) {
+                    const result = yield this.jointCoinsManager.coinsExistenceHandler(preferredCoins[coin]);
+                    console.log("result", result);
+                    if (result === false) {
                         const newCoin = {
-                            coinSymbol: result[coin],
+                            coinSymbol: preferredCoins[coin],
                             accounts: []
                         };
                         yield this.jointCoinsManager.createJointCoin(newCoin);
                     }
                 }
+                // if (result) {
+                //   for (let coin in result) {
+                //     const newCoin: ICoins = {
+                //       coinSymbol: result[coin],
+                //       accounts: []
+                //     }
+                //     // If coins doesn't exist added the coin to jointCoins object
+                //     await this.jointCoinsManager.createJointCoin(newCoin);
+                //   }
+                // }
             }
             catch (error) {
                 console.error(error);
