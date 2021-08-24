@@ -19,8 +19,6 @@ export default class Analyzer {
   }
 
   setupRoutes() {
-
-
     // this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
   }
 
@@ -31,42 +29,43 @@ export default class Analyzer {
 
 
 
-  async getPreferredCoinsData(req: Request, res: Response) {
-    let account = undefined;
-    let currencyData = undefined;
-    let preferredCoinsData = undefined;
+  // async getPreferredCoinsData(req: Request, res: Response) {
+  //   let account = undefined;
+  //   let currencyData = undefined;
+  //   let preferredCoinsData = undefined;
 
-    try {
+  //   try {
 
-      account = await this.getAccountsData(req, res);
+  //     account = await this.getAccountsData(req, res);
 
-    } catch (error) {
-      console.error("error is", error);
-    }
+  //   } catch (error) {
+  //     console.error("error is", error);
+  //   }
 
 
-    try { 
-      currencyData = await this.getCurrencyData();
-    } catch (error) { 
-      console.error("error is", error);
-    }
+  //   try { 
+  //     currencyData = await this.getCurrencyData();
+  //   } catch (error) { 
+  //     console.error("error is", error);
+  //   }
 
-    if (!account || !currencyData) {
-      return;
-    }
+  //   if (!account || !currencyData) {
+  //     return;
+  //   }
 
-    // try {
-    //   preferredCoinsData = await this.analyzerManager.preferredCoinsHandler(account, currencyData);
-    //   console.log("preferredCoinsData is", preferredCoinsData);
-    // } catch (error) {
-    //   console.log("error is", error);
-    // }
+  //   // try {
+  //   //   preferredCoinsData = await this.analyzerManager.preferredCoinsHandler(account, currencyData);
+  //   //   console.log("preferredCoinsData is", preferredCoinsData);
+  //   // } catch (error) {
+  //   //   console.log("error is", error);
+  //   // }
 
-    return preferredCoinsData;
+  //   return preferredCoinsData;
 
-  }
+  // }
 
   // Getting the data related to accounts from data base
+  
   async getAccountsData(req: Request, res: Response) {
 
     let account = undefined;
