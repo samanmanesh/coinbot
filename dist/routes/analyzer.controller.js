@@ -30,43 +30,37 @@ class Analyzer {
         this.setupRoutes();
     }
     setupRoutes() {
-        // this.router.get(SellAnalyzerPath.ByUsername, this.getAccountsData.bind(this));
-        // this.router.get(SellAnalyzerPath.ByUsername, this.getCurrencyData.bind(this));
         // this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
     }
     analyze(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
         });
     }
-    getPreferredCoinsData(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let account = undefined;
-            let currencyData = undefined;
-            let preferredCoinsData = undefined;
-            try {
-                account = yield this.getAccountsData(req, res);
-            }
-            catch (error) {
-                console.error("error is", error);
-            }
-            try {
-                currencyData = yield this.getCurrencyData();
-            }
-            catch (error) {
-                console.error("error is", error);
-            }
-            if (!account || !currencyData) {
-                return;
-            }
-            // try {
-            //   preferredCoinsData = await this.analyzerManager.preferredCoinsHandler(account, currencyData);
-            //   console.log("preferredCoinsData is", preferredCoinsData);
-            // } catch (error) {
-            //   console.log("error is", error);
-            // }
-            return preferredCoinsData;
-        });
-    }
+    // async getPreferredCoinsData(req: Request, res: Response) {
+    //   let account = undefined;
+    //   let currencyData = undefined;
+    //   let preferredCoinsData = undefined;
+    //   try {
+    //     account = await this.getAccountsData(req, res);
+    //   } catch (error) {
+    //     console.error("error is", error);
+    //   }
+    //   try { 
+    //     currencyData = await this.getCurrencyData();
+    //   } catch (error) { 
+    //     console.error("error is", error);
+    //   }
+    //   if (!account || !currencyData) {
+    //     return;
+    //   }
+    //   // try {
+    //   //   preferredCoinsData = await this.analyzerManager.preferredCoinsHandler(account, currencyData);
+    //   //   console.log("preferredCoinsData is", preferredCoinsData);
+    //   // } catch (error) {
+    //   //   console.log("error is", error);
+    //   // }
+    //   return preferredCoinsData;
+    // }
     // Getting the data related to accounts from data base
     getAccountsData(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

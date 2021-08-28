@@ -2,7 +2,7 @@ import express, { Application, Request, Response } from "express";
 import { IRoute } from "../types";
 export default class App {
   public app: Application = express();
-
+  
   constructor(routes: IRoute[]) {
     this.setupMiddleware();
     this.setupRoutes(routes);

@@ -3,7 +3,8 @@ import { IRoute } from "./types";
 import App from "./app/index";
 import CoinMarketController from "./routes/marketData.controller";
 import Analyzer from "./routes/analyzer.controller";
-import jointCoinsController from "./routes/jointCoins.controller";
+import JointCoinsController from "./routes/jointCoins.controller";
+import PriceController from "./routes/price.controller";
 
 const routes: IRoute[] = [
   {
@@ -20,7 +21,11 @@ const routes: IRoute[] = [
   },
   {
     path: "/joint-coins",
-    controller: new jointCoinsController(),
+    controller: new JointCoinsController(),
+  },
+  {
+    path: "/prices",
+    controller: new PriceController()
   }
 ];
 
