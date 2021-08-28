@@ -128,5 +128,25 @@ class AccountManager {
             return account;
         });
     }
+    addCoinsToAccountsAssets(username, coins) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(username, "read the function in manager");
+            let account = yield this.getAccount(username);
+            if (!account)
+                return;
+            account.assets.coins = Array.from(new Set([...account.assets.coins, ...coins]));
+            console.log(account.assets.coins, "check coins after update");
+            // for (let coin in coins) {
+            //   let indexCoin = coins[coin];
+            //   account.assets.push(indexCoin);
+            // }
+            // try {
+            //   await Account.updateOne({ username }, account);
+            // } catch (error) {
+            //   console.error(error);
+            // }
+            // return account;
+        });
+    }
 }
 exports.default = AccountManager;
