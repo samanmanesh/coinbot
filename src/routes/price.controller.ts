@@ -3,24 +3,29 @@ import { IController } from "../types";
 import PriceManager from "../managers/PriceManager";
 
 
+
 export default class PriceController implements IController {
   public router = express.Router();
-  priceManager = new PriceManager();
-
+  BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
+  SELECTOR = '.showPrice';
+  priceManager = new PriceManager(this.BINANCE_URL,this.SELECTOR);
   constructor() {
     this.setupRoutes();
   }
 
   setupRoutes() {
-    this.router.get("/", this.getPrices);
-    // this.router.get("/:id", this.getPrice);
+    this.router.get("/", this.getPrices.bind(this));
     // this.router.post("/", this.createPrice);
     // this.router.put("/:id", this.updatePrice);
     // this.router.delete("/:id", this.deletePrice);
   }
-
   getPrices = async (req: Request, res: Response) => {
-    const prices = await this.priceManager.test();
-    res.status(200).json(prices);
+    try {
+    const prices = await this.priceManager.interval();
+    res.send(prices);
+    } catch (error) { 
+      res.status(500).send(error);
+    }
   }
+  
 }

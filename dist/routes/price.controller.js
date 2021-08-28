@@ -17,16 +17,22 @@ const PriceManager_1 = __importDefault(require("../managers/PriceManager"));
 class PriceController {
     constructor() {
         this.router = express_1.default.Router();
-        this.priceManager = new PriceManager_1.default();
+        this.BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
+        this.SELECTOR = '.showPrice';
+        this.priceManager = new PriceManager_1.default(this.BINANCE_URL, this.SELECTOR);
         this.getPrices = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const prices = yield this.priceManager.test();
-            res.status(200).json(prices);
+            try {
+                const prices = yield this.priceManager.interval();
+                res.send(prices);
+            }
+            catch (error) {
+                res.status(500).send(error);
+            }
         });
         this.setupRoutes();
     }
     setupRoutes() {
-        this.router.get("/", this.getPrices);
-        // this.router.get("/:id", this.getPrice);
+        this.router.get("/", this.getPrices.bind(this));
         // this.router.post("/", this.createPrice);
         // this.router.put("/:id", this.updatePrice);
         // this.router.delete("/:id", this.deletePrice);
