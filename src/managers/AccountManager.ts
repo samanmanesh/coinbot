@@ -114,10 +114,10 @@ export default class AccountManager {
   }
 
   public async addCoinsToAccountsAssets(username: string, coins: IWalletCoin[]) {
-    console.log(username, "read the function in manager");
     let account = await this.getAccount(username);
     if (!account) return;
-
+    
+    console.log(username, "read the function in manager");
     account.assets.coins = Array.from(new Set([...account.assets.coins, ...coins]));
 
     console.log(account.assets.coins,"check coins after update");

@@ -130,10 +130,10 @@ class AccountManager {
     }
     addCoinsToAccountsAssets(username, coins) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(username, "read the function in manager");
             let account = yield this.getAccount(username);
             if (!account)
                 return;
+            console.log(username, "read the function in manager");
             account.assets.coins = Array.from(new Set([...account.assets.coins, ...coins]));
             console.log(account.assets.coins, "check coins after update");
             // for (let coin in coins) {

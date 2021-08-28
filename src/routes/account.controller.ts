@@ -102,9 +102,9 @@ export default class AccountController implements IController {
   }
 
   async addCoinsToAnAccountsAssets(req: Request, res: Response) {
-    const username = req?.body?.username ?? "";
+    const username = req?.params?.username ?? "";
     const fromDB = await this.accountManager.authorizeAccount(username);
-    if (fromDB) {
+    if (!fromDB) {
       res.status(404).send("User does not exist!");
       return;
     }
