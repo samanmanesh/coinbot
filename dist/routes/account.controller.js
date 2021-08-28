@@ -20,7 +20,7 @@ var AccountPath;
     AccountPath["Base"] = "/";
     AccountPath["ByUsername"] = "/:username";
     AccountPath["ByActionAndUser"] = "/action/:username";
-    AccountPath["ByUserAndAssetsCoins"] = "/:username/:assets/:coins";
+    AccountPath["ByUserAndAssets"] = "/assets/:username";
 })(AccountPath || (AccountPath = {}));
 class AccountController {
     constructor() {
@@ -37,7 +37,7 @@ class AccountController {
         this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
         this.router.put(AccountPath.ByUsername, (req, res) => this.addPreferredCoins(req, res));
         this.router.delete(AccountPath.ByActionAndUser, (req, res) => this.removePreferredCoins(req, res));
-        this.router.put(AccountPath.ByUserAndAssetsCoins, (req, res) => this.addAssetCoins(req, res));
+        this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAnAccountsAssets(req, res));
     }
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -91,6 +91,23 @@ class AccountController {
             try {
                 const savedAccount = yield this.accountManager.createAccount(newAccount);
                 res.status(201).json(savedAccount);
+            }
+            catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+        });
+    }
+    addCoinsToAnAccountsAssets(req, res) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
+            const fromDB = yield this.accountManager.authorizeAccount(username);
+            if (fromDB) {
+                res.status(404).send("User does not exist!");
+                return;
+            }
+            try {
+                const result = yield this.accountManager.addCoinsToAccountsAssets(username, req.body.coins);
             }
             catch (error) {
                 res.status(400).json({ message: error.message });

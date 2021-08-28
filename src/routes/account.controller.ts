@@ -8,7 +8,7 @@ enum AccountPath {
   Base = "/",
   ByUsername = "/:username",
   ByActionAndUser = "/action/:username",
-  ByUserAndAssetsCoins = "/:username/:assets/:coins"
+  ByUserAndAssets = "/assets/:username"
 }
 
 export default class AccountController implements IController {
@@ -39,7 +39,9 @@ export default class AccountController implements IController {
     this.router.delete(AccountPath.ByActionAndUser, (req, res) => this.removePreferredCoins(req, res));
 
 
-    this.router.put(AccountPath.ByUserAndAssetsCoins, (req, res) => this.addAssetCoins(req, res));
+    this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAnAccountsAssets(req, res));
+
+
   }
 
   async getAllAccounts(req: Request, res: Response) {
@@ -99,7 +101,23 @@ export default class AccountController implements IController {
 
   }
 
-  async addAssetsToAnAccount(req: Request, res: Response) { }
+  async addCoinsToAnAccountsAssets(req: Request, res: Response) {
+    const username = req?.body?.username ?? "";
+    const fromDB = await this.accountManager.authorizeAccount(username);
+    if (fromDB) {
+      res.status(404).send("User does not exist!");
+      return;
+    }
+
+    try {
+      const result = await this.accountManager.addCoinsToAccountsAssets(username, req.body.coins);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+    
+
+
+  }
 
 
   async deleteAccount(req: Request, res: Response) {

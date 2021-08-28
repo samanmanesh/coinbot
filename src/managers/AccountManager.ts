@@ -1,6 +1,6 @@
 import { DeleteResult } from 'mongodb';
 import Account, { IAccount } from "../models/Account";
-
+import { IWalletCoin, IAccountAssets } from "../types";
 export default class AccountManager {
   constructor() {
   }
@@ -112,5 +112,28 @@ export default class AccountManager {
     return account;
 
   }
+
+  public async addCoinsToAccountsAssets(username: string, coins: IWalletCoin[]) {
+    console.log(username, "read the function in manager");
+    let account = await this.getAccount(username);
+    if (!account) return;
+
+    account.assets.coins = Array.from(new Set([...account.assets.coins, ...coins]));
+
+    console.log(account.assets.coins,"check coins after update");
+    // for (let coin in coins) {
+    //   let indexCoin = coins[coin];
+    //   account.assets.push(indexCoin);
+    // }
+
+    // try {
+    //   await Account.updateOne({ username }, account);
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    // return account;
+  }
+
+
 }
 
