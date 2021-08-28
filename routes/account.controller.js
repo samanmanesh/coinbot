@@ -100,9 +100,9 @@ class AccountController {
     addCoinsToAnAccountsAssets(req, res) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
+            const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
             const fromDB = yield this.accountManager.authorizeAccount(username);
-            if (fromDB) {
+            if (!fromDB) {
                 res.status(404).send("User does not exist!");
                 return;
             }
