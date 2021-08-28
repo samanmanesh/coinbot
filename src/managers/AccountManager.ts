@@ -117,23 +117,17 @@ export default class AccountManager {
     let account = await this.getAccount(username);
     if (!account) return;
     
-    console.log(username, "read the function in manager");
     account.assets.coins = Array.from(new Set([...account.assets.coins, ...coins]));
 
-    console.log(account.assets.coins,"check coins after update");
-    // for (let coin in coins) {
-    //   let indexCoin = coins[coin];
-    //   account.assets.push(indexCoin);
-    // }
+    console.log(account.assets.coins,"check coins after update"); 
 
-    // try {
-    //   await Account.updateOne({ username }, account);
-    // } catch (error) {
-    //   console.error(error);
-    // }
-    // return account;
+    try {
+      await Account.updateOne({ username }, account);
+    } catch (error) {
+      console.error(error);
+    }
+    return account;
   }
-
 
 }
 
