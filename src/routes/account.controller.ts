@@ -99,6 +99,9 @@ export default class AccountController implements IController {
 
   }
 
+  async addAssetsToAnAccount(req: Request, res: Response) { }
+
+
   async deleteAccount(req: Request, res: Response) {
     const { username } = req.params;
     try {
