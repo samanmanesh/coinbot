@@ -142,7 +142,6 @@ class AccountController {
             try {
                 for (let coin in preferredCoins) {
                     const result = yield this.jointCoinsManager.coinsExistenceHandler(preferredCoins[coin]);
-                    console.log("result", result);
                     if (result === false) {
                         const newCoin = {
                             coinSymbol: preferredCoins[coin],
@@ -151,16 +150,6 @@ class AccountController {
                         yield this.jointCoinsManager.createJointCoin(newCoin);
                     }
                 }
-                // if (result) {
-                //   for (let coin in result) {
-                //     const newCoin: ICoins = {
-                //       coinSymbol: result[coin],
-                //       accounts: []
-                //     }
-                //     // If coins doesn't exist added the coin to jointCoins object
-                //     await this.jointCoinsManager.createJointCoin(newCoin);
-                //   }
-                // }
             }
             catch (error) {
                 console.error(error);

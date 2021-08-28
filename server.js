@@ -8,6 +8,7 @@ const index_1 = __importDefault(require("./app/index"));
 const marketData_controller_1 = __importDefault(require("./routes/marketData.controller"));
 const analyzer_controller_1 = __importDefault(require("./routes/analyzer.controller"));
 const jointCoins_controller_1 = __importDefault(require("./routes/jointCoins.controller"));
+const price_controller_1 = __importDefault(require("./routes/price.controller"));
 const routes = [
     {
         path: "/accounts",
@@ -24,6 +25,10 @@ const routes = [
     {
         path: "/joint-coins",
         controller: new jointCoins_controller_1.default(),
+    },
+    {
+        path: "/prices",
+        controller: new price_controller_1.default()
     }
 ];
 const app = new index_1.default(routes);
