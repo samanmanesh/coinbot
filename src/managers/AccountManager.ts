@@ -95,7 +95,7 @@ export default class AccountManager {
 
 
   public async removePreferredCoinsHandler(username: string, removeCoins: string[]) {
-    
+
     let account = await this.getAccount(username);
     if (!account) return;
 
@@ -113,21 +113,49 @@ export default class AccountManager {
 
   }
 
-  public async addCoinsToAccountsAssets(username: string, coins: IWalletCoin[]) {
+  public async coinExistenceCheck(username: string, coin: string) {
     let account = await this.getAccount(username);
     if (!account) return;
-    
-    account.assets.coins = Array.from(new Set([...account.assets.coins, ...coins]));
 
-    console.log(account.assets.coins,"check coins after update"); 
+
+    account.assets.coins.filter(c => c.symbol === coin)
+    if (account.assets.coins.filter(c => c.symbol === coin).length !== 0) {
+      console.log("coin already exists");
+      return true;
+    }
+
+    return false;
+
+  }
+
+  public async addCoinToAccountsAssets(username: string, coin: IWalletCoin) {
+    let account = await this.getAccount(username);
+    if (!account) return;
+
+    account.assets.coins = Array.from(new Set([...account.assets.coins, coin]));
 
     try {
       await Account.updateOne({ username }, account);
     } catch (error) {
       console.error(error);
     }
+
     return account;
   }
 
+  public async removeCoinFromAccountsAssets(username: string, coin: string) {
+    let account = await this.getAccount(username);
+    if (!account) return;
+
+    account.assets.coins = account.assets.coins.filter(c => c.symbol !== coin);
+    
+    try {
+      await Account.updateOne({ username }, account);
+    } catch (error) {
+      console.error(error);
+    }
+
+    return account;
+  }
 }
 

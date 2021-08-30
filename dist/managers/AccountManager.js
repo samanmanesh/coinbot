@@ -128,13 +128,40 @@ class AccountManager {
             return account;
         });
     }
-    addCoinsToAccountsAssets(username, coins) {
+    coinExistenceCheck(username, coin) {
         return __awaiter(this, void 0, void 0, function* () {
             let account = yield this.getAccount(username);
             if (!account)
                 return;
-            account.assets.coins = Array.from(new Set([...account.assets.coins, ...coins]));
-            console.log(account.assets.coins, "check coins after update");
+            account.assets.coins.filter(c => c.symbol === coin);
+            if (account.assets.coins.filter(c => c.symbol === coin).length !== 0) {
+                console.log("coin already exists");
+                return true;
+            }
+            return false;
+        });
+    }
+    addCoinToAccountsAssets(username, coin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let account = yield this.getAccount(username);
+            if (!account)
+                return;
+            account.assets.coins = Array.from(new Set([...account.assets.coins, coin]));
+            try {
+                yield Account_1.default.updateOne({ username }, account);
+            }
+            catch (error) {
+                console.error(error);
+            }
+            return account;
+        });
+    }
+    removeCoinFromAccountsAssets(username, coin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let account = yield this.getAccount(username);
+            if (!account)
+                return;
+            account.assets.coins = account.assets.coins.filter(c => c.symbol !== coin);
             try {
                 yield Account_1.default.updateOne({ username }, account);
             }

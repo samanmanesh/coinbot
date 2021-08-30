@@ -8,7 +8,8 @@ enum AccountPath {
   Base = "/",
   ByUsername = "/:username",
   ByActionAndUser = "/action/:username",
-  ByUserAndAssets = "/assets/:username"
+  ByUserAndAssets = "/assets/:username",
+  ByUserAndAssetsAndCoin = "/assets/:username/:coin",
 }
 
 export default class AccountController implements IController {
@@ -41,6 +42,7 @@ export default class AccountController implements IController {
 
     this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAnAccountsAssets(req, res));
 
+    this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAnAccountsAssets(req, res));
 
   }
 
@@ -100,26 +102,6 @@ export default class AccountController implements IController {
     }
 
   }
-
-  async addCoinsToAnAccountsAssets(req: Request, res: Response) {
-    const username = req?.params?.username ?? "";
-    const fromDB = await this.accountManager.authorizeAccount(username);
-    if (!fromDB) {
-      res.status(404).send("User does not exist!");
-      return;
-    }
-
-    try {
-      const result = await this.accountManager.addCoinsToAccountsAssets(username, req.body.coins);
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-    
-
-
-  }
-
 
   async deleteAccount(req: Request, res: Response) {
     const { username } = req.params;
@@ -209,7 +191,66 @@ export default class AccountController implements IController {
   }
 
   // Controlling the assets 
-  async addAssetCoins(req: Request, res: Response) {
+  async addCoinsToAnAccountsAssets(req: Request, res: Response) {
+    const username = req?.params?.username ?? "";
+    const fromDB = await this.accountManager.authorizeAccount(username);
+    if (!fromDB) {
+      res.status(404).send("User does not exist!");
+      return;
+    }
+
+    let coin = undefined;
+    // Checking if coin already exists in assets
+    try {
+      coin = await this.accountManager.coinExistenceCheck(username, req.body.symbol);
+      if (coin === true) res.status(200).send("message: coins already exists");
+
+    } catch (error) {
+      console.error(error);
+    }
+
+
+    // Adding the coin to accounts assets if it does not exist
+    try {
+      if (coin === false) {
+        const result = await this.accountManager.addCoinToAccountsAssets(username, req.body);
+        res.status(200).json(result);
+      }
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+
 
   }
+
+  async removeCoinsFromAnAccountsAssets(req: Request, res: Response) {
+    const username = req?.params?.username ?? "";
+    const fromDB = await this.accountManager.authorizeAccount(username);
+    if (!fromDB) {
+      res.status(404).send("User does not exist!");
+      return;
+    }
+
+    let coin = undefined;
+    // Checking if coin already exists in assets
+    try {
+      coin = await this.accountManager.coinExistenceCheck(username, req.params.coin);
+      if (coin === false) res.status(200).send("message: coins does not exists");
+    } catch (error) {
+      console.error(error);
+    }
+
+    // Removing the coin from accounts assets if it exists
+    try {
+      if (coin === true) {
+        const result = await this.accountManager.removeCoinFromAccountsAssets(username, req.params.coin);
+        res.status(200).json(result);
+      }
+    }
+    catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+
+  }
+
 }
