@@ -62,6 +62,7 @@ export default class AccountManager {
   public async updateAccount(username: string, account: IAccount): Promise<IAccount | undefined> {
     try {
       await Account.updateOne({ username }, account);
+
     } catch (error) {
       console.error(error);
     }
@@ -157,5 +158,8 @@ export default class AccountManager {
 
     return account;
   }
+
+  
+
 }
 
