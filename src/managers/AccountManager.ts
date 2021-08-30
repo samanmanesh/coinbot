@@ -146,7 +146,7 @@ export default class AccountManager {
 
     
     if (account.assets.coins.some(c => c.symbol === coin)) {
-      console.log("coin already exists");
+      // console.log("coin already exists");
       return true;
     }
 
