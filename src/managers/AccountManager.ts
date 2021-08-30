@@ -69,6 +69,32 @@ export default class AccountManager {
     return account;
   }
 
+  //Todo a general update to gets required section and value to update
+  // public async updateAccount(username: string, section: string, value: IAccount): Promise<IAccount | undefined> {
+  //   let account = await this.getAccount(username);
+  //   // [...account, account?.assets: value];
+  //   if (!account) return;
+  //   switch (section) {
+  //     case "coins":
+
+
+  //      break;
+
+  //    default:
+  //      break;
+  //  }
+
+
+  //   try {
+  //     await Account.updateOne({ username }, account);
+
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  //   return account;
+  // }
+
+
   public async deleteAccount(username: string): Promise<DeleteResult | undefined> {
     try {
       return await Account.remove({ username });
@@ -118,9 +144,9 @@ export default class AccountManager {
     let account = await this.getAccount(username);
     if (!account) return;
 
-
-    account.assets.coins.filter(c => c.symbol === coin)
-    if (account.assets.coins.filter(c => c.symbol === coin).length !== 0) {
+    // account.assets.coins.filter(c => c.symbol === coin)
+    
+    if (account.assets.coins.some(c => c.symbol === coin)) {
       console.log("coin already exists");
       return true;
     }
@@ -149,7 +175,7 @@ export default class AccountManager {
     if (!account) return;
 
     account.assets.coins = account.assets.coins.filter(c => c.symbol !== coin);
-    
+
     try {
       await Account.updateOne({ username }, account);
     } catch (error) {
@@ -159,7 +185,41 @@ export default class AccountManager {
     return account;
   }
 
-  
+  public async updateCoinInAccountsAssets(username: string, coin: IWalletCoin) {
+    let account = await this.getAccount(username);
+    if (!account) return;
+    const updatedCoinIndex = account.assets.coins.findIndex(c => c.symbol === coin.symbol);
+    if (updatedCoinIndex === -1) {
+      account.assets.coins.push(coin);
+    } else {
+      account.assets.coins[updatedCoinIndex] = coin;
+    }
+
+    // account.assets.coins.filter(c => c.symbol === coin.symbol)
+    // account.assets.coins = account.assets.coins.map(c => {
+    //   if (c.symbol === coin.symbol) {
+    //     switch (key) {
+    //       case "symbol":
+    //         [account.assets.coins[coin.symbol] = coin.symbol];
+    //         break;
+    //       case "volume": 
+    //       default:
+    //         break;
+    //     }
+
+    //     return coin;
+    //   }
+    //   return c;
+    // });
+
+    try {
+      await Account.updateOne({ username }, account);
+    } catch (error) {
+      console.error(error);
+    }
+
+    return account;
+  }
 
 }
 

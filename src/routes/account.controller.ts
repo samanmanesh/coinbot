@@ -40,7 +40,7 @@ export default class AccountController implements IController {
     this.router.delete(AccountPath.ByActionAndUser, (req, res) => this.removePreferredCoins(req, res));
 
 
-    this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAnAccountsAssets(req, res));
+    this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAccountsAssets(req, res));
 
     this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAnAccountsAssets(req, res));
 
@@ -128,6 +128,17 @@ export default class AccountController implements IController {
       res.status(400).json({ message: error.message });
     }
   }
+  //Todo a general update to gets required section and value to update
+  // async updateAccount(req: Request, res: Response) {
+  //   const desiredSection= req.params.section;
+
+  //   try {
+  //     const updatedAccount = await this.accountManager.updateAccount(req.params.username,desiredSection, req.body );
+  //     res.status(200).json(updatedAccount);
+  //   } catch (error) {
+  //     res.status(400).json({ message: error.message });
+  //   }
+  // }
 
   // Controlling the PreferredCoins
   async addPreferredCoins(req: Request, res: Response) {
@@ -191,7 +202,7 @@ export default class AccountController implements IController {
   }
 
   // Controlling the assets 
-  async addCoinsToAnAccountsAssets(req: Request, res: Response) {
+  async addCoinsToAccountsAssets(req: Request, res: Response) {
     const username = req?.params?.username ?? "";
     const fromDB = await this.accountManager.authorizeAccount(username);
     if (!fromDB) {
@@ -203,7 +214,7 @@ export default class AccountController implements IController {
     // Checking if coin already exists in assets
     try {
       coin = await this.accountManager.coinExistenceCheck(username, req.body.symbol);
-      if (coin === true) res.status(200).send("message: coins already exists");
+      if (coin) res.status(200).send("message: coins already exists");
 
     } catch (error) {
       console.error(error);
@@ -212,7 +223,7 @@ export default class AccountController implements IController {
 
     // Adding the coin to accounts assets if it does not exist
     try {
-      if (coin === false) {
+      if (!coin) {
         const result = await this.accountManager.addCoinToAccountsAssets(username, req.body);
         res.status(200).json(result);
       }
@@ -252,5 +263,6 @@ export default class AccountController implements IController {
     }
 
   }
+
 
 }
