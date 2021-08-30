@@ -83,6 +83,24 @@ class AccountManager {
             return account;
         });
     }
+    //Todo a general update to gets required section and value to update
+    // public async updateAccount(username: string, section: string, value: IAccount): Promise<IAccount | undefined> {
+    //   let account = await this.getAccount(username);
+    //   // [...account, account?.assets: value];
+    //   if (!account) return;
+    //   switch (section) {
+    //     case "coins":
+    //      break;
+    //    default:
+    //      break;
+    //  }
+    //   try {
+    //     await Account.updateOne({ username }, account);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    //   return account;
+    // }
     deleteAccount(username) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -133,8 +151,7 @@ class AccountManager {
             let account = yield this.getAccount(username);
             if (!account)
                 return;
-            account.assets.coins.filter(c => c.symbol === coin);
-            if (account.assets.coins.filter(c => c.symbol === coin).length !== 0) {
+            if (account.assets.coins.some(c => c.symbol === coin)) {
                 console.log("coin already exists");
                 return true;
             }
@@ -162,6 +179,27 @@ class AccountManager {
             if (!account)
                 return;
             account.assets.coins = account.assets.coins.filter(c => c.symbol !== coin);
+            try {
+                yield Account_1.default.updateOne({ username }, account);
+            }
+            catch (error) {
+                console.error(error);
+            }
+            return account;
+        });
+    }
+    updateCoinInAccountsAssets(username, coin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let account = yield this.getAccount(username);
+            if (!account)
+                return;
+            const updatedCoinIndex = account.assets.coins.findIndex(c => c.symbol === coin.symbol);
+            if (updatedCoinIndex === -1) {
+                account.assets.coins.push(coin);
+            }
+            else {
+                account.assets.coins[updatedCoinIndex] = coin;
+            }
             try {
                 yield Account_1.default.updateOne({ username }, account);
             }

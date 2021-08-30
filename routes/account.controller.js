@@ -36,10 +36,11 @@ class AccountController {
         this.router.post(AccountPath.Base, (req, res) => this.addAccount(req, res));
         this.router.delete(AccountPath.ByUsername, (req, res) => this.deleteAccount(req, res));
         this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
-        this.router.put(AccountPath.ByUsername, (req, res) => this.addPreferredCoins(req, res));
+        this.router.post(AccountPath.ByUsername, (req, res) => this.addPreferredCoins(req, res));
         this.router.delete(AccountPath.ByActionAndUser, (req, res) => this.removePreferredCoins(req, res));
-        this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAnAccountsAssets(req, res));
-        this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAnAccountsAssets(req, res));
+        this.router.post(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAccountsAssets(req, res));
+        this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAccountsAssets(req, res));
+        this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.updateCoinInAccountsAssets(req, res));
     }
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -128,6 +129,16 @@ class AccountController {
             }
         });
     }
+    //Todo a general update to gets required section and value to update
+    // async updateAccount(req: Request, res: Response) {
+    //   const desiredSection= req.params.section;
+    //   try {
+    //     const updatedAccount = await this.accountManager.updateAccount(req.params.username,desiredSection, req.body );
+    //     res.status(200).json(updatedAccount);
+    //   } catch (error) {
+    //     res.status(400).json({ message: error.message });
+    //   }
+    // }
     // Controlling the PreferredCoins
     addPreferredCoins(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -186,7 +197,7 @@ class AccountController {
         });
     }
     // Controlling the assets 
-    addCoinsToAnAccountsAssets(req, res) {
+    addCoinsToAccountsAssets(req, res) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
@@ -199,7 +210,7 @@ class AccountController {
             // Checking if coin already exists in assets
             try {
                 coin = yield this.accountManager.coinExistenceCheck(username, req.body.symbol);
-                if (coin === true)
+                if (coin)
                     res.status(200).send("message: coins already exists");
             }
             catch (error) {
@@ -207,7 +218,7 @@ class AccountController {
             }
             // Adding the coin to accounts assets if it does not exist
             try {
-                if (coin === false) {
+                if (!coin) {
                     const result = yield this.accountManager.addCoinToAccountsAssets(username, req.body);
                     res.status(200).json(result);
                 }
@@ -217,7 +228,7 @@ class AccountController {
             }
         });
     }
-    removeCoinsFromAnAccountsAssets(req, res) {
+    removeCoinsFromAccountsAssets(req, res) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
@@ -240,6 +251,37 @@ class AccountController {
             try {
                 if (coin === true) {
                     const result = yield this.accountManager.removeCoinFromAccountsAssets(username, req.params.coin);
+                    res.status(200).json(result);
+                }
+            }
+            catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+        });
+    }
+    updateCoinInAccountsAssets(req, res) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
+            const fromDB = yield this.accountManager.authorizeAccount(username);
+            if (!fromDB) {
+                res.status(404).send("User does not exist!");
+                return;
+            }
+            let coin = undefined;
+            // Checking if coin already exists in assets
+            try {
+                coin = yield this.accountManager.coinExistenceCheck(username, req.body.symbol);
+                if (!coin)
+                    res.status(200).send("message: coins does not exists");
+            }
+            catch (error) {
+                console.error(error);
+            }
+            // Updating the coin in accounts assets if it exists
+            try {
+                if (coin) {
+                    const result = yield this.accountManager.updateCoinInAccountsAssets(username, req.body);
                     res.status(200).json(result);
                 }
             }
