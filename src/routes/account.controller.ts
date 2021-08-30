@@ -35,14 +35,16 @@ export default class AccountController implements IController {
     this.router.patch(AccountPath.ByUsername, (req, res) => this.updateAccount(req, res));
 
 
-    this.router.put(AccountPath.ByUsername, (req, res) => this.addPreferredCoins(req, res));
+    this.router.post(AccountPath.ByUsername, (req, res) => this.addPreferredCoins(req, res));
 
     this.router.delete(AccountPath.ByActionAndUser, (req, res) => this.removePreferredCoins(req, res));
 
 
-    this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAccountsAssets(req, res));
+    this.router.post(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAccountsAssets(req, res));
 
-    this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAnAccountsAssets(req, res));
+    this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAccountsAssets(req, res));
+
+    this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.updateCoinInAccountsAssets(req, res));
 
   }
 
@@ -234,7 +236,7 @@ export default class AccountController implements IController {
 
   }
 
-  async removeCoinsFromAnAccountsAssets(req: Request, res: Response) {
+  async removeCoinsFromAccountsAssets(req: Request, res: Response) {
     const username = req?.params?.username ?? "";
     const fromDB = await this.accountManager.authorizeAccount(username);
     if (!fromDB) {
@@ -261,6 +263,38 @@ export default class AccountController implements IController {
     catch (error) {
       res.status(400).json({ message: error.message });
     }
+
+  }
+
+  async updateCoinInAccountsAssets(req: Request, res: Response) {
+
+    const username = req?.params?.username ?? "";
+    const fromDB = await this.accountManager.authorizeAccount(username);
+    if (!fromDB) {
+      res.status(404).send("User does not exist!");
+      return;
+    }
+
+    let coin = undefined;
+    // Checking if coin already exists in assets
+    try {
+      coin = await this.accountManager.coinExistenceCheck(username, req.body.symbol);
+      if (!coin) res.status(200).send("message: coins does not exists");
+    } catch (error) {
+      console.error(error);
+    }
+
+    // Updating the coin in accounts assets if it exists
+    try {
+      if (coin) {
+        const result = await this.accountManager.updateCoinInAccountsAssets(username,  req.body);
+        res.status(200).json(result);
+      }
+    }
+    catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+
 
   }
 

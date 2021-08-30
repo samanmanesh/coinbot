@@ -144,7 +144,6 @@ export default class AccountManager {
     let account = await this.getAccount(username);
     if (!account) return;
 
-    // account.assets.coins.filter(c => c.symbol === coin)
     
     if (account.assets.coins.some(c => c.symbol === coin)) {
       console.log("coin already exists");
@@ -194,23 +193,6 @@ export default class AccountManager {
     } else {
       account.assets.coins[updatedCoinIndex] = coin;
     }
-
-    // account.assets.coins.filter(c => c.symbol === coin.symbol)
-    // account.assets.coins = account.assets.coins.map(c => {
-    //   if (c.symbol === coin.symbol) {
-    //     switch (key) {
-    //       case "symbol":
-    //         [account.assets.coins[coin.symbol] = coin.symbol];
-    //         break;
-    //       case "volume": 
-    //       default:
-    //         break;
-    //     }
-
-    //     return coin;
-    //   }
-    //   return c;
-    // });
 
     try {
       await Account.updateOne({ username }, account);
