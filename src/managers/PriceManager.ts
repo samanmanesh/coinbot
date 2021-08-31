@@ -48,6 +48,7 @@ export default class PriceManager {
     let data = await this.page.$eval(this.selector, node => {
       return node.innerText
     });
+    return data;
     console.log(data);
     console.log('------');
   }
