@@ -56,8 +56,6 @@ export default class AccountController implements IController {
     } catch (error) {
       res.status(500).send(error);
     }
-
-
   }
 
   async getAccount(req: Request, res: Response) {

@@ -1,9 +1,9 @@
 import { DeleteResult } from 'mongodb';
+import CoinBotContext from '../context/CoinBotContext';
 import Account, { IAccount } from "../models/Account";
 import { IWalletCoin, IAccountAssets } from "../types";
 export default class AccountManager {
-  constructor() {
-  }
+
 
   public async getAccount(username: string): Promise<IAccount | undefined> {
     let requiredAccount = undefined;
@@ -165,7 +165,7 @@ export default class AccountManager {
     } catch (error) {
       console.error(error);
     }
-
+    CoinBotContext.instance.updateUser(account);
     return account;
   }
 
@@ -180,7 +180,7 @@ export default class AccountManager {
     } catch (error) {
       console.error(error);
     }
-
+    CoinBotContext.instance.updateUser(account);
     return account;
   }
 
@@ -199,6 +199,8 @@ export default class AccountManager {
     } catch (error) {
       console.error(error);
     }
+
+    CoinBotContext.instance.updateUser(account);
 
     return account;
   }

@@ -1,7 +1,9 @@
-import  AnalyzerManager  from '../managers/AnalyzerManager';
+import AnalyzerManager from '../managers/AnalyzerManager';
 import express, { Request, Response } from "express";
 import AccountManager from "../managers/AccountManager";
 import MarketDataManager from "../managers/MarketDataManager";
+import { IAccount } from "../models/Account";
+
 
 enum AnalyzerPath {
   Base = "/",
@@ -22,10 +24,13 @@ export default class Analyzer {
     // this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
   }
 
-  public async analyze(req: Request, res: Response) {
+  public async analyze(users: Record<string, IAccount[]>) {
+    ///Cron job to run every 5 minutes
 
 
   }
+
+
 
 
 
@@ -65,7 +70,7 @@ export default class Analyzer {
   // }
 
   // Getting the data related to accounts from data base
-  
+
   async getAccountsData(req: Request, res: Response) {
 
     let account = undefined;
@@ -102,21 +107,6 @@ export default class Analyzer {
   }
 
 
-  // async  getMarketDataTestApi(req: Request, res: Response) {
-  //   let marketData = undefined;
-  //   try { 
-  //     marketData = await this.marketDataManager.getMarketDataFromAPI();
-  //     // console.log("Market data is", marketData);
-  //     if (!marketData) {
-  //       return;
-  //     }
-  //     res.status(200).send(marketData);
-  //   }catch (error) {
-  //     // console.error("error is", error);
-  //     res.status(500).send(error);
-  //   }
-
-  // }
 
 
 }
