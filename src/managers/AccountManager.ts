@@ -180,7 +180,7 @@ export default class AccountManager {
     } catch (error) {
       console.error(error);
     }
-    CoinBotContext.instance.updateUser(account);
+    CoinBotContext.instance.updateUser(account, coin);
     return account;
   }
 

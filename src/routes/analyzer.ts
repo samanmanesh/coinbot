@@ -24,10 +24,8 @@ export default class Analyzer {
     // this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
   }
 
-  public async analyze(users: Record<string, IAccount[]>) {
-    ///Cron job to run every 5 minutes
-
-
+  public async analyze(users: Record<string, IAccount[]>, data: any) {
+    console.debug('ANALYZER:', users, data);
   }
 
 

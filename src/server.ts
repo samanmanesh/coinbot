@@ -2,7 +2,7 @@ import AccountController from "./routes/account.controller";
 import { IRoute } from "./types";
 import App from "./app/index";
 import CoinMarketController from "./routes/marketData.controller";
-import Analyzer from "./routes/analyzer.controller";
+import Analyzer from "./routes/analyzer";
 import JointCoinsController from "./routes/jointCoins.controller";
 import PriceController from "./routes/price.controller";
 

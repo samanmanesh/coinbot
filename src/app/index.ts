@@ -1,11 +1,14 @@
 import express, { Application, Request, Response } from "express";
+import CoinBotContext from "../context/CoinBotContext";
 import { IRoute } from "../types";
 export default class App {
   public app: Application = express();
+  private _context: CoinBotContext = new CoinBotContext();
   
   constructor(routes: IRoute[]) {
     this.setupMiddleware();
     this.setupRoutes(routes);
+    this.setupCron();
     this.app.get("/", (req: Request, res: Response) => {
       res.send(`'Hello world'`);
     });
@@ -28,4 +31,7 @@ export default class App {
     });
   }
 
+  setupCron() {
+    this._context.runCron();
+  }
 }
