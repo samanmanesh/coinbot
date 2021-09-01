@@ -35,7 +35,7 @@ const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const puppeteer_1 = __importDefault(require("puppeteer"));
 class PriceManager {
-    constructor(url, selector) {
+    constructor() {
         // constructor() {}
         // async getMarketPrice () {
         //   const browser = await puppeteer.launch();
@@ -49,24 +49,26 @@ class PriceManager {
         this.intervalRate = 500;
         this.url = '';
         this.selector = '';
-        this.url = url;
-        this.selector = selector;
     }
+    // constructor(url: string, selector: string) {
+    //   this.url = url;
+    //   this.selector = selector;
+    // }
     interval() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.init().then(() => setInterval(() => this.getData(), this.intervalRate));
+            // await this.init().then(() => setInterval(() => this.getData(), this.intervalRate));
         });
     }
-    init() {
+    init(url, selector) {
         return __awaiter(this, void 0, void 0, function* () {
             //@ts-ignore
             this.browser = yield puppeteer_1.default.launch();
             //@ts-ignore
             this.page = yield this.browser.newPage();
             //@ts-ignore
-            yield this.page.goto(this.url);
+            yield this.page.goto(url);
             //@ts-ignore
-            yield this.page.waitForSelector(this.selector);
+            yield this.page.waitForSelector(selector);
         });
     }
     getData() {
@@ -75,9 +77,28 @@ class PriceManager {
             let data = yield this.page.$eval(this.selector, node => {
                 return node.innerText;
             });
-            return data;
             console.log(data);
             console.log('------');
+            return data;
+        });
+    }
+    getDataTest(url, selector) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // //@ts-ignore
+            // this.browser = await puppeteer.launch();
+            // //@ts-ignore
+            // this.page = await this.browser.newPage();
+            // //@ts-ignore
+            // await this.page.goto(url);
+            // //@ts-ignore
+            // await this.page.waitForSelector(selector);
+            //@ts-ignore
+            let data = yield this.page.$eval(selector, node => {
+                return node.innerText;
+            });
+            console.log(data);
+            console.log('------');
+            return data;
         });
     }
 }

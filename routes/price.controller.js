@@ -13,17 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const PriceManager_1 = __importDefault(require("../managers/PriceManager"));
 class PriceController {
+    // priceManager = new PriceManager(this.BINANCE_URL,this.SELECTOR);
     constructor() {
         this.router = express_1.default.Router();
         this.BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
         this.SELECTOR = '.showPrice';
-        this.priceManager = new PriceManager_1.default(this.BINANCE_URL, this.SELECTOR);
         this.getPrices = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const prices = yield this.priceManager.interval();
-                res.send(prices);
+                // const prices = await this.priceManager.interval();
+                // res.send(prices);
             }
             catch (error) {
                 res.status(500).send(error);
