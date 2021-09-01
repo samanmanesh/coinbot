@@ -43,28 +43,20 @@ export default class PriceManager {
     await this.page.waitForSelector(selector);
   }
 
-  async getData() {
-    //@ts-ignore
-    let data = await this.page.$eval(this.selector, node => {
-      return node.innerText
-    });
-    console.log(data);
-    console.log('------');
-    return data;
-  }
+  // async getData() {
+  //   //@ts-ignore
+  //   let data = await this.page.$eval(this.selector, node => {
+  //     return node.innerText
+  //   });
+  //   console.log(data);
+  //   console.log('------');
+  //   return data;
+  // }
 
 
 
-  async getDataTest(url: string, selector: string) {
-    // //@ts-ignore
-    // this.browser = await puppeteer.launch();
-    // //@ts-ignore
-    // this.page = await this.browser.newPage();
-    // //@ts-ignore
-    // await this.page.goto(url);
-    // //@ts-ignore
-    // await this.page.waitForSelector(selector);
-
+  async getData(url: string, selector: string) {
+  
     //@ts-ignore
     let data = await this.page.$eval(selector, node => {
       return node.innerText

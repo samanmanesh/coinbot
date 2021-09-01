@@ -71,27 +71,17 @@ class PriceManager {
             yield this.page.waitForSelector(selector);
         });
     }
-    getData() {
+    // async getData() {
+    //   //@ts-ignore
+    //   let data = await this.page.$eval(this.selector, node => {
+    //     return node.innerText
+    //   });
+    //   console.log(data);
+    //   console.log('------');
+    //   return data;
+    // }
+    getData(url, selector) {
         return __awaiter(this, void 0, void 0, function* () {
-            //@ts-ignore
-            let data = yield this.page.$eval(this.selector, node => {
-                return node.innerText;
-            });
-            console.log(data);
-            console.log('------');
-            return data;
-        });
-    }
-    getDataTest(url, selector) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // //@ts-ignore
-            // this.browser = await puppeteer.launch();
-            // //@ts-ignore
-            // this.page = await this.browser.newPage();
-            // //@ts-ignore
-            // await this.page.goto(url);
-            // //@ts-ignore
-            // await this.page.waitForSelector(selector);
             //@ts-ignore
             let data = yield this.page.$eval(selector, node => {
                 return node.innerText;

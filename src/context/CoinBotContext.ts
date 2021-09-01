@@ -4,6 +4,21 @@ import AccountManager from "../managers/AccountManager"
 import cron from "node-cron";
 import PriceManager from "../managers/PriceManager";
 type CoinSymbol = string;
+
+const BinanceUrlAndSelector = [
+  {
+    expectedData: 'BTC/USDT',
+    url: 'https://www.binance.com/en/trade/BTC_USDT?layout=basic',
+    section: '.showPrice'
+  },
+  {
+    expectedData: 'ADA/USDT',
+    url: 'https://www.binance.com/en/trade/ADA_USDT?layout=basic',
+    section: '.showPrice'
+  },
+
+]
+
 export default class CoinBotContext {
   public static instance: CoinBotContext;
 
@@ -21,12 +36,14 @@ export default class CoinBotContext {
   public async runCron() {
     // Get all accounts
     await this.populateUsers();
-    // init the puppeteer
-    //test 
-    const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
-    const SELECTOR = '.showPrice';
-    await this.priceManager.init(BINANCE_URL, SELECTOR);
 
+    // // init the puppeteer
+    // //test 
+    // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
+    // const SELECTOR = '.showPrice';
+    // await this.priceManager.init(BINANCE_URL, SELECTOR);
+
+    await this.puppeteerHandler();
     cron.schedule("* * * * * * ", () => this.analyze());
 
     // # ┌────────────── second (optional)
@@ -41,6 +58,19 @@ export default class CoinBotContext {
 
   }
 
+
+  private async puppeteerHandler() {
+    // init the puppeteer
+    // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
+    // const SELECTOR = '.showPrice';
+    // await this.priceManager.init(BINANCE_URL, SELECTOR);
+
+    BinanceUrlAndSelector.forEach(async (urlAndSelector) => {
+      await this.priceManager.init(urlAndSelector.url, urlAndSelector.section);
+    }
+
+    )
+  }
 
   public updateUser(account: IAccount, removedCoinSymbol?: CoinSymbol) {
     if (removedCoinSymbol) {
@@ -64,15 +94,18 @@ export default class CoinBotContext {
     // 1. Get data from puppeteer
     // const data = ...();
     let data: any = {};
-    
+
     //test 
-    const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
-    const SELECTOR = '.showPrice';
+    // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
+    // const SELECTOR = '.showPrice';
 
-    // data = this.priceManager.init(BINANCE_URL, SELECTOR).then(()=>this.priceManager.getData(BINANCE_URL, SELECTOR));
+    // data = this.priceManager.getData(BINANCE_URL, SELECTOR);
 
-    data = this.priceManager.getDataTest(BINANCE_URL, SELECTOR);
-    ///end test
+    BinanceUrlAndSelector.forEach(async (urlAndSelector) => { 
+      data = this.priceManager.getData(urlAndSelector.url, urlAndSelector.section);
+    }
+    )
+    
 
     // 2. Analyze data
     this.analyzer.analyze(this.coinsAccounts, data); // send as params
@@ -94,7 +127,7 @@ export default class CoinBotContext {
         if (!this.coinsAccounts[coin.symbol]) {
           this.coinsAccounts[coin.symbol] = [];
         }
-        
+
         // add account to coin
         this.coinsAccounts[coin.symbol].push(account);
       });
