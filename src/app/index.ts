@@ -1,17 +1,21 @@
 import express, { Application, Request, Response } from "express";
 import CoinBotContext from "../context/CoinBotContext";
 import { IRoute } from "../types";
+
 export default class App {
   public app: Application = express();
   private _context: CoinBotContext = new CoinBotContext();
-  
+
   constructor(routes: IRoute[]) {
+
+
     this.setupMiddleware();
     this.setupRoutes(routes);
-    this.setupCron();
     this.app.get("/", (req: Request, res: Response) => {
       res.send(`'Hello world'`);
     });
+    this.app.get("/play", this.setupCron.bind(this));
+    // this.setupCron();
   }
 
   public listen(port: number) {
@@ -20,18 +24,23 @@ export default class App {
     );
   }
 
-  setupMiddleware() {
+  private setupMiddleware() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
   }
 
-  setupRoutes(routes: IRoute[]) {
+  private setupRoutes(routes: IRoute[]) {
     routes.forEach((route) => {
       this.app.use(route.path, route.controller.router);
     });
   }
 
-  setupCron() {
-    this._context.runCron();
+  public async setupCron(req: Request, res: Response) {
+    try {
+    await this._context.runCron();
+    res.status(200).send("Cron is running");}
+    catch(err) { 
+      console.error({message: err});
+    }
   }
 }

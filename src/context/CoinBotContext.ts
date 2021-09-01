@@ -21,7 +21,7 @@ export default class CoinBotContext {
   public async runCron() {
     // Get all accounts
     await this.populateUsers();
-    cron.schedule("*", () => this.analyze());
+    // cron.schedule("*", () => this.analyze());
   }
 
   public updateUser(account: IAccount, removedCoinSymbol?: CoinSymbol) {
@@ -58,7 +58,7 @@ export default class CoinBotContext {
       console.error('No accounts found');
       return;
     }
-    const coinsAccounts = {};
+    // const coinsAccounts = {};
     accounts.forEach(account => {
       // for each coin in account
       account.assets.coins.forEach(coin => {
@@ -71,6 +71,7 @@ export default class CoinBotContext {
         this.coinsAccounts[coin.symbol].push(account);
       });
     });
+    console.log(" coinsAccounts", this.coinsAccounts);
   }
 
 }

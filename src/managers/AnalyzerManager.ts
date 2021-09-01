@@ -11,6 +11,8 @@ export default class AnalyzerManager {
     } 
 
 
+
+    
     // public async preferredCoinsHandler( account: IAccount, marketData: IMarketData) {
 
     //     const userPreferredCoins = account.preferred_coins;

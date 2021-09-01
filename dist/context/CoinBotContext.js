@@ -14,14 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const analyzer_1 = __importDefault(require("../routes/analyzer"));
 const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
-const node_cron_1 = __importDefault(require("node-cron"));
-const PriceManager_1 = __importDefault(require("../managers/PriceManager"));
 class CoinBotContext {
+    // private priceManager = new PriceManager();
     constructor() {
         this.analyzer = new analyzer_1.default();
         this.accountManager = new AccountManager_1.default();
         this.coinsAccounts = {};
-        this.priceManager = new PriceManager_1.default();
         if (CoinBotContext.instance) {
             return CoinBotContext.instance;
         }
@@ -31,10 +29,7 @@ class CoinBotContext {
         return __awaiter(this, void 0, void 0, function* () {
             // Get all accounts
             yield this.populateUsers();
-            const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
-            const SELECTOR = '.showPrice';
-            yield this.priceManager.init(BINANCE_URL, SELECTOR);
-            node_cron_1.default.schedule("*", () => this.analyze());
+            // cron.schedule("*", () => this.analyze());
         });
     }
     updateUser(account, removedCoinSymbol) {
@@ -54,8 +49,6 @@ class CoinBotContext {
     analyze() {
         console.log('called analyze');
         // 1. Get data from puppeteer
-        const SELECTOR = '.showPrice';
-        this.priceManager.getData(SELECTOR);
         // const data = ...();
         const data = {};
         // 2. Analyze data
@@ -70,7 +63,7 @@ class CoinBotContext {
                 console.error('No accounts found');
                 return;
             }
-            const coinsAccounts = {};
+            // const coinsAccounts = {};
             accounts.forEach(account => {
                 // for each coin in account
                 account.assets.coins.forEach(coin => {
@@ -82,6 +75,7 @@ class CoinBotContext {
                     this.coinsAccounts[coin.symbol].push(account);
                 });
             });
+            console.log(" coinsAccounts", this.coinsAccounts);
         });
     }
 }

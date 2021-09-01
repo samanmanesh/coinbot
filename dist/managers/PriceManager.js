@@ -49,35 +49,35 @@ class PriceManager {
         this.intervalRate = 500;
         this.url = '';
         this.selector = '';
-        // this.url = url;
-        // this.selector = selector;
+        this.url = url;
+        this.selector = selector;
     }
     interval() {
         return __awaiter(this, void 0, void 0, function* () {
-            // await this.init().then(() => setInterval(() => this.getData(), this.intervalRate));
+            yield this.init().then(() => setInterval(() => this.getData(), this.intervalRate));
         });
     }
-    init(url, selector) {
+    init() {
         return __awaiter(this, void 0, void 0, function* () {
             //@ts-ignore
             this.browser = yield puppeteer_1.default.launch();
             //@ts-ignore
             this.page = yield this.browser.newPage();
             //@ts-ignore
-            yield this.page.goto(url);
+            yield this.page.goto(this.url);
             //@ts-ignore
-            yield this.page.waitForSelector(selector);
+            yield this.page.waitForSelector(this.selector);
         });
     }
-    getData(selector) {
+    getData() {
         return __awaiter(this, void 0, void 0, function* () {
             //@ts-ignore
-            let data = yield this.page.$eval(selector, node => {
+            let data = yield this.page.$eval(this.selector, node => {
                 return node.innerText;
             });
+            return data;
             console.log(data);
             console.log('------');
-            return data;
         });
     }
 }
