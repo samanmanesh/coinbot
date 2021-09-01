@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const analyzer_1 = __importDefault(require("../routes/analyzer"));
 const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
+const node_cron_1 = __importDefault(require("node-cron"));
 class CoinBotContext {
     // private priceManager = new PriceManager();
     constructor() {
@@ -29,7 +30,7 @@ class CoinBotContext {
         return __awaiter(this, void 0, void 0, function* () {
             // Get all accounts
             yield this.populateUsers();
-            // cron.schedule("*", () => this.analyze());
+            node_cron_1.default.schedule("5 * * * * * ", () => this.analyze());
         });
     }
     updateUser(account, removedCoinSymbol) {
@@ -80,3 +81,4 @@ class CoinBotContext {
     }
 }
 exports.default = CoinBotContext;
+//Note: I had to run runCron() through a get request because it was not working with this.runCron() in index.ts(app) as it runs in constructor before we connect to the database therefore it couldn't ask for accounts to get from database since we were not connected to the database yet.
