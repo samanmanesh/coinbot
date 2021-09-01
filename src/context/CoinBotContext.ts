@@ -75,3 +75,6 @@ export default class CoinBotContext {
   }
 
 }
+
+
+//Note: I had to run runCron() through a get request because it was not working with this.runCron() in index.ts(app) as it runs in constructor before we connect to the database therefore it couldn't ask for accounts to get from database since we were not connected to the database yet.
