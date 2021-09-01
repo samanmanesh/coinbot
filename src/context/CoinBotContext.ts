@@ -10,7 +10,7 @@ export default class CoinBotContext {
   private analyzer: Analyzer = new Analyzer();
   private accountManager: AccountManager = new AccountManager();
   private coinsAccounts: Record<CoinSymbol, IAccount[]> = {};
-  // private priceManager = new PriceManager();
+  private priceManager = new PriceManager();
   constructor() {
     if (CoinBotContext.instance) {
       return CoinBotContext.instance;
@@ -21,7 +21,13 @@ export default class CoinBotContext {
   public async runCron() {
     // Get all accounts
     await this.populateUsers();
-    cron.schedule("5 * * * * * ", () => this.analyze());
+    // init the puppeteer
+    //test 
+    const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
+    const SELECTOR = '.showPrice';
+    await this.priceManager.init(BINANCE_URL, SELECTOR);
+
+    cron.schedule("* * * * * * ", () => this.analyze());
 
     // # ┌────────────── second (optional)
     // # │ ┌──────────── minute
@@ -57,10 +63,16 @@ export default class CoinBotContext {
     console.log('called analyze');
     // 1. Get data from puppeteer
     // const data = ...();
-    const data: any = {};
-      
+    let data: any = {};
+    
+    //test 
+    const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
+    const SELECTOR = '.showPrice';
 
+    // data = this.priceManager.init(BINANCE_URL, SELECTOR).then(()=>this.priceManager.getData(BINANCE_URL, SELECTOR));
 
+    data = this.priceManager.getDataTest(BINANCE_URL, SELECTOR);
+    ///end test
 
     // 2. Analyze data
     this.analyzer.analyze(this.coinsAccounts, data); // send as params

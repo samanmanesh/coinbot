@@ -15,12 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const analyzer_1 = __importDefault(require("../routes/analyzer"));
 const AccountManager_1 = __importDefault(require("../managers/AccountManager"));
 const node_cron_1 = __importDefault(require("node-cron"));
+const PriceManager_1 = __importDefault(require("../managers/PriceManager"));
 class CoinBotContext {
-    // private priceManager = new PriceManager();
     constructor() {
         this.analyzer = new analyzer_1.default();
         this.accountManager = new AccountManager_1.default();
         this.coinsAccounts = {};
+        this.priceManager = new PriceManager_1.default();
         if (CoinBotContext.instance) {
             return CoinBotContext.instance;
         }
@@ -30,7 +31,21 @@ class CoinBotContext {
         return __awaiter(this, void 0, void 0, function* () {
             // Get all accounts
             yield this.populateUsers();
-            node_cron_1.default.schedule("5 * * * * * ", () => this.analyze());
+            // init the puppeteer
+            //test 
+            const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
+            const SELECTOR = '.showPrice';
+            yield this.priceManager.init(BINANCE_URL, SELECTOR);
+            node_cron_1.default.schedule("* * * * * * ", () => this.analyze());
+            // # ┌────────────── second (optional)
+            // # │ ┌──────────── minute
+            // # │ │ ┌────────── hour
+            // # │ │ │ ┌──────── day of month
+            // # │ │ │ │ ┌────── month
+            // # │ │ │ │ │ ┌──── day of week
+            // # │ │ │ │ │ │
+            // # │ │ │ │ │ │
+            // # * * * * * *
         });
     }
     updateUser(account, removedCoinSymbol) {
@@ -51,7 +66,13 @@ class CoinBotContext {
         console.log('called analyze');
         // 1. Get data from puppeteer
         // const data = ...();
-        const data = {};
+        let data = {};
+        //test 
+        const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
+        const SELECTOR = '.showPrice';
+        // data = this.priceManager.init(BINANCE_URL, SELECTOR).then(()=>this.priceManager.getData(BINANCE_URL, SELECTOR));
+        data = this.priceManager.getDataTest(BINANCE_URL, SELECTOR);
+        ///end test
         // 2. Analyze data
         this.analyzer.analyze(this.coinsAccounts, data); // send as params
     }

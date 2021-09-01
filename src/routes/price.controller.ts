@@ -8,7 +8,7 @@ export default class PriceController implements IController {
   public router = express.Router();
   BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
   SELECTOR = '.showPrice';
-  priceManager = new PriceManager(this.BINANCE_URL,this.SELECTOR);
+  // priceManager = new PriceManager(this.BINANCE_URL,this.SELECTOR);
   constructor() {
     this.setupRoutes();
   }
@@ -21,8 +21,8 @@ export default class PriceController implements IController {
   }
   getPrices = async (req: Request, res: Response) => {
     try {
-    const prices = await this.priceManager.interval();
-    res.send(prices);
+    // const prices = await this.priceManager.interval();
+    // res.send(prices);
     } catch (error) { 
       res.status(500).send(error);
     }
