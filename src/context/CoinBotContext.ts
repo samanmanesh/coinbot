@@ -21,8 +21,20 @@ export default class CoinBotContext {
   public async runCron() {
     // Get all accounts
     await this.populateUsers();
-    // cron.schedule("*", () => this.analyze());
+    cron.schedule("5 * * * * * ", () => this.analyze());
+
+    // # ┌────────────── second (optional)
+    // # │ ┌──────────── minute
+    // # │ │ ┌────────── hour
+    // # │ │ │ ┌──────── day of month
+    // # │ │ │ │ ┌────── month
+    // # │ │ │ │ │ ┌──── day of week
+    // # │ │ │ │ │ │
+    // # │ │ │ │ │ │
+    // # * * * * * *
+
   }
+
 
   public updateUser(account: IAccount, removedCoinSymbol?: CoinSymbol) {
     if (removedCoinSymbol) {
@@ -46,6 +58,10 @@ export default class CoinBotContext {
     // 1. Get data from puppeteer
     // const data = ...();
     const data: any = {};
+      
+
+
+
     // 2. Analyze data
     this.analyzer.analyze(this.coinsAccounts, data); // send as params
   }
