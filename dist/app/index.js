@@ -4,11 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const CoinBotContext_1 = __importDefault(require("../context/CoinBotContext"));
 class App {
     constructor(routes) {
         this.app = express_1.default();
+        this._context = new CoinBotContext_1.default();
         this.setupMiddleware();
         this.setupRoutes(routes);
+        this.setupCron();
         this.app.get("/", (req, res) => {
             res.send(`'Hello world'`);
         });
@@ -24,6 +27,9 @@ class App {
         routes.forEach((route) => {
             this.app.use(route.path, route.controller.router);
         });
+    }
+    setupCron() {
+        this._context.runCron();
     }
 }
 exports.default = App;

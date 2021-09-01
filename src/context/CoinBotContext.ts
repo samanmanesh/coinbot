@@ -2,7 +2,7 @@ import Analyzer from "../routes/analyzer";
 import { IAccount } from "../models/Account";
 import AccountManager from "../managers/AccountManager"
 import cron from "node-cron";
-
+import PriceManager from "../managers/PriceManager";
 type CoinSymbol = string;
 export default class CoinBotContext {
   public static instance: CoinBotContext;
@@ -10,7 +10,7 @@ export default class CoinBotContext {
   private analyzer: Analyzer = new Analyzer();
   private accountManager: AccountManager = new AccountManager();
   private coinsAccounts: Record<CoinSymbol, IAccount[]> = {};
-  
+  // private priceManager = new PriceManager();
   constructor() {
     if (CoinBotContext.instance) {
       return CoinBotContext.instance;

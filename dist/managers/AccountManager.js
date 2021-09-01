@@ -12,10 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const CoinBotContext_1 = __importDefault(require("../context/CoinBotContext"));
 const Account_1 = __importDefault(require("../models/Account"));
 class AccountManager {
-    constructor() {
-    }
     getAccount(username) {
         return __awaiter(this, void 0, void 0, function* () {
             let requiredAccount = undefined;
@@ -152,7 +151,7 @@ class AccountManager {
             if (!account)
                 return;
             if (account.assets.coins.some(c => c.symbol === coin)) {
-                console.log("coin already exists");
+                // console.log("coin already exists");
                 return true;
             }
             return false;
@@ -170,6 +169,7 @@ class AccountManager {
             catch (error) {
                 console.error(error);
             }
+            CoinBotContext_1.default.instance.updateUser(account);
             return account;
         });
     }
@@ -185,6 +185,7 @@ class AccountManager {
             catch (error) {
                 console.error(error);
             }
+            CoinBotContext_1.default.instance.updateUser(account, coin);
             return account;
         });
     }
@@ -206,6 +207,7 @@ class AccountManager {
             catch (error) {
                 console.error(error);
             }
+            CoinBotContext_1.default.instance.updateUser(account);
             return account;
         });
     }
