@@ -14,7 +14,7 @@ export default class PriceManager {
 
   // }
 
-
+  pages = {}
   browser = null;
   BTCPage = null;
   ADAPage = null;
@@ -33,16 +33,16 @@ export default class PriceManager {
 
   }
 
-  async init(url: string, selector: string) {
-    //@ts-ignore
-    this.browser = await puppeteer.launch();
-    //@ts-ignore
-    this.page = await this.browser.newPage();
-    //@ts-ignore
-    await this.page.goto(url);
-    //@ts-ignore
-    await this.page.waitForSelector(selector);
-  }
+  // async init(url: string, selector: string) {
+  //   //@ts-ignore
+  //   this.browser = await puppeteer.launch();
+  //   //@ts-ignore
+  //   this.page = await this.browser.newPage();
+  //   //@ts-ignore
+  //   await this.page.goto(url);
+  //   //@ts-ignore
+  //   await this.page.waitForSelector(selector);
+  // }
 
   // async getData() {
   //   //@ts-ignore
@@ -56,23 +56,35 @@ export default class PriceManager {
 
 
 
-  async getData( selector: string) {
-  
+  // async getData(selector: string) {
+
+  //   //@ts-ignore
+  //   let data = await this.page.$eval(selector, node => {
+  //     return node.innerText
+  //   });
+  //   console.log(data);
+  //   console.log('------');
+  //   return data;
+
+  // }
+
+
+  async init(url: string, selector: string, page: string) {
+
+    //@ts-ignore  
+    this.browser = await puppeteer.launch();
+
     //@ts-ignore
-    let data = await this.page.$eval(selector, node => {
-      return node.innerText
-    });
-    console.log(data);
-    console.log('------');
-    return data;
+    this.pages[page] = await this.browser.newPage();
+    //@ts-ignore
+    await this.pages[page].goto(url);
+    //@ts-ignore
+    await this.pages[page].waitForSelector(selector);
 
   }
 
 
-
-
-
-  async BTCInit (url: string, selector: string){
+  async BTCInit(url: string, selector: string) {
     // let page = undefined;
 
     //@ts-ignore
@@ -85,26 +97,30 @@ export default class PriceManager {
     await this.BTCPage.waitForSelector(selector);
   }
 
-  async BTCGetData( selector: string){
+  // async BTCGetData(selector: string) {
+  //   //@ts-ignore
+  //   let data = await this.BTCPage.$eval(selector, node => {
+  //     return node.innerText
+  //   });
+  //   console.log("BTC Price")
+  //   console.log(data);
+  //   console.log('------');
+  //   return data;
+  // }
+
+
+  async getData(selector: string, page: string) {
     //@ts-ignore
-    let data = await this.BTCPage.$eval(selector, node => {
+    let data = await this.pages[page].$eval(selector, node => {
       return node.innerText
     });
-    console.log("BTC Price")
+    console.log( page,"Price")
     console.log(data);
     console.log('------');
     return data;
   }
 
-  // async BTCInitAndGetData(url: string, selector: string){
-  //   //@ts-ignore
-  //   this.browser = await puppeteer.launch();
-  //   //@ts-ignore
-  //   this.page = await this.browser.newPage();
-  //   //@ts-ignore
-  //   await this.page.goto(url);
-  //   //@ts-ignore
-  //   await this.page.waitForSelector(selector);
+  
 
   //   // await puppeteer.launch().then(browser => { browser.newPage().then(page => {
   //   //   page.goto(url).then(() => { page.waitForSelector(selector)})}) 
@@ -118,12 +134,12 @@ export default class PriceManager {
   //   console.log(data);
   //   console.log('------');
   //   return data;
-    
+
   // }
 
 
 
-  async ADAInit (url: string, selector: string){
+  async ADAInit(url: string, selector: string) {
     // let page = undefined;
     //@ts-ignore
     this.browser = await puppeteer.launch();
@@ -136,7 +152,7 @@ export default class PriceManager {
   }
 
 
-  async ADAGetData( selector: string){
+  async ADAGetData(selector: string) {
     //@ts-ignore
     let data = await this.ADAPage.$eval(selector, node => {
       return node.innerText

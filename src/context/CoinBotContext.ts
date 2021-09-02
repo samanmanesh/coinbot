@@ -7,11 +7,13 @@ type CoinSymbol = string;
 
 const BinanceUrlAndSelector = [
   {
+    page: "BTC",
     expectedData: 'BTC/USDT',
     url: 'https://www.binance.com/en/trade/BTC_USDT?layout=basic',
     section: '.showPrice'
   },
   {
+    page: "ADA",
     expectedData: 'ADA/USDT',
     url: 'https://www.binance.com/en/trade/ADA_USDT?layout=basic',
     section: '.showPrice'
@@ -83,14 +85,25 @@ export default class CoinBotContext {
     // }
     // )
 
-  
+
 
     //// init first and then just call a cron
-    await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice')
+    // await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice')
 
-    await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice')
+    // await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice')
+
+    // cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+
+    // init all having coins
+    
+    BinanceUrlAndSelector.forEach(async (element) => {
+      await this.priceManager.init(element.url, element.section, element.page);
+    })
 
     cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+
+
+
   }
 
 
@@ -131,8 +144,12 @@ export default class CoinBotContext {
 
 
 
-    data.BTC = this.priceManager.BTCGetData(selector);
-    data.ADA = this.priceManager.ADAGetData(selector);
+    // data.BTC = this.priceManager.BTCGetData(selector);
+    // data.ADA = this.priceManager.ADAGetData(selector);
+    // console.log(data.BTC, "check btc");
+    // console.log(data.ADA, "check Ada");
+    data.BTC = this.priceManager.getData(selector, 'BTC');
+    data.ADA = this.priceManager.getData(selector, 'ADA');
     console.log(data.BTC, "check btc");
     console.log(data.ADA, "check Ada");
 
