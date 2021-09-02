@@ -45,7 +45,8 @@ class PriceManager {
         //   await browser.close();
         // }
         this.browser = null;
-        this.page = null;
+        this.page1 = null;
+        this.page2 = null;
         this.intervalRate = 500;
         this.url = '';
         this.selector = '';
@@ -80,12 +81,83 @@ class PriceManager {
     //   console.log('------');
     //   return data;
     // }
-    getData(url, selector) {
+    getData(selector) {
         return __awaiter(this, void 0, void 0, function* () {
             //@ts-ignore
             let data = yield this.page.$eval(selector, node => {
                 return node.innerText;
             });
+            console.log(data);
+            console.log('------');
+            return data;
+        });
+    }
+    BTCInit(url, selector) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // let page = undefined;
+            //@ts-ignore
+            this.browser = yield puppeteer_1.default.launch();
+            //@ts-ignore
+            this.page1 = yield this.browser.newPage();
+            //@ts-ignore
+            yield this.page1.goto(url);
+            //@ts-ignore
+            yield this.page1.waitForSelector(selector);
+        });
+    }
+    BTCGetData(selector) {
+        return __awaiter(this, void 0, void 0, function* () {
+            //@ts-ignore
+            let data = yield this.page1.$eval(selector, node => {
+                return node.innerText;
+            });
+            console.log("BTC Price");
+            console.log(data);
+            console.log('------');
+            return data;
+        });
+    }
+    // async BTCInitAndGetData(url: string, selector: string){
+    //   //@ts-ignore
+    //   this.browser = await puppeteer.launch();
+    //   //@ts-ignore
+    //   this.page = await this.browser.newPage();
+    //   //@ts-ignore
+    //   await this.page.goto(url);
+    //   //@ts-ignore
+    //   await this.page.waitForSelector(selector);
+    //   // await puppeteer.launch().then(browser => { browser.newPage().then(page => {
+    //   //   page.goto(url).then(() => { page.waitForSelector(selector)})}) 
+    //   // });
+    //   //@ts-ignore
+    //   let data = await this.page.$eval(selector, node => {
+    //     return node.innerText
+    //   });
+    //   console.log("BTC Price")
+    //   console.log(data);
+    //   console.log('------');
+    //   return data;
+    // }
+    ADAInit(url, selector) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // let page = undefined;
+            //@ts-ignore
+            this.browser = yield puppeteer_1.default.launch();
+            //@ts-ignore
+            this.page2 = yield this.browser.newPage();
+            //@ts-ignore
+            yield this.page2.goto(url);
+            //@ts-ignore
+            yield this.page2.waitForSelector(selector);
+        });
+    }
+    ADAGetData(selector) {
+        return __awaiter(this, void 0, void 0, function* () {
+            //@ts-ignore
+            let data = yield this.page2.$eval(selector, node => {
+                return node.innerText;
+            });
+            console.log("ADA Price");
             console.log(data);
             console.log('------');
             return data;
