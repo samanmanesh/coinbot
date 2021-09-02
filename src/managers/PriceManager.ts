@@ -83,19 +83,29 @@ export default class PriceManager {
 
   }
 
-
-  async BTCInit(url: string, selector: string) {
-    // let page = undefined;
-
+  async getData(selector: string, page: string) {
     //@ts-ignore
-    this.browser = await puppeteer.launch();
-    //@ts-ignore
-    this.BTCPage = await this.browser.newPage();
-    //@ts-ignore
-    await this.BTCPage.goto(url);
-    //@ts-ignore
-    await this.BTCPage.waitForSelector(selector);
+    let data = await this.pages[page].$eval(selector, node => {
+      return node.innerText
+    });
+    console.log( page,"Price")
+    console.log(data);
+    console.log('------');
+    return data;
   }
+
+  // async BTCInit(url: string, selector: string) {
+  //   // let page = undefined;
+
+  //   //@ts-ignore
+  //   this.browser = await puppeteer.launch();
+  //   //@ts-ignore
+  //   this.BTCPage = await this.browser.newPage();
+  //   //@ts-ignore
+  //   await this.BTCPage.goto(url);
+  //   //@ts-ignore
+  //   await this.BTCPage.waitForSelector(selector);
+  // }
 
   // async BTCGetData(selector: string) {
   //   //@ts-ignore
@@ -109,16 +119,7 @@ export default class PriceManager {
   // }
 
 
-  async getData(selector: string, page: string) {
-    //@ts-ignore
-    let data = await this.pages[page].$eval(selector, node => {
-      return node.innerText
-    });
-    console.log( page,"Price")
-    console.log(data);
-    console.log('------');
-    return data;
-  }
+ 
 
   
 
@@ -139,53 +140,29 @@ export default class PriceManager {
 
 
 
-  async ADAInit(url: string, selector: string) {
-    // let page = undefined;
-    //@ts-ignore
-    this.browser = await puppeteer.launch();
-    //@ts-ignore
-    this.ADAPage = await this.browser.newPage();
-    //@ts-ignore
-    await this.ADAPage.goto(url);
-    //@ts-ignore
-    await this.ADAPage.waitForSelector(selector);
-  }
+  // async ADAInit(url: string, selector: string) {
+  //   // let page = undefined;
+  //   //@ts-ignore
+  //   this.browser = await puppeteer.launch();
+  //   //@ts-ignore
+  //   this.ADAPage = await this.browser.newPage();
+  //   //@ts-ignore
+  //   await this.ADAPage.goto(url);
+  //   //@ts-ignore
+  //   await this.ADAPage.waitForSelector(selector);
+  // }
 
 
-  async ADAGetData(selector: string) {
-    //@ts-ignore
-    let data = await this.ADAPage.$eval(selector, node => {
-      return node.innerText
-    });
-    console.log("ADA Price")
-    console.log(data);
-    console.log('------');
-    return data;
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  // async ADAGetData(selector: string) {
+  //   //@ts-ignore
+  //   let data = await this.ADAPage.$eval(selector, node => {
+  //     return node.innerText
+  //   });
+  //   console.log("ADA Price")
+  //   console.log(data);
+  //   console.log('------');
+  //   return data;
+  // }
 
 
 }

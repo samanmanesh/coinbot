@@ -86,7 +86,6 @@ export default class CoinBotContext {
     // )
 
 
-
     //// init first and then just call a cron
     // await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice')
 
@@ -101,7 +100,6 @@ export default class CoinBotContext {
     })
 
     cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
-
 
 
   }
