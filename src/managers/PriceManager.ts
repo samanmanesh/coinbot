@@ -73,7 +73,6 @@ export default class PriceManager {
 
     //@ts-ignore  
     this.browser = await puppeteer.launch();
-
     //@ts-ignore
     this.pages[page] = await this.browser.newPage();
     //@ts-ignore
@@ -88,12 +87,13 @@ export default class PriceManager {
     let data = await this.pages[page].$eval(selector, node => {
       return node.innerText
     });
+    console.log('------');
     console.log( page,"Price")
     console.log(data);
-    console.log('------');
     return data;
   }
 
+  //#region test
   // async BTCInit(url: string, selector: string) {
   //   // let page = undefined;
 
@@ -163,7 +163,7 @@ export default class PriceManager {
   //   console.log('------');
   //   return data;
   // }
-
+  //#endregion
 
 }
 // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=pro';

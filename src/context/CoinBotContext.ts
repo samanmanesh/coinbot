@@ -7,13 +7,13 @@ type CoinSymbol = string;
 
 const BinanceUrlAndSelector = [
   {
-    page: "BTC",
+    pageName: "BTC",
     expectedData: 'BTC/USDT',
     url: 'https://www.binance.com/en/trade/BTC_USDT?layout=basic',
     section: '.showPrice'
   },
   {
-    page: "ADA",
+    pageName: "ADA",
     expectedData: 'ADA/USDT',
     url: 'https://www.binance.com/en/trade/ADA_USDT?layout=basic',
     section: '.showPrice'
@@ -36,27 +36,12 @@ export default class CoinBotContext {
   }
 
   public async runCron() {
+
     //todo Get all accounts
     await this.populateUsers();
 
-    // // init the puppeteer
-    // //test 
-    // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
-    // const SELECTOR = '.showPrice';
-    // await this.priceManager.init(BINANCE_URL, SELECTOR);
-
     await this.puppeteerHandler();
     // cron.schedule("* * * * * * ", () => this.analyze());
-
-    // # ┌────────────── second (optional)
-    // # │ ┌──────────── minute
-    // # │ │ ┌────────── hour
-    // # │ │ │ ┌──────── day of month
-    // # │ │ │ │ ┌────── month
-    // # │ │ │ │ │ ┌──── day of week
-    // # │ │ │ │ │ │
-    // # │ │ │ │ │ │
-    // # * * * * * *
 
   }
 
@@ -64,6 +49,13 @@ export default class CoinBotContext {
   private async puppeteerHandler() {
     //Todo init the puppeteer
 
+    BinanceUrlAndSelector.forEach(async (element) => {
+      await this.priceManager.init(element.url, element.section, element.pageName);
+    })
+
+    cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+
+    //#region test
     // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
     // const SELECTOR = '.showPrice';
     // await this.priceManager.init(BINANCE_URL, SELECTOR);
@@ -95,12 +87,7 @@ export default class CoinBotContext {
 
     // init all having coins
     
-    BinanceUrlAndSelector.forEach(async (element) => {
-      await this.priceManager.init(element.url, element.section, element.page);
-    })
-
-    cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
-
+    //#endregion
 
   }
 
@@ -123,38 +110,46 @@ export default class CoinBotContext {
     )
   }
 
-  private analyze(selector: string) {
+  private async analyze(selector: string) {
     console.log('called analyze');
     //todo 1. Get data from puppeteer
     // const data = ...();
     const data: any = {};
 
-    //test 
-    // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
-    // const SELECTOR = '.showPrice';
-
-    // data = this.priceManager.getData(BINANCE_URL, SELECTOR);
-
-    // BinanceUrlAndSelector.forEach(async (urlAndSelector) => { 
-    //   data = this.priceManager.getData(urlAndSelector.url, urlAndSelector.section);
-    // }
-    // )
+   
 
 
 
-    // data.BTC = this.priceManager.BTCGetData(selector);
-    // data.ADA = this.priceManager.ADAGetData(selector);
+    data.BTC = await this.priceManager.getData(selector, 'BTC');
+    data.ADA = await this.priceManager.getData(selector, 'ADA');
+
     // console.log(data.BTC, "check btc");
     // console.log(data.ADA, "check Ada");
-    data.BTC = this.priceManager.getData(selector, 'BTC');
-    data.ADA = this.priceManager.getData(selector, 'ADA');
-    console.log(data.BTC, "check btc");
-    console.log(data.ADA, "check Ada");
 
     // data = this.priceManager.BTCInitAndGetData(url, selector);
+    console.log(this.coinsAccounts,"coinsAccount");
+    
+    //todo 1: make a function to go over our coinsAccounts and gets all existing coins and send them for getData to gets the price and store that into realted symbol in data and then send that to analyzer
+
+
+    // this.coinsAccounts.BTC.forEach(async (account) => {
+      
+    //   account.assets.coins.forEach(async (coin) => {
+    //     if (coin.symbol === 'BTC') {
+    //       await this.analyzer.analyze(account, coin, data.BTC);
+    //     }
+    //     if (coin.symbol === 'ADA') {
+    //       await this.analyzer.analyze(account, coin, data.ADA);
+    //     }
+    //   }
+    //   )
+
+
+    // })
+
 
     //todo 2. Analyze data
-    this.analyzer.analyze(this.coinsAccounts, data); // send as params
+    await this.analyzer.analyze(this.coinsAccounts, data); // send as params
   }
 
   private async populateUsers() {
