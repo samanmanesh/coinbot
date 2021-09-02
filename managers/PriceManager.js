@@ -44,6 +44,7 @@ class PriceManager {
         //   await page.screenshot({ path: 'example.png' });
         //   await browser.close();
         // }
+        this.pages = {};
         this.browser = null;
         this.BTCPage = null;
         this.ADAPage = null;
@@ -60,18 +61,16 @@ class PriceManager {
             // await this.init().then(() => setInterval(() => this.getData(), this.intervalRate));
         });
     }
-    init(url, selector) {
-        return __awaiter(this, void 0, void 0, function* () {
-            //@ts-ignore
-            this.browser = yield puppeteer_1.default.launch();
-            //@ts-ignore
-            this.page = yield this.browser.newPage();
-            //@ts-ignore
-            yield this.page.goto(url);
-            //@ts-ignore
-            yield this.page.waitForSelector(selector);
-        });
-    }
+    // async init(url: string, selector: string) {
+    //   //@ts-ignore
+    //   this.browser = await puppeteer.launch();
+    //   //@ts-ignore
+    //   this.page = await this.browser.newPage();
+    //   //@ts-ignore
+    //   await this.page.goto(url);
+    //   //@ts-ignore
+    //   await this.page.waitForSelector(selector);
+    // }
     // async getData() {
     //   //@ts-ignore
     //   let data = await this.page.$eval(this.selector, node => {
@@ -81,15 +80,25 @@ class PriceManager {
     //   console.log('------');
     //   return data;
     // }
-    getData(selector) {
+    // async getData(selector: string) {
+    //   //@ts-ignore
+    //   let data = await this.page.$eval(selector, node => {
+    //     return node.innerText
+    //   });
+    //   console.log(data);
+    //   console.log('------');
+    //   return data;
+    // }
+    init(url, selector, page) {
         return __awaiter(this, void 0, void 0, function* () {
+            //@ts-ignore  
+            this.browser = yield puppeteer_1.default.launch();
             //@ts-ignore
-            let data = yield this.page.$eval(selector, node => {
-                return node.innerText;
-            });
-            console.log(data);
-            console.log('------');
-            return data;
+            this.pages[page] = yield this.browser.newPage();
+            //@ts-ignore
+            yield this.pages[page].goto(url);
+            //@ts-ignore
+            yield this.pages[page].waitForSelector(selector);
         });
     }
     BTCInit(url, selector) {
@@ -105,27 +114,28 @@ class PriceManager {
             yield this.BTCPage.waitForSelector(selector);
         });
     }
-    BTCGetData(selector) {
+    // async BTCGetData(selector: string) {
+    //   //@ts-ignore
+    //   let data = await this.BTCPage.$eval(selector, node => {
+    //     return node.innerText
+    //   });
+    //   console.log("BTC Price")
+    //   console.log(data);
+    //   console.log('------');
+    //   return data;
+    // }
+    getData(selector, page) {
         return __awaiter(this, void 0, void 0, function* () {
             //@ts-ignore
-            let data = yield this.BTCPage.$eval(selector, node => {
+            let data = yield this.pages[page].$eval(selector, node => {
                 return node.innerText;
             });
-            console.log("BTC Price");
+            console.log(page, "Price");
             console.log(data);
             console.log('------');
             return data;
         });
     }
-    // async BTCInitAndGetData(url: string, selector: string){
-    //   //@ts-ignore
-    //   this.browser = await puppeteer.launch();
-    //   //@ts-ignore
-    //   this.page = await this.browser.newPage();
-    //   //@ts-ignore
-    //   await this.page.goto(url);
-    //   //@ts-ignore
-    //   await this.page.waitForSelector(selector);
     //   // await puppeteer.launch().then(browser => { browser.newPage().then(page => {
     //   //   page.goto(url).then(() => { page.waitForSelector(selector)})}) 
     //   // });

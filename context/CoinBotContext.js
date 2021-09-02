@@ -18,11 +18,13 @@ const node_cron_1 = __importDefault(require("node-cron"));
 const PriceManager_1 = __importDefault(require("../managers/PriceManager"));
 const BinanceUrlAndSelector = [
     {
+        page: "BTC",
         expectedData: 'BTC/USDT',
         url: 'https://www.binance.com/en/trade/BTC_USDT?layout=basic',
         section: '.showPrice'
     },
     {
+        page: "ADA",
         expectedData: 'ADA/USDT',
         url: 'https://www.binance.com/en/trade/ADA_USDT?layout=basic',
         section: '.showPrice'
@@ -80,13 +82,15 @@ class CoinBotContext {
             //   cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
             // }
             // )
-            //// run the same time for init and get data
-            // cron.schedule("* * * * *", () => this.analyze('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice'));
             //// init first and then just call a cron
-            yield this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice');
-            yield this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice');
+            // await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice')
+            // await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice')
+            // cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+            // init all having coins
+            BinanceUrlAndSelector.forEach((element) => __awaiter(this, void 0, void 0, function* () {
+                yield this.priceManager.init(element.url, element.section, element.page);
+            }));
             node_cron_1.default.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
-            //! INNIT JUST WORKS FOR THE LAST ONE THAT IS INNIT 
         });
     }
     updateUser(account, removedCoinSymbol) {
@@ -116,8 +120,12 @@ class CoinBotContext {
         //   data = this.priceManager.getData(urlAndSelector.url, urlAndSelector.section);
         // }
         // )
-        data.BTC = this.priceManager.BTCGetData(selector);
-        data.ADA = this.priceManager.ADAGetData(selector);
+        // data.BTC = this.priceManager.BTCGetData(selector);
+        // data.ADA = this.priceManager.ADAGetData(selector);
+        // console.log(data.BTC, "check btc");
+        // console.log(data.ADA, "check Ada");
+        data.BTC = this.priceManager.getData(selector, 'BTC');
+        data.ADA = this.priceManager.getData(selector, 'ADA');
         console.log(data.BTC, "check btc");
         console.log(data.ADA, "check Ada");
         // data = this.priceManager.BTCInitAndGetData(url, selector);
