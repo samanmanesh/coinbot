@@ -101,12 +101,20 @@ class CoinBotContext {
             //todo 1. Get data from puppeteer
             // const data = ...();
             const data = {};
-            // data.BTC = await this.priceManager.getData(selector, 'BTC');
-            // data.ADA = await this.priceManager.getData(selector, 'ADA');
-            // console.log(data.BTC, "check btc");
-            // console.log(data.ADA, "check Ada");
-            // data = this.priceManager.BTCInitAndGetData(url, selector);
-            console.log(this.coinsAccounts, "coinsAccount");
+            // Gets data from puppeteer and store in data variable
+            data.BTC = yield this.priceManager.getData(selector, 'BTC');
+            data.ADA = yield this.priceManager.getData(selector, 'ADA');
+            //#region test for making it optimize but not working
+            //todo 1: make a function to go over our coinsAccounts and gets all existing coins and send them for getData to gets the price and store that into related symbol in data and then send that to analyzer
+            //  for (let coin in Object.keys(this.coinsAccounts)) {
+            //   let coinSymbol = Object.keys(this.coinsAccounts)[coin];
+            //   data.coinSymbol = await this.priceManager.getData(selector, coinSymbol);
+            // }
+            // Object.keys(this.coinsAccounts).forEach(async coin => {
+            //   data.coin = await this.priceManager.getData(selector, coin);
+            //   console.log("coin", coin);
+            // })
+            //#endregion
             //todo 2. Analyze data
             yield this.analyzer.analyze(this.coinsAccounts, data); // send as params
         });

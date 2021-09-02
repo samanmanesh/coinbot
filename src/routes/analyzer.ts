@@ -26,9 +26,15 @@ export default class Analyzer {
 
   public async analyze(users: Record<string, IAccount[]>, data: any) {
     // console.debug('ANALYZER:', users, data);
-    console.debug('BTC is', data.BTC);
-    console.debug('ADA is', data.ADA);
+    // console.debug('BTC is', data.BTC);
+    // console.debug('ADA is', data.ADA);
     console.table( data );
+
+    console.log(users);
+  
+
+
+
   }
 
 

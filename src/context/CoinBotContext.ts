@@ -47,11 +47,14 @@ export default class CoinBotContext {
 
 
   private async puppeteerHandler() {
+    
     //Todo init the puppeteer
 
     BinanceUrlAndSelector.forEach(async (element) => {
       await this.priceManager.init(element.url, element.section, element.pageName);
     })
+
+    
 
     cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
 
@@ -86,7 +89,7 @@ export default class CoinBotContext {
     // cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
 
     // init all having coins
-    
+
     //#endregion
 
   }
@@ -112,45 +115,36 @@ export default class CoinBotContext {
 
   private async analyze(selector: string) {
     console.log('called analyze');
+
     //todo 1. Get data from puppeteer
     // const data = ...();
     const data: any = {};
-
-   
-
-
-
+    // Gets data from puppeteer and store in data variable
     data.BTC = await this.priceManager.getData(selector, 'BTC');
     data.ADA = await this.priceManager.getData(selector, 'ADA');
 
-    // console.log(data.BTC, "check btc");
-    // console.log(data.ADA, "check Ada");
+    //#region test for making it optimize but not working
+    //todo 1: make a function to go over our coinsAccounts and gets all existing coins and send them for getData to gets the price and store that into related symbol in data and then send that to analyzer
 
-    // data = this.priceManager.BTCInitAndGetData(url, selector);
-    console.log(this.coinsAccounts,"coinsAccount");
-    
-    //todo 1: make a function to go over our coinsAccounts and gets all existing coins and send them for getData to gets the price and store that into realted symbol in data and then send that to analyzer
+    //  for (let coin in Object.keys(this.coinsAccounts)) {
+       
+    //   let coinSymbol = Object.keys(this.coinsAccounts)[coin];
+    //   data.coinSymbol = await this.priceManager.getData(selector, coinSymbol);
+    // }
 
+    // Object.keys(this.coinsAccounts).forEach(async coin => {
 
-    // this.coinsAccounts.BTC.forEach(async (account) => {
-      
-    //   account.assets.coins.forEach(async (coin) => {
-    //     if (coin.symbol === 'BTC') {
-    //       await this.analyzer.analyze(account, coin, data.BTC);
-    //     }
-    //     if (coin.symbol === 'ADA') {
-    //       await this.analyzer.analyze(account, coin, data.ADA);
-    //     }
-    //   }
-    //   )
-
+    //   data.coin = await this.priceManager.getData(selector, coin);
+    //   console.log("coin", coin);
 
     // })
-
-
+    //#endregion
     //todo 2. Analyze data
     await this.analyzer.analyze(this.coinsAccounts, data); // send as params
+
   }
+
+
 
   private async populateUsers() {
     // todo
