@@ -45,8 +45,8 @@ class PriceManager {
         //   await browser.close();
         // }
         this.browser = null;
-        this.page1 = null;
-        this.page2 = null;
+        this.BTCPage = null;
+        this.ADAPage = null;
         this.intervalRate = 500;
         this.url = '';
         this.selector = '';
@@ -98,17 +98,17 @@ class PriceManager {
             //@ts-ignore
             this.browser = yield puppeteer_1.default.launch();
             //@ts-ignore
-            this.page1 = yield this.browser.newPage();
+            this.BTCPage = yield this.browser.newPage();
             //@ts-ignore
-            yield this.page1.goto(url);
+            yield this.BTCPage.goto(url);
             //@ts-ignore
-            yield this.page1.waitForSelector(selector);
+            yield this.BTCPage.waitForSelector(selector);
         });
     }
     BTCGetData(selector) {
         return __awaiter(this, void 0, void 0, function* () {
             //@ts-ignore
-            let data = yield this.page1.$eval(selector, node => {
+            let data = yield this.BTCPage.$eval(selector, node => {
                 return node.innerText;
             });
             console.log("BTC Price");
@@ -144,17 +144,17 @@ class PriceManager {
             //@ts-ignore
             this.browser = yield puppeteer_1.default.launch();
             //@ts-ignore
-            this.page2 = yield this.browser.newPage();
+            this.ADAPage = yield this.browser.newPage();
             //@ts-ignore
-            yield this.page2.goto(url);
+            yield this.ADAPage.goto(url);
             //@ts-ignore
-            yield this.page2.waitForSelector(selector);
+            yield this.ADAPage.waitForSelector(selector);
         });
     }
     ADAGetData(selector) {
         return __awaiter(this, void 0, void 0, function* () {
             //@ts-ignore
-            let data = yield this.page2.$eval(selector, node => {
+            let data = yield this.ADAPage.$eval(selector, node => {
                 return node.innerText;
             });
             console.log("ADA Price");
