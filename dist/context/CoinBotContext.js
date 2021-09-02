@@ -72,15 +72,20 @@ class CoinBotContext {
             // }
             // )
             //// int the Ada
-            yield this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice').then(() => {
-                node_cron_1.default.schedule("* * * * * * ", () => this.analyze('.showPrice'));
-            });
+            // await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice').then(() => {
+            //   cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+            // })
             //// int the BTC
-            yield this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice').then(() => {
-                node_cron_1.default.schedule("* * * * * * ", () => this.analyze('.showPrice'));
-            });
+            // await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice').then(() => {
+            //   cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+            // }
+            // )
             //// run the same time for init and get data
             // cron.schedule("* * * * *", () => this.analyze('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice'));
+            //// init first and then just call a cron
+            yield this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice');
+            yield this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice');
+            node_cron_1.default.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
             //! INNIT JUST WORKS FOR THE LAST ONE THAT IS INNIT 
         });
     }
@@ -102,7 +107,7 @@ class CoinBotContext {
         console.log('called analyze');
         //todo 1. Get data from puppeteer
         // const data = ...();
-        let data = {};
+        const data = {};
         //test 
         // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
         // const SELECTOR = '.showPrice';
@@ -111,8 +116,10 @@ class CoinBotContext {
         //   data = this.priceManager.getData(urlAndSelector.url, urlAndSelector.section);
         // }
         // )
-        data.BTCP = this.priceManager.BTCGetData(selector);
-        data.ADAP = this.priceManager.ADAGetData(selector);
+        data.BTC = this.priceManager.BTCGetData(selector);
+        data.ADA = this.priceManager.ADAGetData(selector);
+        console.log(data.BTC, "check btc");
+        console.log(data.ADA, "check Ada");
         // data = this.priceManager.BTCInitAndGetData(url, selector);
         //todo 2. Analyze data
         this.analyzer.analyze(this.coinsAccounts, data); // send as params

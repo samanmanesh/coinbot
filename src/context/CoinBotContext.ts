@@ -71,21 +71,26 @@ export default class CoinBotContext {
     // }
 
     // )
+
     //// int the Ada
-    await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice').then(() => {
-      cron.schedule("* * * * * * ", () => this.analyze('.showPrice'));
-    })
+    // await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice').then(() => {
+    //   cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+    // })
 
     //// int the BTC
-    await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice').then(() => {
-      cron.schedule("* * * * * * ", () => this.analyze('.showPrice'));
-    }
-    )
+    // await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice').then(() => {
+    //   cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+    // }
+    // )
 
-    //// run the same time for init and get data
-    // cron.schedule("* * * * *", () => this.analyze('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice'));
+  
 
-    //! INNIT JUST WORKS FOR THE LAST ONE THAT IS INNIT 
+    //// init first and then just call a cron
+    await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice')
+
+    await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice')
+
+    cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
   }
 
 
@@ -111,7 +116,7 @@ export default class CoinBotContext {
     console.log('called analyze');
     //todo 1. Get data from puppeteer
     // const data = ...();
-    let data: any = {};
+    const data: any = {};
 
     //test 
     // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
@@ -124,9 +129,12 @@ export default class CoinBotContext {
     // }
     // )
 
-    data.BTCP = this.priceManager.BTCGetData(selector);
-    data.ADAP = this.priceManager.ADAGetData(selector);
 
+
+    data.BTC = this.priceManager.BTCGetData(selector);
+    data.ADA = this.priceManager.ADAGetData(selector);
+    console.log(data.BTC, "check btc");
+    console.log(data.ADA, "check Ada");
 
     // data = this.priceManager.BTCInitAndGetData(url, selector);
 

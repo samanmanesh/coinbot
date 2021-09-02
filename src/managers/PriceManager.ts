@@ -16,8 +16,8 @@ export default class PriceManager {
 
 
   browser = null;
-  page1 = null;
-  page2 = null;
+  BTCPage = null;
+  ADAPage = null;
   intervalRate = 500;
   url = '';
   selector = '';
@@ -69,22 +69,25 @@ export default class PriceManager {
   }
 
 
+
+
+
   async BTCInit (url: string, selector: string){
     // let page = undefined;
 
     //@ts-ignore
     this.browser = await puppeteer.launch();
     //@ts-ignore
-    this.page1 = await this.browser.newPage();
+    this.BTCPage = await this.browser.newPage();
     //@ts-ignore
-    await this.page1.goto(url);
+    await this.BTCPage.goto(url);
     //@ts-ignore
-    await this.page1.waitForSelector(selector);
+    await this.BTCPage.waitForSelector(selector);
   }
 
   async BTCGetData( selector: string){
     //@ts-ignore
-    let data = await this.page1.$eval(selector, node => {
+    let data = await this.BTCPage.$eval(selector, node => {
       return node.innerText
     });
     console.log("BTC Price")
@@ -125,17 +128,17 @@ export default class PriceManager {
     //@ts-ignore
     this.browser = await puppeteer.launch();
     //@ts-ignore
-    this.page2 = await this.browser.newPage();
+    this.ADAPage = await this.browser.newPage();
     //@ts-ignore
-    await this.page2.goto(url);
+    await this.ADAPage.goto(url);
     //@ts-ignore
-    await this.page2.waitForSelector(selector);
+    await this.ADAPage.waitForSelector(selector);
   }
 
 
   async ADAGetData( selector: string){
     //@ts-ignore
-    let data = await this.page2.$eval(selector, node => {
+    let data = await this.ADAPage.$eval(selector, node => {
       return node.innerText
     });
     console.log("ADA Price")
