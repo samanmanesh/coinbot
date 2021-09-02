@@ -34,7 +34,7 @@ export default class CoinBotContext {
   }
 
   public async runCron() {
-    // Get all accounts
+    //todo Get all accounts
     await this.populateUsers();
 
     // // init the puppeteer
@@ -44,7 +44,7 @@ export default class CoinBotContext {
     // await this.priceManager.init(BINANCE_URL, SELECTOR);
 
     await this.puppeteerHandler();
-    cron.schedule("* * * * * * ", () => this.analyze());
+    // cron.schedule("* * * * * * ", () => this.analyze());
 
     // # ┌────────────── second (optional)
     // # │ ┌──────────── minute
@@ -60,17 +60,35 @@ export default class CoinBotContext {
 
 
   private async puppeteerHandler() {
-    // init the puppeteer
+    //Todo init the puppeteer
+
     // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
     // const SELECTOR = '.showPrice';
     // await this.priceManager.init(BINANCE_URL, SELECTOR);
 
-    BinanceUrlAndSelector.forEach(async (urlAndSelector) => {
-      await this.priceManager.init(urlAndSelector.url, urlAndSelector.section);
-    }
+    // BinanceUrlAndSelector.forEach(async (urlAndSelector) => {
+    //   await this.priceManager.init(urlAndSelector.url, urlAndSelector.section);
+    // }
 
+    // )
+    //// int the Ada
+    await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice').then(() => {
+      cron.schedule("* * * * * * ", () => this.analyze('.showPrice'));
+    })
+
+    //// int the BTC
+    await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice').then(() => {
+      cron.schedule("* * * * * * ", () => this.analyze('.showPrice'));
+    }
     )
+
+    //// run the same time for init and get data
+    // cron.schedule("* * * * *", () => this.analyze('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice'));
+
+    //! INNIT JUST WORKS FOR THE LAST ONE THAT IS INNIT 
   }
+
+
 
   public updateUser(account: IAccount, removedCoinSymbol?: CoinSymbol) {
     if (removedCoinSymbol) {
@@ -89,9 +107,9 @@ export default class CoinBotContext {
     )
   }
 
-  private analyze() {
+  private analyze(selector: string) {
     console.log('called analyze');
-    // 1. Get data from puppeteer
+    //todo 1. Get data from puppeteer
     // const data = ...();
     let data: any = {};
 
@@ -101,13 +119,18 @@ export default class CoinBotContext {
 
     // data = this.priceManager.getData(BINANCE_URL, SELECTOR);
 
-    BinanceUrlAndSelector.forEach(async (urlAndSelector) => { 
-      data = this.priceManager.getData(urlAndSelector.url, urlAndSelector.section);
-    }
-    )
-    
+    // BinanceUrlAndSelector.forEach(async (urlAndSelector) => { 
+    //   data = this.priceManager.getData(urlAndSelector.url, urlAndSelector.section);
+    // }
+    // )
 
-    // 2. Analyze data
+    data.BTCP = this.priceManager.BTCGetData(selector);
+    data.ADAP = this.priceManager.ADAGetData(selector);
+
+
+    // data = this.priceManager.BTCInitAndGetData(url, selector);
+
+    //todo 2. Analyze data
     this.analyzer.analyze(this.coinsAccounts, data); // send as params
   }
 

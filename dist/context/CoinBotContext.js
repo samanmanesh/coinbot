@@ -41,7 +41,7 @@ class CoinBotContext {
     }
     runCron() {
         return __awaiter(this, void 0, void 0, function* () {
-            // Get all accounts
+            //todo Get all accounts
             yield this.populateUsers();
             // // init the puppeteer
             // //test 
@@ -49,7 +49,7 @@ class CoinBotContext {
             // const SELECTOR = '.showPrice';
             // await this.priceManager.init(BINANCE_URL, SELECTOR);
             yield this.puppeteerHandler();
-            node_cron_1.default.schedule("* * * * * * ", () => this.analyze());
+            // cron.schedule("* * * * * * ", () => this.analyze());
             // # ┌────────────── second (optional)
             // # │ ┌──────────── minute
             // # │ │ ┌────────── hour
@@ -63,13 +63,25 @@ class CoinBotContext {
     }
     puppeteerHandler() {
         return __awaiter(this, void 0, void 0, function* () {
-            // init the puppeteer
+            //Todo init the puppeteer
             // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
             // const SELECTOR = '.showPrice';
             // await this.priceManager.init(BINANCE_URL, SELECTOR);
-            BinanceUrlAndSelector.forEach((urlAndSelector) => __awaiter(this, void 0, void 0, function* () {
-                yield this.priceManager.init(urlAndSelector.url, urlAndSelector.section);
-            }));
+            // BinanceUrlAndSelector.forEach(async (urlAndSelector) => {
+            //   await this.priceManager.init(urlAndSelector.url, urlAndSelector.section);
+            // }
+            // )
+            //// int the Ada
+            yield this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice').then(() => {
+                node_cron_1.default.schedule("* * * * * * ", () => this.analyze('.showPrice'));
+            });
+            //// int the BTC
+            yield this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice').then(() => {
+                node_cron_1.default.schedule("* * * * * * ", () => this.analyze('.showPrice'));
+            });
+            //// run the same time for init and get data
+            // cron.schedule("* * * * *", () => this.analyze('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice'));
+            //! INNIT JUST WORKS FOR THE LAST ONE THAT IS INNIT 
         });
     }
     updateUser(account, removedCoinSymbol) {
@@ -86,19 +98,23 @@ class CoinBotContext {
             this.coinsAccounts[coins.symbol][userIndex] = account;
         });
     }
-    analyze() {
+    analyze(selector) {
         console.log('called analyze');
-        // 1. Get data from puppeteer
+        //todo 1. Get data from puppeteer
         // const data = ...();
         let data = {};
         //test 
         // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
         // const SELECTOR = '.showPrice';
         // data = this.priceManager.getData(BINANCE_URL, SELECTOR);
-        BinanceUrlAndSelector.forEach((urlAndSelector) => __awaiter(this, void 0, void 0, function* () {
-            data = this.priceManager.getData(urlAndSelector.url, urlAndSelector.section);
-        }));
-        // 2. Analyze data
+        // BinanceUrlAndSelector.forEach(async (urlAndSelector) => { 
+        //   data = this.priceManager.getData(urlAndSelector.url, urlAndSelector.section);
+        // }
+        // )
+        data.BTCP = this.priceManager.BTCGetData(selector);
+        data.ADAP = this.priceManager.ADAGetData(selector);
+        // data = this.priceManager.BTCInitAndGetData(url, selector);
+        //todo 2. Analyze data
         this.analyzer.analyze(this.coinsAccounts, data); // send as params
     }
     populateUsers() {

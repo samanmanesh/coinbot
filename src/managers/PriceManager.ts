@@ -16,7 +16,8 @@ export default class PriceManager {
 
 
   browser = null;
-  page = null;
+  page1 = null;
+  page2 = null;
   intervalRate = 500;
   url = '';
   selector = '';
@@ -55,7 +56,7 @@ export default class PriceManager {
 
 
 
-  async getData(url: string, selector: string) {
+  async getData( selector: string) {
   
     //@ts-ignore
     let data = await this.page.$eval(selector, node => {
@@ -66,6 +67,108 @@ export default class PriceManager {
     return data;
 
   }
+
+
+  async BTCInit (url: string, selector: string){
+    // let page = undefined;
+
+    //@ts-ignore
+    this.browser = await puppeteer.launch();
+    //@ts-ignore
+    this.page1 = await this.browser.newPage();
+    //@ts-ignore
+    await this.page1.goto(url);
+    //@ts-ignore
+    await this.page1.waitForSelector(selector);
+  }
+
+  async BTCGetData( selector: string){
+    //@ts-ignore
+    let data = await this.page1.$eval(selector, node => {
+      return node.innerText
+    });
+    console.log("BTC Price")
+    console.log(data);
+    console.log('------');
+    return data;
+  }
+
+  // async BTCInitAndGetData(url: string, selector: string){
+  //   //@ts-ignore
+  //   this.browser = await puppeteer.launch();
+  //   //@ts-ignore
+  //   this.page = await this.browser.newPage();
+  //   //@ts-ignore
+  //   await this.page.goto(url);
+  //   //@ts-ignore
+  //   await this.page.waitForSelector(selector);
+
+  //   // await puppeteer.launch().then(browser => { browser.newPage().then(page => {
+  //   //   page.goto(url).then(() => { page.waitForSelector(selector)})}) 
+  //   // });
+
+  //   //@ts-ignore
+  //   let data = await this.page.$eval(selector, node => {
+  //     return node.innerText
+  //   });
+  //   console.log("BTC Price")
+  //   console.log(data);
+  //   console.log('------');
+  //   return data;
+    
+  // }
+
+
+
+  async ADAInit (url: string, selector: string){
+    // let page = undefined;
+    //@ts-ignore
+    this.browser = await puppeteer.launch();
+    //@ts-ignore
+    this.page2 = await this.browser.newPage();
+    //@ts-ignore
+    await this.page2.goto(url);
+    //@ts-ignore
+    await this.page2.waitForSelector(selector);
+  }
+
+
+  async ADAGetData( selector: string){
+    //@ts-ignore
+    let data = await this.page2.$eval(selector, node => {
+      return node.innerText
+    });
+    console.log("ADA Price")
+    console.log(data);
+    console.log('------');
+    return data;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=pro';
 // const SELECTOR = '.chart-title-indicator-container';
