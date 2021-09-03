@@ -55,7 +55,7 @@ class CoinBotContext {
             BinanceUrlAndSelector.forEach((element) => __awaiter(this, void 0, void 0, function* () {
                 yield this.priceManager.init(element.url, element.section, element.pageName);
             }));
-            node_cron_1.default.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+            node_cron_1.default.schedule(" * * * * * ", () => this.analyze('.showPrice'));
             //#region test
             // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
             // const SELECTOR = '.showPrice';
