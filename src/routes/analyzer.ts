@@ -45,7 +45,16 @@ export default class Analyzer {
 
         console.log("Current Price of" + coin + " is", data[coin]);
 
-        
+        if (userData && userData?.buy_at > data[coin]){
+          console.log("User", user, "is losing money on", coin);
+          console.log("It must go for stop loss percent to check if sell or keep the coin");
+
+        }
+        if (userData && userData?.buy_at < data[coin]){
+          console.log("User", user, " gains money on", coin);
+          console.log("It must go for profit  percent to check if sell or keep the coin");
+
+        }
 
 
       }
@@ -55,6 +64,8 @@ export default class Analyzer {
     
 
   }
+
+
 
 
   //Todo 1> We want to compare the price here 
