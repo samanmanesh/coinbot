@@ -29,16 +29,39 @@ export default class Analyzer {
     // console.debug('BTC is', data.BTC);
     // console.debug('ADA is', data.ADA);
     console.table( data );
+    // console.log(users);
+    
+    for (let coin in users){
+      console.log(coin,'coin');
+     
+      for (let user in users[coin]){
+        // console.log(user,'index');
+        console.log(users[coin][user]);
 
-    console.log(users);
-  
+        let userData =  users[coin][user].assets.coins.find(coins => coins.symbol === coin);
+
+        console.log("for symbol",coin," he bought at",  users[coin][user].assets.coins.find(coins => coins.symbol === coin)?.buy_at);
+        console.log(userData,'userData');
+
+        console.log("Current Price of" + coin + " is", data[coin]);
+
+        
 
 
+      }
+
+
+    }
+    
 
   }
 
 
-
+  //Todo 1> We want to compare the price here 
+  //Todo 2> analyze gets the price each time cron works/  meanwhile we want to pass it to a function or method to :
+  //todo:  first go though each coin for each accounts and then compare the price. 
+  //todo: So if the price is more than 30% on n% of bought price, sell that coin. 
+  //todo: if the price is sold in high we have to look for lower price to but it for that account.  
 
 
   // async getPreferredCoinsData(req: Request, res: Response) {

@@ -56,7 +56,7 @@ export default class CoinBotContext {
 
     
 
-    cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
+    cron.schedule(" * * * * * ", () => this.analyze('.showPrice'));
 
     //#region test
     // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
