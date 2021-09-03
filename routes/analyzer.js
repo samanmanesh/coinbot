@@ -46,9 +46,17 @@ class Analyzer {
                     // console.log(user,'index');
                     console.log(users[coin][user]);
                     let userData = users[coin][user].assets.coins.find(coins => coins.symbol === coin);
-                    console.log("for symobl", coin, " he bought at", (_a = users[coin][user].assets.coins.find(coins => coins.symbol === coin)) === null || _a === void 0 ? void 0 : _a.buy_at);
+                    console.log("for symbol", coin, " he bought at", (_a = users[coin][user].assets.coins.find(coins => coins.symbol === coin)) === null || _a === void 0 ? void 0 : _a.buy_at);
                     console.log(userData, 'userData');
                     console.log("Current Price of" + coin + " is", data[coin]);
+                    if (userData && (userData === null || userData === void 0 ? void 0 : userData.buy_at) > data[coin]) {
+                        console.log("User", user, "is losing money on", coin);
+                        console.log("It must go for stop loss percent to check if sell or kep the coin");
+                    }
+                    if (userData && (userData === null || userData === void 0 ? void 0 : userData.buy_at) < data[coin]) {
+                        console.log("User", user, " gains money on", coin);
+                        console.log("It must go for profit  percent to check if sell or kep the coin");
+                    }
                 }
             }
         });
