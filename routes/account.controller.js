@@ -40,7 +40,7 @@ class AccountController {
         this.router.delete(AccountPath.ByActionAndUser, (req, res) => this.removePreferredCoins(req, res));
         this.router.post(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAccountsAssets(req, res));
         this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAccountsAssets(req, res));
-        this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.updateCoinInAccountsAssets(req, res));
+        this.router.patch(AccountPath.ByUserAndAssets, (req, res) => this.updateCoinInAccountsAssets(req, res));
     }
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
