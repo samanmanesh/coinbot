@@ -224,7 +224,7 @@ export default class AccountController implements IController {
     // Adding the coin to accounts assets if it does not exist
     try {
       if (!coin) {
-        const result = await this.accountManager.addCoinToAccountsAssets(username, req.body);
+        const result = await this.accountManager.addCoinToAccountsAssets(username, JSON.parse(req.body));
         res.status(200).json(result);
       }
     } catch (error) {

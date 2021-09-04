@@ -41,6 +41,7 @@ export default class Analyzer {
         let userData = users[coin][user].assets.coins.find(coins => coins.symbol === coin);
 
         console.log("for symbol", coin, " he bought at", users[coin][user].assets.coins.find(coins => coins.symbol === coin)?.bought_at);
+       
         console.log(userData, 'userData');
 
         console.log("Current Price of" + coin + " is ", data[coin]);
