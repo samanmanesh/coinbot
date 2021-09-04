@@ -32,7 +32,7 @@ export default class Analyzer {
     // console.log(users);
 
     for (let coin in users) {
-      console.log(coin, 'coin');
+      // console.log(coin, 'coin');
 
       for (let user in users[coin]) {
         // console.log(user,'index');
@@ -43,7 +43,7 @@ export default class Analyzer {
         console.log("for symbol", coin, " he bought at", users[coin][user].assets.coins.find(coins => coins.symbol === coin)?.bought_at);
         console.log(userData, 'userData');
 
-        console.log("Current Price of" + coin + " is", data[coin]);
+        console.log("Current Price of" + coin + " is ", data[coin]);
 
         if (userData && userData?.bought_at  > data[coin]) {
           console.log("User", user, "is losing money on", coin);
@@ -55,6 +55,8 @@ export default class Analyzer {
           console.log("It must go for profit percent to check if sell or keep the coin");
 
         }
+        userData && 
+        console.log(this.riskManagement(userData?.bought_at, userData?.sold_at));
 
       }
 
@@ -62,11 +64,29 @@ export default class Analyzer {
 
   }
 
-  async riskManagement(users: Record<string, IAccount[]>, data: any) {
-   //bought_at 
-    
-    
+   private riskManagement( boughtPrice: number, soldPrice: number) {
+   
+    //temporary give it the stop loss percent till it receive it from user and 
+    const sellStopLossPercent = 0.15; //15%
+    const sellProfitMargin = 0.30; //30%
+    const buyStopLossPercent = 0.10; //15%
+    const buyProfitMargin = 0.30; //30%
+    // checks if we bought or sold the coin
+
+    //bought_at 
+    if( boughtPrice !== 0){
+      const stopLoss = boughtPrice - (boughtPrice * sellStopLossPercent);
+      const profitMargin = boughtPrice + (boughtPrice * sellProfitMargin);  
+      return {stopLoss , profitMargin};
+     }
+
+
    //sold_at 
+   if ( soldPrice !== 0){
+    const stopLoss =  boughtPrice - (boughtPrice * buyStopLossPercent);
+    const profitMargin = boughtPrice + (boughtPrice * buyProfitMargin);
+    return {stopLoss , profitMargin};
+   }
 
   }
 

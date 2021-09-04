@@ -41,14 +41,14 @@ class Analyzer {
             console.table(data);
             // console.log(users);
             for (let coin in users) {
-                console.log(coin, 'coin');
+                // console.log(coin, 'coin');
                 for (let user in users[coin]) {
                     // console.log(user,'index');
                     console.log(users[coin][user]);
                     let userData = users[coin][user].assets.coins.find(coins => coins.symbol === coin);
                     console.log("for symbol", coin, " he bought at", (_a = users[coin][user].assets.coins.find(coins => coins.symbol === coin)) === null || _a === void 0 ? void 0 : _a.bought_at);
                     console.log(userData, 'userData');
-                    console.log("Current Price of" + coin + " is", data[coin]);
+                    console.log("Current Price of" + coin + " is ", data[coin]);
                     if (userData && (userData === null || userData === void 0 ? void 0 : userData.bought_at) > data[coin]) {
                         console.log("User", user, "is losing money on", coin);
                         console.log("It must go for stop loss percent to check if sell or keep the coin");
@@ -57,15 +57,31 @@ class Analyzer {
                         console.log("User", user, " gains money on", coin);
                         console.log("It must go for profit percent to check if sell or keep the coin");
                     }
+                    userData &&
+                        console.log(this.riskManagement(userData === null || userData === void 0 ? void 0 : userData.bought_at, userData === null || userData === void 0 ? void 0 : userData.sold_at));
                 }
             }
         });
     }
-    riskManagement(users, data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            //bought_at 
-            //sold_at 
-        });
+    riskManagement(boughtPrice, soldPrice) {
+        //temporary give it the stop loss percent till it receive it from user and 
+        const sellStopLossPercent = 0.15; //15%
+        const sellProfitMargin = 0.30; //30%
+        const buyStopLossPercent = 0.10; //15%
+        const buyProfitMargin = 0.30; //30%
+        // checks if we bought or sold the coin
+        //bought_at 
+        if (boughtPrice !== 0) {
+            const stopLoss = boughtPrice - (boughtPrice * sellStopLossPercent);
+            const profitMargin = boughtPrice + (boughtPrice * sellProfitMargin);
+            return { stopLoss, profitMargin };
+        }
+        //sold_at 
+        if (soldPrice !== 0) {
+            const stopLoss = boughtPrice - (boughtPrice * buyStopLossPercent);
+            const profitMargin = boughtPrice + (boughtPrice * buyProfitMargin);
+            return { stopLoss, profitMargin };
+        }
     }
 }
 exports.default = Analyzer;
