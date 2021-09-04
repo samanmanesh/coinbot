@@ -18,8 +18,9 @@ const BinanceUrlAndSelector = [
     url: 'https://www.binance.com/en/trade/ADA_USDT?layout=basic',
     section: '.showPrice'
   },
-
 ]
+
+// const getUrlSelector = (coinSymbol: string)
 
 export default class CoinBotContext {
   public static instance: CoinBotContext;
@@ -37,7 +38,6 @@ export default class CoinBotContext {
 
   public async runCron() {
 
-    //todo Get all accounts
     await this.populateUsers();
 
     await this.puppeteerHandler();
@@ -103,7 +103,9 @@ export default class CoinBotContext {
     }
 
     account.assets.coins.forEach(coins => {
-      const userIndex = this.coinsAccounts[coins.symbol].findIndex(user => user.username === account.username);
+      const currentCoinAccounts = this.coinsAccounts[coins.symbol];
+      if (!currentCoinAccounts) return;
+      const userIndex = currentCoinAccounts.findIndex(user => user.username === account.username);
       if (!userIndex) {
         this.coinsAccounts[coins.symbol].push(account);
         return;
@@ -119,9 +121,14 @@ export default class CoinBotContext {
     //todo 1. Get data from puppeteer
     // const data = ...();
     const data: any = {};
+    const coinSymbols = ['BTC', 'ADA'];
     // Gets data from puppeteer and store in data variable
-    data.BTC = await this.priceManager.getData(selector, 'BTC');
-    data.ADA = await this.priceManager.getData(selector, 'ADA');
+    for (const symbol of coinSymbols) {
+      const result = await this.priceManager.getData(selector, symbol); 
+      data[symbol] = result;
+    }
+    // data.BTC = await this.priceManager.getData(selector, 'BTC');
+    // data.ADA = await this.priceManager.getData(selector, 'ADA');
 
     //#region test for making it optimize but not working
     //todo 1: make a function to go over our coinsAccounts and gets all existing coins and send them for getData to gets the price and store that into related symbol in data and then send that to analyzer
@@ -147,7 +154,6 @@ export default class CoinBotContext {
 
 
   private async populateUsers() {
-    // todo
     console.debug('Populating users');
     const accounts = await this.accountManager.getAccounts();
     if (!accounts) {

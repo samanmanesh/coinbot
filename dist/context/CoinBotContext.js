@@ -30,6 +30,7 @@ const BinanceUrlAndSelector = [
         section: '.showPrice'
     },
 ];
+// const getUrlSelector = (coinSymbol: string)
 class CoinBotContext {
     constructor() {
         this.analyzer = new analyzer_1.default();
@@ -43,7 +44,6 @@ class CoinBotContext {
     }
     runCron() {
         return __awaiter(this, void 0, void 0, function* () {
-            //todo Get all accounts
             yield this.populateUsers();
             yield this.puppeteerHandler();
             // cron.schedule("* * * * * * ", () => this.analyze());
@@ -87,7 +87,10 @@ class CoinBotContext {
             return;
         }
         account.assets.coins.forEach(coins => {
-            const userIndex = this.coinsAccounts[coins.symbol].findIndex(user => user.username === account.username);
+            const currentCoinAccounts = this.coinsAccounts[coins.symbol];
+            if (!currentCoinAccounts)
+                return;
+            const userIndex = currentCoinAccounts.findIndex(user => user.username === account.username);
             if (!userIndex) {
                 this.coinsAccounts[coins.symbol].push(account);
                 return;
@@ -101,9 +104,14 @@ class CoinBotContext {
             //todo 1. Get data from puppeteer
             // const data = ...();
             const data = {};
+            const coinSymbols = ['BTC', 'ADA'];
             // Gets data from puppeteer and store in data variable
-            data.BTC = yield this.priceManager.getData(selector, 'BTC');
-            data.ADA = yield this.priceManager.getData(selector, 'ADA');
+            for (const symbol of coinSymbols) {
+                const result = yield this.priceManager.getData(selector, symbol);
+                data[symbol] = result;
+            }
+            // data.BTC = await this.priceManager.getData(selector, 'BTC');
+            // data.ADA = await this.priceManager.getData(selector, 'ADA');
             //#region test for making it optimize but not working
             //todo 1: make a function to go over our coinsAccounts and gets all existing coins and send them for getData to gets the price and store that into related symbol in data and then send that to analyzer
             //  for (let coin in Object.keys(this.coinsAccounts)) {
@@ -121,7 +129,6 @@ class CoinBotContext {
     }
     populateUsers() {
         return __awaiter(this, void 0, void 0, function* () {
-            // todo
             console.debug('Populating users');
             const accounts = yield this.accountManager.getAccounts();
             if (!accounts) {

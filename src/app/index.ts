@@ -7,8 +7,6 @@ export default class App {
   private _context: CoinBotContext = new CoinBotContext();
 
   constructor(routes: IRoute[]) {
-
-
     this.setupMiddleware();
     this.setupRoutes(routes);
     this.app.get("/", (req: Request, res: Response) => {

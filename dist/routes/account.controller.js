@@ -219,7 +219,7 @@ class AccountController {
             // Adding the coin to accounts assets if it does not exist
             try {
                 if (!coin) {
-                    const result = yield this.accountManager.addCoinToAccountsAssets(username, req.body);
+                    const result = yield this.accountManager.addCoinToAccountsAssets(username, JSON.parse(req.body));
                     res.status(200).json(result);
                 }
             }
