@@ -44,7 +44,7 @@ export default class AccountController implements IController {
 
     this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAccountsAssets(req, res));
 
-    this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.updateCoinInAccountsAssets(req, res));
+    this.router.patch(AccountPath.ByUserAndAssets, (req, res) => this.updateCoinInAccountsAssets(req, res));
 
   }
 

@@ -40,17 +40,17 @@ export default class Analyzer {
 
         let userData = users[coin][user].assets.coins.find(coins => coins.symbol === coin);
 
-        console.log("for symbol", coin, " he bought at", users[coin][user].assets.coins.find(coins => coins.symbol === coin)?.buy_at);
+        console.log("for symbol", coin, " he bought at", users[coin][user].assets.coins.find(coins => coins.symbol === coin)?.bought_at);
         console.log(userData, 'userData');
 
         console.log("Current Price of" + coin + " is", data[coin]);
 
-        if (userData && userData?.buy_at > data[coin]) {
+        if (userData && userData?.bought_at  > data[coin]) {
           console.log("User", user, "is losing money on", coin);
           console.log("It must go for stop loss percent to check if sell or keep the coin");
 
         }
-        if (userData && userData?.buy_at < data[coin]) {
+        if (userData && userData?.bought_at < data[coin]) {
           console.log("User", user, " gains money on", coin);
           console.log("It must go for profit percent to check if sell or keep the coin");
 
@@ -62,7 +62,13 @@ export default class Analyzer {
 
   }
 
+  async riskManagement(users: Record<string, IAccount[]>, data: any) {
+   //bought_at 
+    
+    
+   //sold_at 
 
+  }
 
 
   //Todo 1> We want to compare the price here 

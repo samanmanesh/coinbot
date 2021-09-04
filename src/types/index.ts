@@ -51,7 +51,8 @@ export interface ICoinData {
 export interface IWalletCoin {
   symbol: string;
   volume: number;
-  buy_at: number;
+  bought_at: number;
+  sold_at: number;
 }
 
 interface IAccountWallet {
