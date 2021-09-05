@@ -18,6 +18,13 @@ const BinanceUrlAndSelector = [
     url: 'https://www.binance.com/en/trade/ADA_USDT?layout=basic',
     section: '.showPrice'
   },
+  {
+    pageName: "XRP",
+    expectedData: 'XRP/USDT',
+    url: 'https://www.binance.com/en/trade/XRP_USDT?layout=pro',
+    section: '.showPrice'
+  },
+  
 ]
 
 // const getUrlSelector = (coinSymbol: string)
@@ -58,39 +65,6 @@ export default class CoinBotContext {
 
     cron.schedule(" * * * * * ", () => this.analyze('.showPrice'));
 
-    //#region test
-    // const BINANCE_URL = 'https://www.binance.com/en/trade/BTC_USDT?layout=basic';
-    // const SELECTOR = '.showPrice';
-    // await this.priceManager.init(BINANCE_URL, SELECTOR);
-
-    // BinanceUrlAndSelector.forEach(async (urlAndSelector) => {
-    //   await this.priceManager.init(urlAndSelector.url, urlAndSelector.section);
-    // }
-
-    // )
-
-    //// int the Ada
-    // await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice').then(() => {
-    //   cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
-    // })
-
-    //// int the BTC
-    // await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice').then(() => {
-    //   cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
-    // }
-    // )
-
-
-    //// init first and then just call a cron
-    // await this.priceManager.BTCInit('https://www.binance.com/en/trade/BTC_USDT?layout=basic', '.showPrice')
-
-    // await this.priceManager.ADAInit('https://www.binance.com/en/trade/ADA_USDT?layout=basic', '.showPrice')
-
-    // cron.schedule("*/2 * * * * * ", () => this.analyze('.showPrice'));
-
-    // init all having coins
-
-    //#endregion
 
   }
 
@@ -121,37 +95,26 @@ export default class CoinBotContext {
     //todo 1. Get data from puppeteer
     // const data = ...();
     const data: any = {};
-    const coinSymbols = ['BTC', 'ADA'];
+    // const coinSymbols = ['BTC', 'ADA'];
     // Gets data from puppeteer and store in data variable
-    for (const symbol of coinSymbols) {
-      const result = await this.priceManager.getData(selector, symbol); 
-      data[symbol] = result;
-    }
+    // for (const symbol of coinSymbols) {
+    //   const result = await this.priceManager.getData(selector, symbol); 
+    //   data[symbol] = result;
+    // }
+    for (let coinSymbol in this.coinsAccounts) {
+     data[coinSymbol] = await this.priceManager.getData(selector, coinSymbol);
+   }
     // data.BTC = await this.priceManager.getData(selector, 'BTC');
     // data.ADA = await this.priceManager.getData(selector, 'ADA');
 
     //#region test for making it optimize but not working
     //todo 1: make a function to go over our coinsAccounts and gets all existing coins and send them for getData to gets the price and store that into related symbol in data and then send that to analyzer
 
-    //  for (let coin in Object.keys(this.coinsAccounts)) {
-       
-    //   let coinSymbol = Object.keys(this.coinsAccounts)[coin];
-    //   data.coinSymbol = await this.priceManager.getData(selector, coinSymbol);
-    // }
-
-    // Object.keys(this.coinsAccounts).forEach(async coin => {
-
-    //   data.coin = await this.priceManager.getData(selector, coin);
-    //   console.log("coin", coin);
-
-    // })
     //#endregion
     //todo 2. Analyze data
     await this.analyzer.analyze(this.coinsAccounts, data); // send as params
 
   }
-
-
 
   private async populateUsers() {
     console.debug('Populating users');
@@ -173,7 +136,7 @@ export default class CoinBotContext {
         this.coinsAccounts[coin.symbol].push(account);
       });
     });
-    console.log(" coinsAccounts", this.coinsAccounts);
+    // console.log(" coinsAccounts", this.coinsAccounts);
   }
 
 }

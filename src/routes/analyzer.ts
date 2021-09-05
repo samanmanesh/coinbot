@@ -70,23 +70,27 @@ export default class Analyzer {
     //temporary give it the stop loss percent till it receive it from user and 
     const sellStopLossPercent = 0.15; //15%
     const sellProfitMargin = 0.30; //30%
-    const buyStopLossPercent = 0.10; //15%
+    const buyStopLossPercent = 0.15; //15%
     const buyProfitMargin = 0.30; //30%
     // checks if we bought or sold the coin
 
     //bought_at 
     if( boughtPrice !== 0){
-      const stopLoss = boughtPrice - (boughtPrice * sellStopLossPercent);
-      const profitMargin = boughtPrice + (boughtPrice * sellProfitMargin);  
-      return {stopLoss , profitMargin};
-     }
+      // const stopLoss = boughtPrice - (boughtPrice * sellStopLossPercent);
 
+      const profitMargin = boughtPrice + (boughtPrice * sellProfitMargin);  
+      console.log("if reach to profitMargin sell");
+      return  profitMargin;
+     }
+     //volume boughtPrice
+     
 
    //sold_at 
    if ( soldPrice !== 0){
-    const stopLoss =  boughtPrice - (boughtPrice * buyStopLossPercent);
-    const profitMargin = boughtPrice + (boughtPrice * buyProfitMargin);
-    return {stopLoss , profitMargin};
+     // const profitMargin = boughtPrice + (boughtPrice * buyProfitMargin);
+    const newBoughtPosition =  boughtPrice - (boughtPrice * buyStopLossPercent);
+    console.log("if reach the new buy position, buy  ")
+    return  newBoughtPosition;
    }
 
   }
