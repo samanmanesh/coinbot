@@ -19,8 +19,14 @@ class Model<T> {
   }
 
   async connect() {
-    await this.client.connect();
-    console.log("Connected to DataBase");
+    console.log('check');
+    try {
+      await this.client.connect();
+      console.log("Connected to DataBase");
+    
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public async save(document: T) {
