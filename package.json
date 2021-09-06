@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsc -p . && nodemon src/server.ts",
-    "deploy": "tsc -p . && git add dist -f && git commit -m 'Updated build' && git subtree push --prefix dist origin live-build"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
