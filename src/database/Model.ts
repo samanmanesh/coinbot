@@ -19,7 +19,6 @@ class Model<T> {
   }
 
   async connect() {
-    console.log('check');
     try {
       await this.client.connect();
       console.log("Connected to DataBase");

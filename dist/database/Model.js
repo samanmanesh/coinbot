@@ -45,7 +45,6 @@ class Model {
     }
     connect() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('check');
             try {
                 yield this.client.connect();
                 console.log("Connected to DataBase");

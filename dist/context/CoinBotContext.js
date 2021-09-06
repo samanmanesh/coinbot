@@ -98,9 +98,6 @@ class CoinBotContext {
             }
             // data.BTC = await this.priceManager.getData(selector, 'BTC');
             // data.ADA = await this.priceManager.getData(selector, 'ADA');
-            //#region test for making it optimize but not working
-            //todo 1: make a function to go over our coinsAccounts and gets all existing coins and send them for getData to gets the price and store that into related symbol in data and then send that to analyzer
-            //#endregion
             //todo 2. Analyze data
             yield this.analyzer.analyze(this.coinsAccounts, data); // send as params
         });
