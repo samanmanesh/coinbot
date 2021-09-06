@@ -28,6 +28,7 @@ export default class Analyzer {
   public async analyze(users: Record<string, IAccount[]>, data: any) {
     console.table(data);
     // console.log(users);
+    const riskPriceManager= 
 
     for (let coin in users) {
       // console.log(coin, 'coin');
@@ -35,7 +36,7 @@ export default class Analyzer {
         // console.log(user,'index');
         console.log(users[coin][user]);
         let userData = users[coin][user].assets.coins.find(coins => coins.symbol === coin);
-        
+
         if (userData) {
 
           console.log('userData', userData);
@@ -57,39 +58,40 @@ export default class Analyzer {
 
           const riskMargins: IRiskMargins = this.riskManagement(userData?.bought_at, userData?.sold_at);
 
-          // Order handler
-          console.log("if reach the new buy position, buy/ use limit order to buy for us  ")
-
+          //ORDER Handler
           //sell time 
-          if (riskMargins.profitMargin !== 0){
+          if (riskMargins.profitMargin !== 0) {
+            // const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
+
             this.orderHandler(riskMargins.profitMargin, userData.volume);
           }
 
-          //sell time
-          if (riskMargins.profitMargin !== 0 && data[coin] >= riskMargins.profitMargin) {
+          //Buy time
+          if (riskMargins.newBuyPosition !== 0) {
+            //   const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at)
 
-            // if we want to sell all having volume we can call the volumeCalculator to get the current volume for selling and then send that with limit  
-
-            //if reach to profitMargin sell/ use limit order to sell for us"
-
-            const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
-
-
-            // this.orderHandler(userData.bought_at, userData.volume, userData.sold_at)
-
+            this.orderHandler(riskMargins.newBuyPosition, userData.volume);
           }
+
+          // //sell time
+          // if (riskMargins.profitMargin !== 0 && data[coin] >= riskMargins.profitMargin) {
+
+          //   // if we want to sell all having volume we can call the volumeCalculator to get the current volume for selling and then send that with limit  
+
+          //   //if reach to profitMargin sell/ use limit order to sell for us"
+
+          //   const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
+
+
+          //   // this.orderHandler(userData.bought_at, userData.volume, userData.sold_at)
+
+          // }
 
           //Buy time
-          if (riskMargins.newBuyPosition !== 0 && data[coin] <= riskMargins.newBuyPosition) {
-            const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at)
-          }
+          // if (riskMargins.newBuyPosition !== 0 && data[coin] <= riskMargins.newBuyPosition) {
+          //   const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at)
+          // }
 
-
-          // console.log(this.riskManagement(userData?.bought_at, userData?.sold_at));
-
-          //volume 
-          // userData &&
-          //   this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
         }
       }
 
@@ -108,14 +110,11 @@ export default class Analyzer {
 
     let profitMargin = 0;
     let newBuyPosition = 0;
+
     // checks if we bought or sold the coin
     //bought_at 
     if (boughtPrice !== 0) {
-
-      // We are looking for sell with profit
       profitMargin = boughtPrice + (boughtPrice * sellProfitMargin);
-      // console.log("if reach to profitMargin sell/ use limit order to sell for us");
-      // return profitMargin;
     }
 
     //sold_at 
@@ -126,25 +125,23 @@ export default class Analyzer {
       // console.log("if reach the new buy position, buy/ use limit order to buy for us  ")
       // return newBoughtPosition;
     }
-
     return ({ profitMargin, newBuyPosition });
   }
 
   private volumeCalculator(currentPrice: number, volume: number, boughtPrice: number) {
-
     const currentVolume = (currentPrice * volume) / boughtPrice;
     console.log("currentVolume is", currentVolume);
-
     return currentVolume;
-
   }
 
-  private orderHandler(limitPrice: number, volume: number, ) {
+  private orderHandler(limitPrice: number, volume: number,) {
     // use binance Api 
 
     //for now we use accountManager to update data
 
   }
 
-  
+  private riskPriceManager (){
+    
+  }
 }
