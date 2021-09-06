@@ -3,6 +3,7 @@ import express, { Request, Response } from "express";
 import AccountManager from "../managers/AccountManager";
 import MarketDataManager from "../managers/MarketDataManager";
 import { IAccount } from "../models/Account";
+import { IRiskMargins } from '../types';
 
 
 enum AnalyzerPath {
@@ -30,39 +31,44 @@ export default class Analyzer {
 
     for (let coin in users) {
       // console.log(coin, 'coin');
-
       for (let user in users[coin]) {
         // console.log(user,'index');
         console.log(users[coin][user]);
-
         let userData = users[coin][user].assets.coins.find(coins => coins.symbol === coin);
         if (!userData) return;
-
+        
+        console.log('userData',userData);
 
         console.log("for symbol", coin, " he bought at", users[coin][user].assets.coins.find(coins => coins.symbol === coin)?.bought_at);
-        console.log(userData, 'userData');
+        
         console.log("Current Price of" + coin + " is ", data[coin]);
 
 
         // LOGICS
-        if (userData?.bought_at > data[coin]) {
+        if (userData.bought_at > data[coin]) {
           console.log("User", user, "is losing money on", coin);
-          // console.log("It must go for stop loss percent to check if sell or keep the coin");
 
         }
-        if (userData?.bought_at < data[coin]) {
+        if (userData.bought_at < data[coin]) {
           console.log("User", user, " gains money on", coin);
-          // console.log("It must go for profit percent to check if sell or keep the coin");
         }
         // Gets the risk data 
 
-        const riskMargins = this.riskManagement(userData?.bought_at, userData?.sold_at);
+        const riskMargins: IRiskMargins = this.riskManagement(userData?.bought_at, userData?.sold_at);
 
+        // Order handler
+        console.log("if reach the new buy position, buy/ use limit order to buy for us  ")
+        
+        
         //sell time
         if (riskMargins.profitMargin !== 0 && data[coin] >= riskMargins.profitMargin) {
-          console.log(" if we want to sell all having volume we can call the volumeCalculator to get the current volume for selling and then send that with limit  ");
+           
+          // if we want to sell all having volume we can call the volumeCalculator to get the current volume for selling and then send that with limit  
+          
+          //if reach to profitMargin sell/ use limit order to sell for us"
 
           const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
+
 
           
 
@@ -103,7 +109,7 @@ export default class Analyzer {
 
       // We are looking for sell with profit
       profitMargin = boughtPrice + (boughtPrice * sellProfitMargin);
-      console.log("if reach to profitMargin sell/ use limit order to sell for us");
+      // console.log("if reach to profitMargin sell/ use limit order to sell for us");
       // return profitMargin;
     }
 
@@ -111,8 +117,8 @@ export default class Analyzer {
     if (soldPrice !== 0) {
 
       // We are looking for buy new coin in lower price
-      const newBuyPosition = boughtPrice - (boughtPrice * buyPositionPercent);
-      console.log("if reach the new buy position, buy/ use limit order to buy for us  ")
+      newBuyPosition = boughtPrice - (boughtPrice * buyPositionPercent);
+      // console.log("if reach the new buy position, buy/ use limit order to buy for us  ")
       // return newBoughtPosition;
     }
 
@@ -121,10 +127,15 @@ export default class Analyzer {
 
   private volumeCalculator(currentPrice: number, volume: number, boughtPrice: number) {
 
-    const currentVolume = boughtPrice ? (currentPrice * volume) / boughtPrice : 0
+    const currentVolume =  (currentPrice * volume) / boughtPrice;
     console.log("currentVolume is", currentVolume);
+
     return currentVolume;
 
+  }
+
+  private orderHandling (){
+    
   }
 
   //Todo 1> We want to compare the price here 

@@ -35,9 +35,6 @@ class Analyzer {
     analyze(users, data) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            // console.debug('ANALYZER:', users, data);
-            // console.debug('BTC is', data.BTC);
-            // console.debug('ADA is', data.ADA);
             console.table(data);
             // console.log(users);
             for (let coin in users) {
@@ -48,29 +45,34 @@ class Analyzer {
                     let userData = users[coin][user].assets.coins.find(coins => coins.symbol === coin);
                     if (!userData)
                         return;
+                    console.log('userData', userData);
                     console.log("for symbol", coin, " he bought at", (_a = users[coin][user].assets.coins.find(coins => coins.symbol === coin)) === null || _a === void 0 ? void 0 : _a.bought_at);
-                    console.log(userData, 'userData');
                     console.log("Current Price of" + coin + " is ", data[coin]);
                     // LOGICS
-                    if ((userData === null || userData === void 0 ? void 0 : userData.bought_at) > data[coin]) {
+                    if (userData.bought_at > data[coin]) {
                         console.log("User", user, "is losing money on", coin);
-                        // console.log("It must go for stop loss percent to check if sell or keep the coin");
                     }
-                    if ((userData === null || userData === void 0 ? void 0 : userData.bought_at) < data[coin]) {
+                    if (userData.bought_at < data[coin]) {
                         console.log("User", user, " gains money on", coin);
-                        // console.log("It must go for profit percent to check if sell or keep the coin");
                     }
                     // Gets the risk data 
                     const riskMargins = this.riskManagement(userData === null || userData === void 0 ? void 0 : userData.bought_at, userData === null || userData === void 0 ? void 0 : userData.sold_at);
+                    // Order handler
+                    console.log("if reach the new buy position, buy/ use limit order to buy for us  ");
                     //sell time
                     if (riskMargins.profitMargin !== 0 && data[coin] >= riskMargins.profitMargin) {
-                        console.log(" now should call the volumeCalculator to get the volume for selling and then send that with limit  ");
-                        const profitVolume = this.volumeCalculator(data[coin], userData === null || userData === void 0 ? void 0 : userData.volume, userData === null || userData === void 0 ? void 0 : userData.bought_at);
+                        // if we want to sell all having volume we can call the volumeCalculator to get the current volume for selling and then send that with limit  
+                        //if reach to profitMargin sell/ use limit order to sell for us"
+                        const volume = this.volumeCalculator(data[coin], userData === null || userData === void 0 ? void 0 : userData.volume, userData === null || userData === void 0 ? void 0 : userData.bought_at);
+                    }
+                    //Buy time
+                    if (riskMargins.newBuyPosition !== 0 && data[coin] <= riskMargins.newBuyPosition) {
+                        const volume = this.volumeCalculator(data[coin], userData === null || userData === void 0 ? void 0 : userData.volume, userData === null || userData === void 0 ? void 0 : userData.bought_at);
                     }
                     // console.log(this.riskManagement(userData?.bought_at, userData?.sold_at));
                     //volume 
-                    userData &&
-                        this.volumeCalculator(data[coin], userData === null || userData === void 0 ? void 0 : userData.volume, userData === null || userData === void 0 ? void 0 : userData.bought_at);
+                    // userData &&
+                    //   this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
                 }
             }
         });
@@ -78,32 +80,34 @@ class Analyzer {
     riskManagement(boughtPrice, soldPrice) {
         //temporary give it the stop loss percent till it receive it from user and 
         // const sellStopLossPercent = 0.15; //15%
-        const sellProfitMargin = 0.15; //30%
-        const buyStopLossPercent = 0.10; //15%
         // const buyProfitMargin = 0.30; //30%
+        const sellProfitMargin = 0.20; //20%
+        const buyPositionPercent = 0.10; //10%
         let profitMargin = 0;
-        let newBoughtPosition = 0;
+        let newBuyPosition = 0;
         // checks if we bought or sold the coin
         //bought_at 
         if (boughtPrice !== 0) {
-            // const stopLoss = boughtPrice - (boughtPrice * sellStopLossPercent);
+            // We are looking for sell with profit
             profitMargin = boughtPrice + (boughtPrice * sellProfitMargin);
-            console.log("if reach to profitMargin sell");
+            // console.log("if reach to profitMargin sell/ use limit order to sell for us");
             // return profitMargin;
         }
         //sold_at 
         if (soldPrice !== 0) {
-            // const profitMargin = boughtPrice + (boughtPrice * buyProfitMargin);
-            const newBoughtPosition = boughtPrice - (boughtPrice * buyStopLossPercent);
-            console.log("if reach the new buy position, buy  ");
+            // We are looking for buy new coin in lower price
+            newBuyPosition = boughtPrice - (boughtPrice * buyPositionPercent);
+            // console.log("if reach the new buy position, buy/ use limit order to buy for us  ")
             // return newBoughtPosition;
         }
-        return ({ profitMargin, newBoughtPosition });
+        return ({ profitMargin, newBuyPosition });
     }
     volumeCalculator(currentPrice, volume, boughtPrice) {
-        const currentVolume = boughtPrice ? (currentPrice * volume) / boughtPrice : 0;
+        const currentVolume = (currentPrice * volume) / boughtPrice;
         console.log("currentVolume is", currentVolume);
         return currentVolume;
+    }
+    orderHandling() {
     }
 }
 exports.default = Analyzer;

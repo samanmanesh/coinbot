@@ -63,7 +63,13 @@ export interface IAccountAssets {
   wallet: IAccountWallet;
   coins: IWalletCoin[];
 }
-/** 
+
+export interface IRiskMargins {
+  profitMargin: number,
+  newBuyPosition: number
+}
+
+/**
        * {
       id: 1027,
       name: string,
