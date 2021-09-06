@@ -46,44 +46,64 @@ class Analyzer {
                     // console.log(user,'index');
                     console.log(users[coin][user]);
                     let userData = users[coin][user].assets.coins.find(coins => coins.symbol === coin);
+                    if (!userData)
+                        return;
                     console.log("for symbol", coin, " he bought at", (_a = users[coin][user].assets.coins.find(coins => coins.symbol === coin)) === null || _a === void 0 ? void 0 : _a.bought_at);
                     console.log(userData, 'userData');
                     console.log("Current Price of" + coin + " is ", data[coin]);
-                    if (userData && (userData === null || userData === void 0 ? void 0 : userData.bought_at) > data[coin]) {
+                    // LOGICS
+                    if ((userData === null || userData === void 0 ? void 0 : userData.bought_at) > data[coin]) {
                         console.log("User", user, "is losing money on", coin);
-                        console.log("It must go for stop loss percent to check if sell or keep the coin");
+                        // console.log("It must go for stop loss percent to check if sell or keep the coin");
                     }
-                    if (userData && (userData === null || userData === void 0 ? void 0 : userData.bought_at) < data[coin]) {
+                    if ((userData === null || userData === void 0 ? void 0 : userData.bought_at) < data[coin]) {
                         console.log("User", user, " gains money on", coin);
-                        console.log("It must go for profit percent to check if sell or keep the coin");
+                        // console.log("It must go for profit percent to check if sell or keep the coin");
                     }
+                    // Gets the risk data 
+                    const riskMargins = this.riskManagement(userData === null || userData === void 0 ? void 0 : userData.bought_at, userData === null || userData === void 0 ? void 0 : userData.sold_at);
+                    //sell time
+                    if (riskMargins.profitMargin !== 0 && data[coin] >= riskMargins.profitMargin) {
+                        console.log(" now should call the volumeCalculator to get the volume for selling and then send that with limit  ");
+                        const profitVolume = this.volumeCalculator(data[coin], userData === null || userData === void 0 ? void 0 : userData.volume, userData === null || userData === void 0 ? void 0 : userData.bought_at);
+                    }
+                    // console.log(this.riskManagement(userData?.bought_at, userData?.sold_at));
+                    //volume 
                     userData &&
-                        console.log(this.riskManagement(userData === null || userData === void 0 ? void 0 : userData.bought_at, userData === null || userData === void 0 ? void 0 : userData.sold_at));
+                        this.volumeCalculator(data[coin], userData === null || userData === void 0 ? void 0 : userData.volume, userData === null || userData === void 0 ? void 0 : userData.bought_at);
                 }
             }
         });
     }
     riskManagement(boughtPrice, soldPrice) {
         //temporary give it the stop loss percent till it receive it from user and 
-        const sellStopLossPercent = 0.15; //15%
-        const sellProfitMargin = 0.30; //30%
-        const buyStopLossPercent = 0.15; //15%
-        const buyProfitMargin = 0.30; //30%
+        // const sellStopLossPercent = 0.15; //15%
+        const sellProfitMargin = 0.15; //30%
+        const buyStopLossPercent = 0.10; //15%
+        // const buyProfitMargin = 0.30; //30%
+        let profitMargin = 0;
+        let newBoughtPosition = 0;
         // checks if we bought or sold the coin
         //bought_at 
         if (boughtPrice !== 0) {
             // const stopLoss = boughtPrice - (boughtPrice * sellStopLossPercent);
-            const profitMargin = boughtPrice + (boughtPrice * sellProfitMargin);
+            profitMargin = boughtPrice + (boughtPrice * sellProfitMargin);
             console.log("if reach to profitMargin sell");
-            return profitMargin;
+            // return profitMargin;
         }
         //sold_at 
         if (soldPrice !== 0) {
             // const profitMargin = boughtPrice + (boughtPrice * buyProfitMargin);
             const newBoughtPosition = boughtPrice - (boughtPrice * buyStopLossPercent);
             console.log("if reach the new buy position, buy  ");
-            return newBoughtPosition;
+            // return newBoughtPosition;
         }
+        return ({ profitMargin, newBoughtPosition });
+    }
+    volumeCalculator(currentPrice, volume, boughtPrice) {
+        const currentVolume = boughtPrice ? (currentPrice * volume) / boughtPrice : 0;
+        console.log("currentVolume is", currentVolume);
+        return currentVolume;
     }
 }
 exports.default = Analyzer;
