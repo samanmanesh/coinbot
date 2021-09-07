@@ -25,25 +25,26 @@ export default class Analyzer {
     // this.router.get(AnalyzerPath.Base, this.getMarketDataTestApi.bind(this));
   }
 
-  public async analyze(users: Record<string, IAccount[]>, data: any) {
+  public async analyze(coinAccounts: Record<string, IAccount[]>, data: any) {
     console.table(data);
-    // console.log(users);
-    const riskPriceManager= 
+    console.log(coinAccounts);
+    //  await this.riskPriceManager(); 
 
-    for (let coin in users) {
-      // console.log(coin, 'coin');
-      for (let user in users[coin]) {
+    for (let coin in coinAccounts) {
+      console.log(coin, 'coin');
+      for (let user in coinAccounts[coin]) {
         // console.log(user,'index');
-        console.log(users[coin][user]);
-        let userData = users[coin][user].assets.coins.find(coins => coins.symbol === coin);
+        // console.log(users[coin][user], 'user');
+        let userData = coinAccounts[coin][user].assets.coins.find(coins => coins.symbol === coin);
 
+      
         if (userData) {
 
-          console.log('userData', userData);
+          // console.log('userData', userData);
 
-          console.log("for symbol", coin, " he bought at", users[coin][user].assets.coins.find(coins => coins.symbol === coin)?.bought_at);
+          // console.log("for symbol", coin, " he bought at", users[coin][user].assets.coins.find(coins => coins.symbol === coin)?.bought_at);
 
-          console.log("Current Price of" + coin + " is ", data[coin]);
+          // console.log("Current Price of" + coin + " is ", data[coin]);
 
 
           // LOGICS
@@ -141,7 +142,10 @@ export default class Analyzer {
 
   }
 
-  private riskPriceManager (){
-    
+  private async riskPriceManager (){
+    // we want the assets.coins.allocated_price
+    //todo we want to spread the deposit to all holding coins"assets.coins"(for now instead of prefer coins) 
+
+
   }
 }

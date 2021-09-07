@@ -6,6 +6,7 @@ export interface IAccount {
   api: string;
   preferred_coins: string[];
   assets: IAccountAssets;
+  
 }
 
 const Account = model<IAccount>("accounts");

@@ -53,6 +53,7 @@ export interface IWalletCoin {
   volume: number;
   bought_at: number;
   sold_at: number;
+  allocated_price: number;
 }
 
 interface IAccountWallet {
