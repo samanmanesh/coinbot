@@ -74,24 +74,11 @@ export default class Analyzer {
             this.orderHandler(riskMargins.newBuyPosition, userData.volume);
           }
 
-          // //sell time
-          // if (riskMargins.profitMargin !== 0 && data[coin] >= riskMargins.profitMargin) {
-
           //   // if we want to sell all having volume we can call the volumeCalculator to get the current volume for selling and then send that with limit  
 
           //   //if reach to profitMargin sell/ use limit order to sell for us"
 
-          //   const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
-
-
           //   // this.orderHandler(userData.bought_at, userData.volume, userData.sold_at)
-
-          // }
-
-          //Buy time
-          // if (riskMargins.newBuyPosition !== 0 && data[coin] <= riskMargins.newBuyPosition) {
-          //   const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at)
-          // }
 
         }
       }
