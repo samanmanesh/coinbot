@@ -15,9 +15,6 @@ export default class PriceController implements IController {
 
   setupRoutes() {
     this.router.get("/", this.getPrices.bind(this));
-    // this.router.post("/", this.createPrice);
-    // this.router.put("/:id", this.updatePrice);
-    // this.router.delete("/:id", this.deletePrice);
   }
   getPrices = async (req: Request, res: Response) => {
     try {
