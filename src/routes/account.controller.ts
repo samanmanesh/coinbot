@@ -86,7 +86,7 @@ export default class AccountController implements IController {
       assets: {
         wallet: {
           deposit: "",
-          currency: "CAD",
+          currency: "USDT",
         },
         coins: [
 
