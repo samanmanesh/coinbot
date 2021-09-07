@@ -61,14 +61,14 @@ export default class Analyzer {
 
           //ORDER Handler
           //sell time 
-          if (riskMargins.profitMargin !== 0) {
+          if (userData.bought_at !== 0 && riskMargins.profitMargin !== 0) {
             // const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
 
             this.orderHandler(riskMargins.profitMargin, userData.volume);
           }
 
           //Buy time
-          if (riskMargins.newBuyPosition !== 0) {
+          if (userData.sold_at !== 0 && riskMargins.newBuyPosition !== 0) {
             //   const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at)
 
             this.orderHandler(riskMargins.newBuyPosition, userData.volume);
