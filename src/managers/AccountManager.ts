@@ -220,7 +220,7 @@ export default class AccountManager {
       
       console.error(error);
     }
-
+    return account;
   }
 }
 
