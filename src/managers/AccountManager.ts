@@ -205,7 +205,7 @@ export default class AccountManager {
     return account;
   }
 
-  public async updateAllocatedPriceInAccountAssets(username: string, newPrice: number, symbol: string) {
+  public async updateAllocatedPriceInCoins(username: string, newPrice: number, symbol: string) {
     let account = await this.getAccount(username);
     if (!account) return;
 

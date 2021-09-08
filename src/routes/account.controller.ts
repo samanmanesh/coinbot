@@ -1,6 +1,6 @@
 import { ICoins } from './../models/jointCoins';
 import express, { Request, Response } from "express";
-import { IAccount } from "../models/Account";
+import Account, { IAccount } from "../models/Account";
 import { IController } from "../types";
 import AccountManager from "../managers/AccountManager";
 import JointCoinsManager from '../managers/JointCoinsManager';
@@ -45,6 +45,9 @@ export default class AccountController implements IController {
     this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAccountsAssets(req, res));
 
     this.router.patch(AccountPath.ByUserAndAssets, (req, res) => this.updateCoinInAccountsAssets(req, res));
+
+    this.router.patch(AccountPath.ByUserAndAssetsAndCoin, (req, res)=> this.updateAllocatedPriceInCoins(req, res));
+     
 
     this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.updateWallet(req, res));
   }
@@ -291,6 +294,26 @@ export default class AccountController implements IController {
       }
     }
     catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+
+
+  }
+
+  async updateAllocatedPriceInCoins(req: Request, res: Response) {
+    const username= req?.params?.username ?? "";
+    const symbol = req.params.coin;
+    const newPrice = req.body.allocated_price;
+    const fromDB = await this.accountManager.authorizeAccount(username);
+    if (!fromDB) {
+      res.status(404).send("User does not exist!");
+      return;
+    }
+
+    try {
+        const result = await this.accountManager.updateAllocatedPriceInCoins(username, newPrice, symbol);
+        res.status(200).send(result);
+    } catch (error) {
       res.status(400).json({ message: error.message });
     }
 
