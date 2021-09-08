@@ -134,10 +134,11 @@ export default class CoinBotContext {
 
   private async depositDistributionHandler() {
 
-    // firs go through each account.asset.wallet and get the total deposit
-    // seconds gets all the account.asssets.coins.bought_at and sold_at for calculating the total deposit
-    // gets the number of coins and divide the totall deposit on the number of coins
-    // third change the account.assets.coin.allocated_price to new allocated_price for each.
+    //todo firs go through each account.asset.wallet and get the total for each account  deposit
+    //todo seconds for each account, gets all the account.assets.coins.bought_at and sold_at for calculating the total deposit for that account
+    //todo gets the number of coins and divide the total deposit on the number of coins
+    //todo third change the account.assets.coin.allocated_price to new allocated_price for each.
+    //!NOTE I added update wallet method and update allocated_price in account manager to be used for this part 
 
 
   }

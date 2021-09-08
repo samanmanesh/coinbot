@@ -225,7 +225,6 @@ export default class AccountManager {
     return account;
   }
 
-
   public async updateWallet(username: string, newWallet: IAccountWallet) {
 
     let account = await this.getAccount(username);
