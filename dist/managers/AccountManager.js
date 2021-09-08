@@ -211,6 +211,24 @@ class AccountManager {
             return account;
         });
     }
+    updateAllocatedPriceInCoins(username, newPrice, symbol) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let account = yield this.getAccount(username);
+            if (!account)
+                return;
+            const updatedCoinIndex = account.assets.coins.findIndex(c => c.symbol === symbol);
+            if (updatedCoinIndex === -1)
+                return;
+            account.assets.coins[updatedCoinIndex].allocated_price = newPrice;
+            try {
+                yield Account_1.default.updateOne({ username }, account);
+            }
+            catch (error) {
+                console.error(error);
+            }
+            return account;
+        });
+    }
     updateWallet(username, newWallet) {
         return __awaiter(this, void 0, void 0, function* () {
             let account = yield this.getAccount(username);
@@ -223,6 +241,7 @@ class AccountManager {
             catch (error) {
                 console.error(error);
             }
+            return account;
         });
     }
 }

@@ -120,6 +120,14 @@ class CoinBotContext {
             // console.log(" coinsAccounts", this.coinsAccounts);
         });
     }
+    depositDistributionHandler() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // firs go through each account.asset.wallet and get the total deposit
+            // seconds gets all the account.asssets.coins.bought_at and sold_at for calculating the total deposit
+            // gets the number of coins and divide the totall deposit on the number of coins
+            // third change the account.assets.coin.allocated_price to new allocated_price for each.
+        });
+    }
 }
 exports.default = CoinBotContext;
 //Note: I had to run runCron() through a get request because it was not working with this.runCron() in index.ts(app) as it runs in constructor before we connect to the database therefore it couldn't ask for accounts to get from database since we were not connected to the database yet.
