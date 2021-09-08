@@ -46,6 +46,7 @@ export default class AccountController implements IController {
 
     this.router.patch(AccountPath.ByUserAndAssets, (req, res) => this.updateCoinInAccountsAssets(req, res));
 
+    this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.updateWallet(req, res));
   }
 
   async getAllAccounts(req: Request, res: Response) {
@@ -85,7 +86,7 @@ export default class AccountController implements IController {
       preferred_coins: [],
       assets: {
         wallet: {
-          deposit: "",
+          deposit: 0,
           currency: "USDT",
         },
         coins: [
@@ -296,6 +297,22 @@ export default class AccountController implements IController {
 
   }
 
+  async updateWallet(req: Request, res: Response){
+    const username = req?.params?.username ?? "";
+    const newWallet = req?.body;
+    const fromDB = await this.accountManager.authorizeAccount(username);
+    if (!fromDB) {
+      res.status(404).send("User does not exist!");
+      return;
+    }
 
+    try {
+        await this.accountManager.updateWallet(username, newWallet);
+        res.status(200).send("Wallet updated successfully");
+    } catch (error) {
+      console.error(error);
+    }
+
+  }
 
 }

@@ -43,8 +43,6 @@ class Analyzer {
                     // console.log(user,'index');
                     // console.log(users[coin][user], 'user');
                     let userData = coinAccounts[coin][user].assets.coins.find(coins => coins.symbol === coin);
-                    let userAssetDeposit = coinAccounts[coin][user].assets.wallet.deposit;
-                    console.log("wallet", userAssetDeposit);
                     if (userData) {
                         // console.log('userData', userData);
                         // console.log("for symbol", coin, " he bought at", users[coin][user].assets.coins.find(coins => coins.symbol === coin)?.bought_at);
@@ -60,26 +58,18 @@ class Analyzer {
                         const riskMargins = this.riskManagement(userData === null || userData === void 0 ? void 0 : userData.bought_at, userData === null || userData === void 0 ? void 0 : userData.sold_at);
                         //ORDER Handler
                         //sell time 
-                        if (riskMargins.profitMargin !== 0) {
+                        if (userData.bought_at !== 0 && riskMargins.profitMargin !== 0) {
                             // const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
                             this.orderHandler(riskMargins.profitMargin, userData.volume);
                         }
                         //Buy time
-                        if (riskMargins.newBuyPosition !== 0) {
+                        if (userData.sold_at !== 0 && riskMargins.newBuyPosition !== 0) {
                             //   const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at)
                             this.orderHandler(riskMargins.newBuyPosition, userData.volume);
                         }
-                        // //sell time
-                        // if (riskMargins.profitMargin !== 0 && data[coin] >= riskMargins.profitMargin) {
                         //   // if we want to sell all having volume we can call the volumeCalculator to get the current volume for selling and then send that with limit  
                         //   //if reach to profitMargin sell/ use limit order to sell for us"
-                        //   const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at);
                         //   // this.orderHandler(userData.bought_at, userData.volume, userData.sold_at)
-                        // }
-                        //Buy time
-                        // if (riskMargins.newBuyPosition !== 0 && data[coin] <= riskMargins.newBuyPosition) {
-                        //   const volume = this.volumeCalculator(data[coin], userData?.volume, userData?.bought_at)
-                        // }
                     }
                 }
             }
@@ -118,8 +108,7 @@ class Analyzer {
     }
     riskPriceManager() {
         return __awaiter(this, void 0, void 0, function* () {
-            // we want the assets.wallet.deposit 
-            // the number of assets.coins
+            // we want the assets.coins.allocated_price
             //todo we want to spread the deposit to all holding coins"assets.coins"(for now instead of prefer coins) 
         });
     }

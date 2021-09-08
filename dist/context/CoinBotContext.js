@@ -89,10 +89,6 @@ class CoinBotContext {
             const data = {};
             // const coinSymbols = ['BTC', 'ADA'];
             // Gets data from puppeteer and store in data variable
-            // for (const symbol of coinSymbols) {
-            //   const result = await this.priceManager.getData(selector, symbol); 
-            //   data[symbol] = result;
-            // }
             for (let coinSymbol in this.coinsAccounts) {
                 data[coinSymbol] = yield this.priceManager.getData(selector, coinSymbol);
             }
@@ -110,7 +106,6 @@ class CoinBotContext {
                 console.error('No accounts found');
                 return;
             }
-            // const coinsAccounts = {};
             accounts.forEach(account => {
                 // for each coin in account
                 account.assets.coins.forEach(coin => {

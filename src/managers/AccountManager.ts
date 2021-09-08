@@ -1,7 +1,7 @@
 import { DeleteResult } from 'mongodb';
 import CoinBotContext from '../context/CoinBotContext';
 import Account, { IAccount } from "../models/Account";
-import { IWalletCoin, IAccountAssets } from "../types";
+import { IWalletCoin, IAccountAssets, IAccountWallet } from "../types";
 export default class AccountManager {
 
 
@@ -205,5 +205,22 @@ export default class AccountManager {
     return account;
   }
 
+
+  public async updateWallet( username: string, newWallet: IAccountWallet){
+
+    let account= await this.getAccount(username);    
+    if (!account) return;
+   
+     account.assets.wallet = newWallet;
+
+    try {
+      Account.updateOne({ username}, account);
+
+    } catch (error) {
+      
+      console.error(error);
+    }
+
+  }
 }
 

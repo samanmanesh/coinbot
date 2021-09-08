@@ -41,6 +41,7 @@ class AccountController {
         this.router.post(AccountPath.ByUserAndAssets, (req, res) => this.addCoinsToAccountsAssets(req, res));
         this.router.delete(AccountPath.ByUserAndAssetsAndCoin, (req, res) => this.removeCoinsFromAccountsAssets(req, res));
         this.router.patch(AccountPath.ByUserAndAssets, (req, res) => this.updateCoinInAccountsAssets(req, res));
+        this.router.put(AccountPath.ByUserAndAssets, (req, res) => this.updateWallet(req, res));
     }
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -85,8 +86,8 @@ class AccountController {
                 preferred_coins: [],
                 assets: {
                     wallet: {
-                        deposit: "",
-                        currency: "CAD",
+                        deposit: 0,
+                        currency: "USDT",
                     },
                     coins: [],
                 },
@@ -287,6 +288,25 @@ class AccountController {
             }
             catch (error) {
                 res.status(400).json({ message: error.message });
+            }
+        });
+    }
+    updateWallet(req, res) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const username = (_b = (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.username) !== null && _b !== void 0 ? _b : "";
+            const newWallet = req === null || req === void 0 ? void 0 : req.body;
+            const fromDB = yield this.accountManager.authorizeAccount(username);
+            if (!fromDB) {
+                res.status(404).send("User does not exist!");
+                return;
+            }
+            try {
+                const result = yield this.accountManager.updateWallet(username, newWallet);
+                res.status(200).send(result);
+            }
+            catch (error) {
+                console.error(error);
             }
         });
     }

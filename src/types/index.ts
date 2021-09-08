@@ -59,8 +59,8 @@ export interface IWalletCoin {
   allocated_price: number;
 }
 
-interface IAccountWallet {
-  deposit: string;
+export interface IAccountWallet {
+  deposit: number;
   currency: string;
 }
 export interface IAccountAssets {

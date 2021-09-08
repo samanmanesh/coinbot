@@ -211,5 +211,19 @@ class AccountManager {
             return account;
         });
     }
+    updateWallet(username, newWallet) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let account = yield this.getAccount(username);
+            if (!account)
+                return;
+            account.assets.wallet = newWallet;
+            try {
+                Account_1.default.updateOne({ username }, account);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        });
+    }
 }
 exports.default = AccountManager;
