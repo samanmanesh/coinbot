@@ -132,6 +132,16 @@ export default class CoinBotContext {
     // console.log(" coinsAccounts", this.coinsAccounts);
   }
 
+  private async depositDistributionHandler() {
+
+    // firs go through each account.asset.wallet and get the total deposit
+    // seconds gets all the account.asssets.coins.bought_at and sold_at for calculating the total deposit
+    // gets the number of coins and divide the totall deposit on the number of coins
+    // third change the account.assets.coin.allocated_price to new allocated_price for each.
+
+
+  }
+
 }
 
 

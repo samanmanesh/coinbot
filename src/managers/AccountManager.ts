@@ -144,7 +144,7 @@ export default class AccountManager {
     let account = await this.getAccount(username);
     if (!account) return;
 
-    
+
     if (account.assets.coins.some(c => c.symbol === coin)) {
       // console.log("coin already exists");
       return true;
@@ -205,19 +205,39 @@ export default class AccountManager {
     return account;
   }
 
-
-  public async updateWallet( username: string, newWallet: IAccountWallet){
-
-    let account= await this.getAccount(username);    
+  public async updateAllocatedPriceInAccountAssets(username: string, newPrice: number, symbol: string) {
+    let account = await this.getAccount(username);
     if (!account) return;
-   
-     account.assets.wallet = newWallet;
+
+    const updatedCoinIndex = account.assets.coins.findIndex(c => c.symbol === symbol);
+
+    if (updatedCoinIndex === -1) return
+     
+    account.assets.coins[updatedCoinIndex].allocated_price = newPrice;
 
     try {
-      Account.updateOne({ username}, account);
-
+      await Account.updateOne({ username }, account);
     } catch (error) {
       
+        console.error(error);
+
+    }
+    return account;
+  }
+
+
+  public async updateWallet(username: string, newWallet: IAccountWallet) {
+
+    let account = await this.getAccount(username);
+    if (!account) return;
+
+    account.assets.wallet = newWallet;
+
+    try {
+      Account.updateOne({ username }, account);
+
+    } catch (error) {
+
       console.error(error);
     }
     return account;
