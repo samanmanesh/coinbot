@@ -1,3 +1,4 @@
+import { ICoinPerAllocatedPrice } from './../types/index';
 import Analyzer from "../routes/analyzer";
 import { IAccount } from "../models/Account";
 import AccountManager from "../managers/AccountManager"
@@ -43,13 +44,14 @@ export default class CoinBotContext {
     CoinBotContext.instance = this;
   }
 
+  
   public async runCron() {
 
     await this.populateUsers();
 
-    await this.puppeteerHandler();
-    // cron.schedule("* * * * * * ", () => this.analyze());
+    // await this.puppeteerHandler();
 
+    await this.depositDistributionHandler();
   }
 
 
@@ -132,20 +134,40 @@ export default class CoinBotContext {
     // console.log(" coinsAccounts", this.coinsAccounts);
   }
 
+  
   private async depositDistributionHandler() {
 
     //todo firs go through each account.asset.wallet and get the total for each account  deposit
+    const newCoinPerAllocatedPrice : ICoinPerAllocatedPrice[] = {};
 
     const accounts = await this.accountManager.getAccounts();
-
     if (!accounts) return;
-    // accounts.forEach(account => account.assets.wallet.deposit )
-    for (let account in accounts){
 
-      const accountDeposit = accounts[account].assets.wallet.deposit; 
+    for (let account in accounts){
       
+      const accountDeposit = accounts[account].assets.wallet.deposit; 
+      console.log("accounts deposit is",accountDeposit);
+
+      for ( let coin in accounts[account].assets.coins){
+        
+        const accountCoin = accounts[account].assets.coins[coin];
+        console.log("coin is", accountCoin );
+
+
+
+            
+            newCoinPerAllocatedPrice.push({
+            accountName : accounts[account].username,
+            symbol: accounts[account].assets.coins[coin].symbol,
+            accountDeposit: accountDeposit,
+            allocated_price: accountCoin.allocated_price,
+          })
+
+      }
 
     }
+    
+    console.log("newCoinPerAllocatedPrice",newCoinPerAllocatedPrice);
     //todo seconds for each account, gets all the account.assets.coins.bought_at and sold_at for calculating the total deposit for that account
     //todo gets the number of coins and divide the total deposit on the number of coins
     //todo third change the account.assets.coin.allocated_price to new allocated_price for each.

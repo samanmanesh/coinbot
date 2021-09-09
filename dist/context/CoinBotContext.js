@@ -51,8 +51,8 @@ class CoinBotContext {
     runCron() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.populateUsers();
-            yield this.puppeteerHandler();
-            // cron.schedule("* * * * * * ", () => this.analyze());
+            // await this.puppeteerHandler();
+            yield this.depositDistributionHandler();
         });
     }
     puppeteerHandler() {
@@ -122,10 +122,32 @@ class CoinBotContext {
     }
     depositDistributionHandler() {
         return __awaiter(this, void 0, void 0, function* () {
-            // firs go through each account.asset.wallet and get the total deposit
-            // seconds gets all the account.asssets.coins.bought_at and sold_at for calculating the total deposit
-            // gets the number of coins and divide the totall deposit on the number of coins
-            // third change the account.assets.coin.allocated_price to new allocated_price for each.
+            //todo firs go through each account.asset.wallet and get the total for each account  deposit
+            let newCoinPerAllocatedPrice;
+            const accounts = yield this.accountManager.getAccounts();
+            if (!accounts)
+                return;
+            for (let account in accounts) {
+                const accountDeposit = accounts[account].assets.wallet.deposit;
+                console.log("accounts deposit is", accountDeposit);
+                for (let coin in accounts[account].assets.coins) {
+                    const accountCoin = accounts[account].assets.coins[coin];
+                    console.log("coin is", accountCoin);
+                    //@ts-ignore
+                    newCoinPerAllocatedPrice.push({
+                        accountName: accounts[account].username,
+                        symbol: accounts[account].assets.coins[coin].symbol,
+                        accountDeposit: accountDeposit,
+                        allocated_price: accountCoin.allocated_price,
+                    });
+                }
+            }
+            //@ts-ignore
+            console.log("newCoinPerAllocatedPrice", newCoinPerAllocatedPrice);
+            //todo seconds for each account, gets all the account.assets.coins.bought_at and sold_at for calculating the total deposit for that account
+            //todo gets the number of coins and divide the total deposit on the number of coins
+            //todo third change the account.assets.coin.allocated_price to new allocated_price for each.
+            //!NOTE I added update wallet method and update allocated_price in account manager to be used for this part 
         });
     }
 }
