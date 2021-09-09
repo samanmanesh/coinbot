@@ -25,7 +25,7 @@ const BinanceUrlAndSelector = [
     url: 'https://www.binance.com/en/trade/XRP_USDT?layout=pro',
     section: '.showPrice'
   },
-  
+
 ]
 
 // const getUrlSelector = (coinSymbol: string)
@@ -44,7 +44,7 @@ export default class CoinBotContext {
     CoinBotContext.instance = this;
   }
 
-  
+
   public async runCron() {
 
     await this.populateUsers();
@@ -56,14 +56,14 @@ export default class CoinBotContext {
 
 
   private async puppeteerHandler() {
-    
+
     //Todo init the puppeteer
 
     BinanceUrlAndSelector.forEach(async (element) => {
       await this.priceManager.init(element.url, element.section, element.pageName);
     })
 
-    
+
 
     cron.schedule(" * * * * * ", () => this.analyze('.showPrice'));
 
@@ -101,8 +101,8 @@ export default class CoinBotContext {
     // Gets data from puppeteer and store in data variable
 
     for (let coinSymbol in this.coinsAccounts) {
-     data[coinSymbol] = await this.priceManager.getData(selector, coinSymbol);
-   }
+      data[coinSymbol] = await this.priceManager.getData(selector, coinSymbol);
+    }
     // data.BTC = await this.priceManager.getData(selector, 'BTC');
     // data.ADA = await this.priceManager.getData(selector, 'ADA');
 
@@ -118,7 +118,7 @@ export default class CoinBotContext {
       console.error('No accounts found');
       return;
     }
-  
+
     accounts.forEach(account => {
       // for each coin in account
       account.assets.coins.forEach(coin => {
@@ -134,40 +134,39 @@ export default class CoinBotContext {
     // console.log(" coinsAccounts", this.coinsAccounts);
   }
 
-  
+
   private async depositDistributionHandler() {
 
     //todo firs go through each account.asset.wallet and get the total for each account  deposit
-    const newCoinPerAllocatedPrice : ICoinPerAllocatedPrice[] = {};
+    let newCoinPerAllocatedPrice: ICoinPerAllocatedPrice[] = [];
 
     const accounts = await this.accountManager.getAccounts();
     if (!accounts) return;
 
-    for (let account in accounts){
-      
-      const accountDeposit = accounts[account].assets.wallet.deposit; 
-      console.log("accounts deposit is",accountDeposit);
+    for (let account in accounts) {
 
-      for ( let coin in accounts[account].assets.coins){
-        
+      const accountDeposit = accounts[account].assets.wallet.deposit;
+      console.log("accounts deposit is", accountDeposit);
+
+      for (let coin in accounts[account].assets.coins) {
+
         const accountCoin = accounts[account].assets.coins[coin];
-        console.log("coin is", accountCoin );
+        console.log("coin is", accountCoin);
 
 
 
-            
-            newCoinPerAllocatedPrice.push({
-            accountName : accounts[account].username,
-            symbol: accounts[account].assets.coins[coin].symbol,
-            accountDeposit: accountDeposit,
-            allocated_price: accountCoin.allocated_price,
-          })
+
+        newCoinPerAllocatedPrice.push({
+          accountName: accounts[account].username,
+          symbol: accounts[account].assets.coins[coin].symbol,
+          accountDeposit: accountDeposit,
+          allocated_price: accountCoin.allocated_price,
+        })
 
       }
 
     }
-    
-    console.log("newCoinPerAllocatedPrice",newCoinPerAllocatedPrice);
+    console.log("newCoinPerAllocatedPrice",newCoinPerAllocatedPrice)
     //todo seconds for each account, gets all the account.assets.coins.bought_at and sold_at for calculating the total deposit for that account
     //todo gets the number of coins and divide the total deposit on the number of coins
     //todo third change the account.assets.coin.allocated_price to new allocated_price for each.

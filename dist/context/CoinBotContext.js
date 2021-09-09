@@ -123,7 +123,7 @@ class CoinBotContext {
     depositDistributionHandler() {
         return __awaiter(this, void 0, void 0, function* () {
             //todo firs go through each account.asset.wallet and get the total for each account  deposit
-            let newCoinPerAllocatedPrice;
+            let newCoinPerAllocatedPrice = [];
             const accounts = yield this.accountManager.getAccounts();
             if (!accounts)
                 return;
@@ -133,7 +133,6 @@ class CoinBotContext {
                 for (let coin in accounts[account].assets.coins) {
                     const accountCoin = accounts[account].assets.coins[coin];
                     console.log("coin is", accountCoin);
-                    //@ts-ignore
                     newCoinPerAllocatedPrice.push({
                         accountName: accounts[account].username,
                         symbol: accounts[account].assets.coins[coin].symbol,
@@ -142,7 +141,6 @@ class CoinBotContext {
                     });
                 }
             }
-            //@ts-ignore
             console.log("newCoinPerAllocatedPrice", newCoinPerAllocatedPrice);
             //todo seconds for each account, gets all the account.assets.coins.bought_at and sold_at for calculating the total deposit for that account
             //todo gets the number of coins and divide the total deposit on the number of coins
