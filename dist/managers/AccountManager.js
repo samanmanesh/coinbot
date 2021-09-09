@@ -25,7 +25,7 @@ class AccountManager {
                 }
             }
             catch (error) {
-                console.error(error.message);
+                console.error(error);
             }
             return requiredAccount;
         });

@@ -73,13 +73,7 @@ export interface IRiskMargins {
   newBuyPosition: number
 }
 
-export interface ICoinPerAllocatedPrice {
-  accountName:string ,
-  symbol: string,
-  accountDeposit: number,
- allocated_price: number
 
-}
 /**
        * {
       id: 1027,

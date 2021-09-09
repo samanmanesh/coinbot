@@ -1,4 +1,3 @@
-import { ICoinPerAllocatedPrice } from './../types/index';
 import Analyzer from "../routes/analyzer";
 import { IAccount } from "../models/Account";
 import AccountManager from "../managers/AccountManager"
@@ -48,16 +47,18 @@ export default class CoinBotContext {
   public async runCron() {
 
     await this.populateUsers();
-
-    // await this.puppeteerHandler();
-
-    await this.depositDistributionHandler();
+    
+    // await this.depositDistributionHandler();
+    
+    await this.puppeteerHandler();
+    
+    //Todo cron doesn't work here for depositDistributionHandler(), make it work
+    //  cron.schedule(" * * * * ", () => this.depositDistributionHandler());
   }
 
   private async puppeteerHandler() {
 
-    //Todo init the puppeteer
-
+    //?? init the puppeteer
     BinanceUrlAndSelector.forEach(async (element) => {
       await this.priceManager.init(element.url, element.section, element.pageName);
     })
@@ -132,52 +133,42 @@ export default class CoinBotContext {
   }
 
   private async depositDistributionHandler() {
-
+    console.log("cron read the depositDistributionHandler");
     //todo firs go through each account.asset.wallet and get the total for each account  deposit
-    let newCoinPerAllocatedPrice: ICoinPerAllocatedPrice[] = [];
+    // let newCoinPerAllocatedPrice: ICoinPerAllocatedPrice[] = [];
 
     const accounts = await this.accountManager.getAccounts();
     if (!accounts) return;
 
     for (let account in accounts) {
 
+      const accountUsername = accounts[account].username;
       const accountDeposit = accounts[account].assets.wallet.deposit;
-      console.log("accounts deposit is", accountDeposit);
-       
+      // console.log("accounts deposit is", accountDeposit);
+      
       const accountsAssetsCoins = accounts[account].assets.coins;
       // gets the number of coins in each account assets.coins
       const coinsNumber = accountsAssetsCoins.length;
-      console.log("coins number is", coinsNumber);
+      // console.log("coins number is", coinsNumber);
 
-      // calculating the allocated price for each coin
+      //?? calculating the allocated price for each coin
       const newAllocatedPrice = accountDeposit / coinsNumber;
-      console.log("allocated price is", newAllocatedPrice);
-       
-      
-  
+      // console.log("allocated price is", newAllocatedPrice);
+
+      //?? updating the allocated price for each coin
 
       for (let coin in accountsAssetsCoins) {
+        
+        const coinSymbol = accountsAssetsCoins[coin].symbol;
+        // console.log("coin symbol is", coinSymbol);
 
-        const accountCoin = accountsAssetsCoins[coin];
-        console.log("coin is", accountCoin);
-
-
-
-
-
-
-        // newCoinPerAllocatedPrice.push({
-        //   accountName: accounts[account].username,
-        //   symbol: accounts[account].assets.coins[coin].symbol,
-        //   accountDeposit: accountDeposit,
-        //   allocated_price: accountCoin.allocated_price,
-        // })
-
+        await this.accountManager.updateAllocatedPriceInCoins(accountUsername,  newAllocatedPrice,coinSymbol);
+        
       }
-
+    
     }
 
-    // console.log("newCoinPerAllocatedPrice", newCoinPerAllocatedPrice)
+    
     //todo seconds for each account, gets all the account.assets.coins.bought_at and sold_at for calculating the total deposit for that account
     //todo gets the number of coins and divide the total deposit on the number of coins
     //todo third change the account.assets.coin.allocated_price to new allocated_price for each.

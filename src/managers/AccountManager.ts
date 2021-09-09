@@ -13,7 +13,7 @@ export default class AccountManager {
         return undefined;
       }
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
     }
 
     return requiredAccount;
