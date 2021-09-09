@@ -131,7 +131,7 @@ export default class Analyzer {
 
   private async riskPriceManager (){
 
-    
+
     // we want the assets.coins.allocated_price
     //todo we want to spread the deposit to all holding coins"assets.coins"(for now instead of prefer coins) 
 
