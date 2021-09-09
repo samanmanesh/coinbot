@@ -130,18 +130,25 @@ class CoinBotContext {
             for (let account in accounts) {
                 const accountDeposit = accounts[account].assets.wallet.deposit;
                 console.log("accounts deposit is", accountDeposit);
-                for (let coin in accounts[account].assets.coins) {
-                    const accountCoin = accounts[account].assets.coins[coin];
+                const accountsAssetsCoins = accounts[account].assets.coins;
+                // gets the number of coins in each account assets.coins
+                const coinsNumber = accountsAssetsCoins.length;
+                console.log("coins number is", coinsNumber);
+                // calculating the allocated price for each coin
+                const newAllocatedPrice = accountDeposit / coinsNumber;
+                console.log("allocated price is", newAllocatedPrice);
+                for (let coin in accountsAssetsCoins) {
+                    const accountCoin = accountsAssetsCoins[coin];
                     console.log("coin is", accountCoin);
-                    newCoinPerAllocatedPrice.push({
-                        accountName: accounts[account].username,
-                        symbol: accounts[account].assets.coins[coin].symbol,
-                        accountDeposit: accountDeposit,
-                        allocated_price: accountCoin.allocated_price,
-                    });
+                    // newCoinPerAllocatedPrice.push({
+                    //   accountName: accounts[account].username,
+                    //   symbol: accounts[account].assets.coins[coin].symbol,
+                    //   accountDeposit: accountDeposit,
+                    //   allocated_price: accountCoin.allocated_price,
+                    // })
                 }
             }
-            console.log("newCoinPerAllocatedPrice", newCoinPerAllocatedPrice);
+            // console.log("newCoinPerAllocatedPrice", newCoinPerAllocatedPrice)
             //todo seconds for each account, gets all the account.assets.coins.bought_at and sold_at for calculating the total deposit for that account
             //todo gets the number of coins and divide the total deposit on the number of coins
             //todo third change the account.assets.coin.allocated_price to new allocated_price for each.
