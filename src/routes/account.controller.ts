@@ -70,7 +70,7 @@ export default class AccountController implements IController {
       res.status(200).json(account);
 
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error });
     }
   }
 
@@ -102,7 +102,7 @@ export default class AccountController implements IController {
       const savedAccount = await this.accountManager.createAccount(newAccount);
       res.status(201).json(savedAccount);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error });
     }
 
   }
@@ -113,7 +113,7 @@ export default class AccountController implements IController {
       await this.accountManager.deleteAccount(username);
       res.status(201).send("Account deleted");
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error });
     }
 
     // try { 
@@ -129,7 +129,7 @@ export default class AccountController implements IController {
       const updatedAccount = await this.accountManager.updateAccount(req.params.username, req.body);
       res.status(200).json(updatedAccount);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error});
     }
   }
   //Todo a general update to gets required section and value to update
@@ -153,7 +153,7 @@ export default class AccountController implements IController {
       const result = await this.accountManager.addPreferredCoinsHandler(username, preferredCoins);
       res.status(200).json(result);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error });
     }
 
     // Check if coins in preferredCoins exists in jointCoins to add to
@@ -192,7 +192,7 @@ export default class AccountController implements IController {
       const result = await this.accountManager.removePreferredCoinsHandler(username, preferredCoins);
       res.status(200).json(result);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error });
     }
 
     // Remove this username for coin's account in jointCoins too
@@ -232,7 +232,7 @@ export default class AccountController implements IController {
         res.status(200).json(result);
       }
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error });
     }
 
 
@@ -263,7 +263,7 @@ export default class AccountController implements IController {
       }
     }
     catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error });
     }
 
   }
@@ -294,7 +294,7 @@ export default class AccountController implements IController {
       }
     }
     catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error });
     }
 
 
@@ -314,7 +314,7 @@ export default class AccountController implements IController {
         const result = await this.accountManager.updateAllocatedPriceInCoins(username, newPrice, symbol);
         res.status(200).send(result);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error });
     }
 
 
